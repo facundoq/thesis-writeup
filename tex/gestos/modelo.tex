@@ -1,0 +1,218 @@
+
+\epigraph{``All models are wrong, but some are useful"}{George E. P. Box}
+
+
+Mientras que una clasificación ciertamente reduce el conjunto de gestos a reconocer, todavía podemos distinguir diversas propiedades de los gestos dinámicos.  
+
+Desde el punto de vista del reconocimiento, buscamos definir un modelo de gestos que nos permitirá precisar el concepto de \textbf{clases o tipos de gestos} para una aplicación particular. Por ejemplo, si nuestro objetivo es el reconocimiento de dígitos arábigos del $0$ al $9$, tendremos $10$ tipos clases distintas a reconocer. 
+
+En la etapa de reconocimiento, asignaremos una clase a un nuevo ejemplar de un gesto en a partir de ejemplares previamente obtenidos, que llamaremos \textbf{ejemplares de entrenamiento}. Para ello, utilizaremos algoritmos de clasificación basados en aprendizaje automático que de alguna manera comparen el nuevo gesto con los ejemplares de entrenamiento, dando como resultado la clase inferida para el nuevo gesto (o estableciendo que no pertenece a ninguna clase conocida, si no se parece a ningún ejemplar anterior). 
+
+
+
+Entonces, procedemos a modelar un ejemplar de un gesto dinámico 3D unimodal $c$ como una trayectoria. En este caso tenemos dos parametrizaciones posibles: una \textbf{temporal} y una por \textbf{longitud de arco}. Procederemos primero a definir el modelo de ejemplar de gesto a reconocer como una trayectoria con parametrización temporal, con ciertas propiedades e invarianzas. Luego haremos lo mismo con la parametrización por longitud de arco, y finalmente compararemos ambas. En estos modelos de gestos dichas trayectorias serán representadas por una función continua, que en secciones posteriores adaptaremos al caso discreto debido a la naturaleza discreta del proceso de captura de los sensores.
+
+
+\subsection{Modelo de gestos con parametrización temporal}
+
+
+Un gesto dinámico 3D unimodal es una trayectoria $c$ tal que: 
+
+\begin{equation}
+  \begin{split}
+    c : \reals \rightarrow \reals^3 \\
+    c(t)=(x,y,z)
+  \end{split}
+  \quad \quad
+  \begin{split}
+    t=0 \dots T
+  \end{split}
+\end{equation}  
+  
+Donde $t$ representa el instante de tiempo en que la parte del cuerpo está en la posición $c(t)$, y $T$ la longitud temporal del gesto. Podemos asumir $c$ continua dado que dicha trayectoria surge del movimiento de la mano, aunque en la práctica eso depende del método de sensado y los algoritmos de seguimiento de posición y su habilidad de interpolación en casos de oclusión. 
+
+Esto plantea la necesidad de un criterio de equivalencia entre ejemplares, lo cuál implica responder a ciertas preguntas: ¿qué sucede si un nuevo ejemplar recorre la misma trayectoria que un gesto de entrenamiento pero a distinta velocidad? ¿si comienzan en lugares diferentes del espacio virtual donde se mueve la parte del cuerpo? ¿si son iguales, módulo una rotación en el espacio respecto a cierto eje? ¿si sólo difieren en su escala? y la más obvia ¿qué sucede si un nuevo ejemplar se realiza de forma parecida a un gesto previo, pero no exactamente de la misma forma?. Estas preguntas, y sus infinitas variaciones y combinaciones, no tienen \textit{una} respuesta correcta, pero es necesario definir ciertas respuestas para encontrar un modelo de gesto apropiado para la aplicación objetivo. De esta manera obtendremos una definición de clase de gestos, definido como una clase de equivalencia en base a una relación de equivalencia entre ejemplares de gestos. Vamos a definir ciertas relaciones de equivalencia entre ejemplares y para luego seleccionar un conjunto de relaciones complementarias que definan inequívocamente el concepto de clase de gesto.
+
+En el caso más simple, dados dos ejemplares de gestos $c$ y $c'$ de longitudes temporales $T$ y $T'$, la definición más simple de equivalencia pide que sean de la misma longitud y todas las posiciones del gesto sean las mismas.
+  
+
+\equivalencia{n}
+{ & c(t) = c'(t) 
+\\ & t=0 \dots T, \; T=T'}   
+
+Con esta definición, no hay dos gestos equivalentes a menos que sean exactamente el mismo, y hay tantas clases de equivalencia como trayectorias y longitudes temporales posibles. Si bien es una definición posible, es bastante restrictiva ya que implica que un gesto debe realizarse siempre con la misma velocidad.
+
+
+\newcommand{\vset}{\mathbb{V}_{T,T'}}
+
+En primer instancia nos será conveniente definir una equivalencia con \textbf{invarianza a la velocidad} con la que se realiza el gesto (y su longitud). Para ello, necesitamos una función $v$ que nos permite convertir entre el tiempo de un gesto y el otro. El conjunto de tales funciones, $\vset$, es:
+
+
+\tc{\vset}{ =}{
+  \set{
+  v(t)}
+    {v(0)&=0, & v(T)&=T' \quad
+    \\ v &\in \continuous, & \derivative{v}{t} &\geq 0 
+  }
+}
+
+Entonces, definimos $c$ y $c'$ como equivalentes con invarianza a la velocidad:
+
+\equivalencia{v}
+{
+& \existsv \\
+&  c(t) = c'(v(t)), \; t=0 \dots T
+}
+
+Es decir, $c$ y $c'$ recorren los mismos puntos, en el mismo orden, pero $v$ nos indica la velocidad a la cual $c'$ recorre los puntos en forma relativa a la velocidad de $c$. 
+
+La invarianza a la velocidad es en cierto modo ortogonal al resto de las invarianzas. Podríamos definirlas exigiendo $T=T'$ como condición en todas ellas, o exigiendo la existencia de $v$, o sea, $c \equiv_v c'$. Dado que en nuestra aplicación queremos reconocer gestos sin importar la velocidad con la que fueron realizados, utilizaremos la segunda opción. 
+
+
+
+Con ella podemos definir una equivalencia con \textbf{invarianza a la traslación}:
+
+
+
+
+\equivalencia{t}{
+& \existsv, \; \existsb:
+\\& c(t)+b = c'(v(t))
+}
+
+
+También podemos definir \textbf{invarianza a la escala} del gesto:
+\equivalencia{s}{
+&\existsv, \;  \existsa 
+\\& ac(t) = c'(v(t))
+}
+
+Definimos la equivalencia \textbf{invariante a la posición de comienzo} para los \textbf{gestos cerrados}, que son aquellos que, idealmente, comienzan y terminan en la misma posición, es decir $c(0)=c(T)$. Esta equivalencia es útil al querer reconocer, por ejemplo, un gesto correspondiente al dígito arábigo $0$, ya que deseamos que el algoritmo de reconocimiento detecte dicho gesto sin que importe el lugar por donde el usuario comenzó a realizar el gesto. Esta equivalencia sólo tiene sentido para gestos cerrados ya que en ese caso hay infinitos puntos de comienzo posible, mientras que en un gesto abierto solo hay una posibilidad. Para ello, dados gestos cerrados $c$ y $c'$, 
+
+\equivalencia{c}{
+ & \existsv  \existsomega 
+\\&  c( (t+\omega) \% T) = c'(v(t))
+}
+Donde $\%$ es el operador módulo. Además, podemos definir una equivalencia con \textbf{invarianza a la dirección} hacia donde se realiza la trayectoria.
+
+\equivalencia{c}{
+ \existsvand 
+\\ c(t) &= c'(v(t'))
+\\  t' &= T-t
+}
+ 
+Por ejemplo, un gesto circular puede hacerse en dirección horaria o anti-horaria. Hay que tener cuidado ya que con esta invarianza ocurren ciertas equivalencias potencialmente indeseables, ya que, por ejemplo, un gesto de ``swipe'' de izquierda a derecha es equivalente a uno de derecha a izquierda.
+
+Por ese motivo dejaremos esta última equivalencia definida, pero no la incluiremos en nuestro modelo final de gesto.
+
+
+Por último, queremos definir una equivalencia con \textbf{invarianza a la rotación} con respecto a un eje determinado $\vi \in \reals^3$. 
+
+\equivalencia{ \roti }{
+ &\existsv, \; \existsroti
+\\& c(t) = \roti c'(v(t))
+}
+
+
+
+%Una característica intrínseca en la expresión gestual de los seres humanos es su dependencia con la cultura y ambigüedad semántica.  Determinados gestos pueden tener más de un significado y a su vez, un mismo concepto puede ser referido por más de un gesto. Por lo tanto, ciertos sistemas como aquellos utilizados en entornos naturales para actividades de vigilancia, monitoreo de pacientes, análisis de comportamiento psicológico, emocional y social deben contemplar estas particularidades para un correcto reconocimiento de los gestos.
+%
+%Aún en entornos más controlados, el reconocimiento de los gestos presenta ciertas dificultades inherentes a los mismos. Las distintas contexturas físicas y diferencias anatómicas acentúan las variaciones gestuales entre distintas personas. En ocasiones la ejecución de los trazos correspondientes a un mismo gesto puede cambiar incluso si es realizado por el mismo individuo. Además de todo, es posible que los gestos sean especificados de manera defectuosa o incompleta.
+%
+%Los reconocedores de gestos usualmente realizan el seguimiento de la posición y movimientos del cuerpo para reconocer el significado del gesto. Dada la gran cantidad de gestos que el cuerpo humano es capaz de expresar, es necesario censar la posición, orientación, la velocidad y aceleración de cada parte del cuerpo y de las articulaciones.
+%
+%Existen diversos dispositivos electrónicos desarrollados específicamente para el reconocimiento de gestos en entornos tridimensionales como es el caso de los comandos provistos de acelerómetros utilizados en consolas de video juegos y los datagloves (guantes de información) que llevan indicadores luminosos (LEDs) para facilitar el reconocimiento gestual por medio de un sistema de adquisición de imágenes.
+%
+%El reconocimiento de gestos dinámicos requiere segmentación temporal. La segmentación automática de gestos es difícil  al igual que la distinción entre gestos intencionales y movimientos aleatorios. Por lo tanto  frecuentemente es necesario especificarle al sistema de alguna forma los puntos de comienzo y fin del gesto.  
+
+Donde $\roti$ es una matriz de rotación alrededor del eje $\vi$. 
+
+
+Con estas relaciones, tenemos distintas clases de equivalencia entre ejemplares de gestos. En nuestro caso, buscamos una combinación de las equivalencias con invarianza a la velocidad, traslación y escala. Además, el reconocimiento será invariante a la rotación con respecto a al torso de la persona como origen de eje, donde el eje $z$ representa posiciones atrás o adelante de dicho origen, el $x$ a izquierda o derecha, y el $y$ arriba o abajo.
+
+Ignoramos la invarianza a la posición de comienzo para gestos cerrados ya que trabajamos en un modelo dependiente del usuario en donde el mismo grabará sus gestos, y dicha invarianza es difícil de incluir en un clasificador. Como mencionamos anteriormente, no incluimos la invarianza a la dirección ya que en muchos casos puede resultar contraintuitiva, y además puede agregarse muy fácilmente invirtiendo el gesto en la etapa de reconocimiento sin importar las otras características a reconocer. 
+
+De esta manera, obtenemos el siguiente modelo:
+
+\equivalencia{ m'}{
+ & \existsv, \; \existsroti 
+ \\ & \existsb, \; \existsa
+\\&  c(t) = a (\roti c'(v(t)))+b
+}
+
+\newcommand{\eequiv}{=_{\epsilon}}
+
+Por último, es obvio que un gesto no puede replicarse exactamente, aún con estas equivalencias. Por ende, relajamos la condición de igualdad entre posiciones a una de $\epsilon-\text{equivalencia}$
+
+
+\tci{a &\eequiv b}{
+& \norm{a-b} < \epsilon
+\\& \text{donde} \; \epsilon \in \reals, \; a,b \in \reals^3
+\\& \text{y} \; \norm{\cdot} \quad \text{es una norma en $\reals^3$}
+}
+
+De esta manera, finalmente llegamos a la equivalencia deseada:
+
+
+\equivalencia{ m}{
+ &\existsv, \; \existsroti 
+ \\& \existsb, \; \existsa
+\\& c(t) \eequiv a (\roti c'(v(t)))+b
+}
+
+Esta equivalencia implica que las posiciones entre los gestos son similares, luego de una misma rotación, traslación y escala de todo el gesto. Si bien esta es una definición válida, es difícil incorporar la función $v$ en el sistema de reconocimiento de gestos ya que agrega un grado de libertad que no se contrarresta tan fácilmente como el de las otras invarianzas, que pueden lograrse con transformaciones más tradicionales de la entrada.
+
+Esta última adición colapsa todas las clases
+
+Además, hay un compromiso inherente entre el tamaño de las clases de equivalencia gestuales y diversas propiedades de un sistema de reconocimiento como la dificultad para realizar los gestos, la facilidad para reconocer que cierta trayectoria corresponde a un gesto, y la facilidad para reconocer a qué clase de gesto pertenece cierta trayectoria. A mayor tamaño de una clase, existen más trayectorias que serán identificadas como gestos de esa clase, y por ende se ampliará la variabilidad con la que el usuario puede realizar un gesto. Pero en la práctica eso también hace que, a medida que el tamaño del vocabulario gestual aumenta, sea más difícil decidir si una trayectoria es un gesto o no, y diferenciar uno de otro.
+
+
+
+\subsection{Modelo de gestos con parametrización por longitud de arco}
+
+La parametrización por longitud de arco obvia totalmente la dimensión temporal del gesto, y modela su posición en función a la porción de la longitud de arco total recorrida, $l'$. Su definición es similar a la de la parametrización temporal, reemplazando $t$ y $T$ por $l'$ y $L$, la longitud de arco recorrida y la longitud de arco total del gesto, respectivamente:
+
+\begin{equation}
+  \begin{split}
+    c : \reals \rightarrow \reals^3 \\
+    c(l')=(x,y,z)
+  \end{split}
+  \quad \quad
+  \begin{split}
+    l'=0 \dots L
+  \end{split}
+\end{equation} 
+
+De esta manera, $c(0)$ es la posición de comienzo del gesto, $c(L)$ la posición de fin, y $L=\int_0^L || \derivative{c(l')}{l'}|| dl'$
+
+Dado que la longitud de arco depende de la escala del gesto, y que como en el caso de la velocidad resulta complicado comparar gestos de distinta longitud (longitud de arco, en este caso). Por ende, podemos normalizar la longitud de arco de todos los gestos a $1$ introduciendo una variable $l=l'/L$, y redefiniendo el gesto como:
+
+\begin{equation}
+  \begin{split}
+    c : \reals \rightarrow \reals^3 \\
+    c(l)=(x,y,z)
+  \end{split}
+  \quad \quad
+  \begin{split}
+    l=0 \dots 1
+  \end{split}
+\end{equation} 
+
+De esta manera, la longitud correspondiente al fin de gesto, mitad de gesto, etc, es equivalente en los distintos gestos. En este caso es posible realizar dicha normalización ya que la longitud de arco es una función de las posiciones mismas y por ende la definición es equivalente. En el caso temporal, en cambio, dicha solución sería acorde siempre y cuando el gesto se realice a velocidad constante, lo cual es una restricción extra que no queremos agregar.
+ Al igual que en el caso temporal, podemos definir una equivalencia con invarianza a la escala y traslación (y a la velocidad, trivialmente, ya que no forma parte de esta definición de gesto). 
+
+\equivalencia{ m'}{
+ & \existsroti, \; \existsb, \; \existsa
+\\& c(l) = a (\roti c'(l))+b 
+}
+
+y nuevamente podemos agregar cierta tolerancia al error:
+
+\equivalencia{ m}{
+& \existsroti, \; \existsb, \; \existsa
+\\& c(l) \eequiv a (\roti c'(l))+b
+}
+
+Este es, entonces, el modelo de gestos a reconocer. Preferiremos está parametrización sobre la temporal ya que resulta más simple a la hora de definir las transformaciones del gesto para obtener características que sean invariantes a las propiedades ya mencionadas. De todas formas, vemos que son equivalentes ya que si $s(l)$ y $s'(l)$ denotan el tiempo en el cual los gestos $c$ y $c'$ tienen longitud de arco $l$, $c(s(l))$ y $c'(v(s'(l)))$ son equivalentes a $c(l)$ y $c'(l)$.
+
+

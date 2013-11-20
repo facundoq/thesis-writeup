@@ -1,0 +1,452 @@
+La idea esencial del algoritmo \textbf{Sequential Minimal Optimization} (SMO), en base a la formulación dual, es partir de la solución "nula" $\ai = 0, \; \rangeD$, e ir eligiendo pares de variables duales $(\ai,\aj), \; i \neq j $, optimizando $\lagd$ respecto de estas dos variables, hasta que la solución se haya mejorado al punto que las condiciones KKT se cumplan, con cierta tolerancia. Siendo $\av = (\alpha_1,\cdots,\alpha_D)$ y $kkt$ una función que calcula cuantas variables duales violan las KKT por más que un nivel $\epsilon$, el esquema del algoritmo es:
+
+
+\begin{algorithm}[H]
+\KwData{ \\Un conjunto de ejemplares $D \in \reals^d$\\
+Una clase $y_i \in \{-1,1\}$ asociada a cada $\xi \in D$ \\
+Una tolerancia a la violación de las KKT, $\epsilon$}
+\KwResult{Un hiperplano descripto implícitamente por las variables duales $\av \in \reals^{|D|}$ y un bias $b \in \reals$}
+$\av=(0,\cdots,0)$\;
+$b=0$\;
+\While{$kkt(\av,\epsilon) > 0 $}{ 
+  Elegir $\ai$ y $\aj$, $i \neq j$ \;
+  Optimizar $\lagd$ respecto de $\ai$ y $\aj$ \;
+}
+Retornar  $b$ y $\av$
+\caption{Esquema del algoritmo SMO} 
+\end{algorithm}
+
+Podemos considerar  esenciales del algoritmo de manera independiente:
+
+\begin{itemize}
+\item En una sección anterior, analizamos la relación que implican las KKT entre los valores de las variables duales ($\ai =0$ , $0 <\ai < c$ y $\ai = c$) con el error del clasificador ($\hyi$). Cuando dicha relación no se mantiene, detectamos una violación de las KKT. De esta forma la función $kkt$ puede contar cuantas variables violan las KKT. La verificación del cumplimiento de las KKT es suave, es decir, se permite cierto error $\epsilon$, típicamente $10^{-2}$ o $10^{-3}$. Verificaciones más estrictas tienen el efecto de retrasar demasiado la convergencia, y no son típicamente necesarias en un clasificador de patrones. 
+
+\item La elección de $\ai$ y $\aj$ se hace prefiriendo aquellas variables duales correspondientes a vectores de soporte que no cumplan las KKT. Primero se elige $\ai$, y luego $\aj$ siguiendo ciertas heurísticas.
+
+\item La optimización de $f$ respecto a $\ai$ y $\aj$ puede hacerse de forma analítica, ya que consideramos solo a $\ai$ y $\aj$ como variables y al resto de las variables duales como constantes.
+\end{itemize}
+
+ Nos enfocamos primero en la tercera parte del algoritmo, que constituye su esencia. Luego, se lidiará con los primeros dos items que contienen mucho en común, ya que ambos tienen la tarea de ver qué variables no cumplen las KKT y por ende se tratan juntos, mezclando la elección de los $\ai$ y $\aj$ con la condición de fin $kkt(\av,\epsilon) > 0 $. 
+
+\subsection[Optimización de $\lagd$]{Optimización de $\lagd$ con $\ai$ y $\aj$}
+
+
+
+Por simplicidad, y sin pérdida de generalidad, en esta sección asumimos que las variables duales elegidas para optimizar $\lagd$ son  $\au$ y $\ad$. Primero, llevaremos $\au$ a la forma $\au = \gamma + s \ad $ ($\gamma$ y $s$ constantes) tomando en cuenta que optimizamos solo respecto a $\au$ y $\ad$. Reescribiremos $\lagd$ en una expresión $G$ que solo dependa de $\ad$. De esa manera, podremos optimizar $G$ (y por ende, $\lagd$) solamente respecto a $\ad$, y después simplemente calcular el valor de la otra. Luego, derivamos $\derivative{G}{\ad}$ para encontrar el máximo. Finalmente, ajustamos el valor máximo considerando las restricciones relevantes sobre $\au$ y $\ad$ provenientes de las KKT, y calculamos $\au$.
+
+Las condiciones de optimalidad $\derivative{\lag}{b}=0$ implican $\sum_i \ai y_i=0$. Como las únicas variables son $\au$ y $\ad$, es mejor escribir:
+
+\ma{
+0=\sumtn \ayi + \au y_1 + \ad y_2 \\
+\au y_1 + \ad y_2 = -\sumtn \ayi = \gamma'
+}
+
+Donde $\gamma'=- -\sumtn \ayi $ es constante y $n=|D|$. Tomaremos como convención que $\au$ y $\ad$ son los valores \textit{nuevos} de las variables duales, y $\au^v$ y $\ad^v$ los \textit{viejos}; para los otros $\ai$ esta distinción no es necesaria ya que no se modifican.
+
+Definiendo $\gamma=y_1  \gamma'$ y $s=y_1 y_2$, podemos simplificar dicha ecuación:
+
+\ma{
+\au y_1 + \ad y_2 = \gamma' \\
+\au  + \ad y_2 y_1 = \gamma' y_1 \\
+\au  + \ad s = \gamma' y_1 \\
+\au  + \ad s = \gamma
+}
+
+De esta manera obtenemos la ecuación de una recta con ordenada $\gamma$ y pendiente $s=\pm 1$.  Como $\au  + \ad s = \gamma$, podemos expresar $\au$ en términos de $\ad$. Procederemos a simplificar la función $\lagd$ para expresarla en términos de $\au$. Pero antes, redefiniremos $\lagd$ sin cambiar su esencia para simplificar la derivación. La nueva expresión es:
+
+$\lagd= \sumi \ai - \oh \sumi \suml_j  (\ai y_i \aj y_j \kij )$
+
+Donde escalamos el segundo término con la constante $\frac{1}{2}$. Simplificando el nuevo $\lagd$, comenzamos separando los términos que dependen de $\au$ y $\ad$ del resto:
+
+\ma{
+\lagd &=  - \oh (\sumi \suml_j  \ai y_i \aj y_j \kij)  + \sumi \ai \\
+&= \oh( - \au^2 \kuu y_1^2 - \ad^2 \kdd y_2^2 - 2 \au \ad \kud y_1 y_2 \\
+&- 2 \au y_1 \sumtnj \kuj y_j \aj - 2\ad y_2 \sumtnj \kdj y_j \aj \\ 
+&- \sumtn \sumtnj \ai \aj \kij y_i y_j)\\
+&+ \sumtn \ai + \au + \ad\\
+&= -\oh \au^2 \kuu -\oh \ad^2 \kdd - \au \ad \kud s \\
+&- \au y_1 \sumtnj K_{1,j} y_j \aj - \ad y_2 \sumtnj \kdj y_j \aj \\
+&- \sumtn \sumtnj \ai \aj \kij y_i y_j\\
+&+ \sumtn \ai + \au + \ad
+}
+
+Reemplazando $(y_i)^2=1$ y $y_1 y_2 = s$,  y dado que el máximo de  $\lagd$ no depende de $\alpha_3,\cdots,\alpha_n$, podemos quitar los términos constantes y optimizar:
+
+\ma{
+&= -\oh  \au^2  \kuu -\oh  \ad^2  \kdd -  \au \ad s \kud \\
+&- \au y_1 \sumtnj \kuj y_j \aj - \ad y_2 \sumtnj \kdj y_j \aj\\
+& + \au + \ad 
+}
+
+
+Ahora, reescribimos con $\au=\gamma-s \ad$ para expresar solamente en términos de la variable $\ad$:
+
+\ma{
+&=- \oh (\auaddef)^2  \kuu - \oh  \ad^2  \kdd -  (\auaddef) \ad  s \kud \\
+&- (\auaddef) y_1 \sumtnj \kuj y_j \aj - \ad y_2 \sumtnj \kdj y_j \aj \\
+& + (\auaddef) + \ad 
+ }
+
+Sabiendo que:
+
+\ma{
+s^2 &= 1\\
+(\auaddef)^2 &= \gamma^2 - 2 \gamma s \ad +\ad^2 \\
+s y_1 &= y_2
+}
+
+Y definiendo $v_i = \sumtnj	 \aj y_j \kij$, llegamos a:
+
+\ma{
+&= -\oh \gamma^2  \kuu +  \gamma s \ad \kuu - \oh \ad^2 \kuu \\
+&- \oh  \ad^2  \kdd - \ad  \gamma s \kud +\ad^2 \kud\\
+&- \gamma y_1 v_1  + \ad y_2 v_1 - \ad y_2 v_2\\
+&+ \gamma + \ad (1-s) 
+}
+
+Descartando términos constantes $- \gamma^2  \kuu $, $- \gamma y_1 v_1$ y $\gamma$:
+
+
+\ma{
+&= \gamma s \ad \kuu - \oh \ad^2 \kuu \\
+&- \oh \ad^2  \kdd - \gamma s \ad \kud + \ad^2 \kud\\
+&+ \ad y_2 v_1 - \ad y_2 v_2) \\
+&+ \ad (1-s) \\
+}
+
+
+
+Sacando factor común $\ad^2$ y $\ad$:
+\ma{
+&= \ad^2 (-\oh \kuu +\kud -\oh \kdd) \\
+&  +  \ad (\gamma s \kuu  - \gamma s \kud +  y_2 v_1 - y_2 v_2 +(1-s)) \\ 
+}
+
+Sea $\eta = -\kuu +  2 \kud - \kdd$, y agrupando $y_2$:
+
+\ma{
+&= \oh \ad^2 \eta  +  \ad (\gamma s \kuu  - \gamma s \kud +  y_2 (v_1 -v_2) +1-s) \\ 
+}
+
+Para simplificar el coeficiente de $\ad$, consideramos que $\gamma = \auv+ s \adv$ y:
+
+\ma{
+v_i &= \sumtnj \aj y_j \kij = (\sumtnj \aj y_j \xj) \cdot \xi \\
+&= (\sumj \aj y_j \xj - \auv y_1 \xv_1 - \adv y_2 \xv_2 ) \cdot \xi \\
+&= (\wv - \auv y_1 \xv_1 - \adv y_2 \xv_2 ) \cdot \xi \\
+&= \wv \cdot \xi - \auv y_1 \kui - \adv y_2 \kdi \\
+&= (\wv \cdot \xi + b^v) - b^v - \auv y_1 \kui - \adv y_2 \kdi \\
+&= f_i^v - b^v - \auv y_1 \kui - \adv y_2 \kdi
+}
+
+Donde $f_i^v$ es la salida para $\xi$ bajo el $\wv^v$ correspondiente a los viejos parámetros. Entonces, el coeficiente de $\ad$ es:
+
+\ma{
+&\gamma s \kuu  - \gamma s \kud +  y_2 (v_1 v_2) +1-s \\
+&= (\auv+ s \adv) s \kuu  - (\auv+ s \adv) s \kud +  y_2 (v_1 - v_2) +1-s \\
+&= \auv s \kuu + \adv \kuu - \auv s \kud -  \adv \kud \\
+&+  y_2 (v_1 - v_2) +1-s \\
+&= \auv s \kuu + \adv \kuu - \auv s \kud -  \adv \kud \\
+&+ y_2 ( f_1^v - b^v - \auv y_1 \kuu - \adv y_2 \kud-
+f_2^v + b^v + \auv y_1 \kud + \adv y_2 \kdd) + 1 - s \\
+&=  \auv s \kuu + \adv \kuu - \auv s \kud -  \adv \kud \\
+&+ y_2 ( f_1^v - \auv y_1 \kuu - \adv y_2 \kud-
+f_2^v + \auv y_1 \kud + \adv y_2 \kdd) + 1 - s \\
+&=  \auv s \kuu + \adv \kuu - \auv s \kud -  \adv \kud \\
+&+ y_2 ( f_1^v - f_2^v) - \auv s \kuu - \adv \kud
+ + \auv s \kud + \adv  \kdd + 1 - s  \\
+&=  \auv s \kuu - \auv s \kud + \auv s \kud - \auv s \kuu\\
+&+ \adv \kuu  - \adv \kud - \adv \kud + \adv  \kdd\\
+&+ y_2 ( f_1^v - f_2^v) + 1 - s  \\
+&= \adv (\kuu -2 \kud + \kdd) \\
+&+ y_2 ( f_1^v - f_2^v) + 1 - s  \\
+&= y_2 ( f_1^v - f_2^v) + 1 - s  - \adv \eta \\
+&= y_2 ( f_1^v - f_2^v) + y_2 y_2 - y_1 y_2  - \adv \eta \\
+&=  y_2 ( f_1^v - f_2^v + y_2 - y_1)  - \adv \eta \\
+&=  y_2 ( (f_1^v - y_1 ) - (f_2^v - y_2))  - \adv \eta 
+}
+
+Siendo $E_i^v = f_i^v - y_i$ el error cometido por el clasificador con los valores viejos, el coeficiente de $\ad$ es entonces:
+\ma{
+&=y_2 ( E_1^v - E_2^v) - \adv \eta 
+}
+
+Entonces, la expresión a optimizar queda como:
+
+\ma{
+G &= \oh \eta \ad^2 +  (y_2 ( E_1^v - E_2^v) - \adv \eta ) \ad 
+}
+
+
+Hemos llegado a una expresión $G$ tal que $G = \lagd + Constante$, y por ende es equivalente para optimizar. Derivando respecto a $\ad$ para encontrar el óptimo:
+
+\ma{
+\derivative{G}{\ad} &= \eta \ad + y_2 ( E_1^v - E_2^v) - \adv \eta \\ 
+\derivativen{G}{\ad}{2} &= \eta
+}
+
+Entonces, si $\derivative{G}{\ad}=0$, tenemos:
+\newcommand{\adadvequation}[1]{\ad #1= \adv + \frac{ y_2 ( E_2^v - E_1^v )}{\eta} }
+
+\ma{
+0 &= \eta \ad + y_2 ( E_1^v - E_2^v) - \adv \eta\\
+\ad &= \frac{- y_2 ( E_1^v - E_2^v) + \adv \eta}{\eta}\\
+\ad &= \adv + \frac{- y_2 ( E_1^v - E_2^v)}{\eta} \\
+\ad &= \adv + \frac{ y_2 ( E_2^v - E_1^v )}{\eta} \\
+\adadvequation{&}
+}
+
+Armados con esta última ecuación, que relaciona de forma simple $\ad$ con $\adv$, procedemos ahora a buscar una regla de actualización de las variables $\ad$ y $\au$ para mejorar la solución actual.
+
+\subsection{Regla de actualización para $\au$ y $\ad$}
+
+Debemos tener en cuenta que las variables $\ad$ y $\au$ no pueden tomar cualquier valor posible ya que la nueva solución debe cumplir las condiciones KKT $0 \leq \ai \leq c$ y $\sum_i \ai y_i=0$. A continuación llamaremos $L$ y $H$ los límites inferiores y superiores que puede tomar la variable $\ad$, cuya existencia asumimos y que derivaremos en la sección siguiente. Estos valores límite asegurarían que la nueva solución cumpla las condiciones KKT si se elige un nuevo $\ad$ tal que $\ad \in [L,H]$ y se actualiza $\au$ con la regla $\au \ass \sigma - s \ad$,  
+
+
+Por otro lado, la ecuación $\ad= \adv + \frac{ y_2 ( E_2^v - E_1^v )}{\eta}$ sólo tiene sentido si $\eta \neq 0$. Podemos ver que $\eta \leq 0$, ya que:
+
+\ma{
+\eta &= -\kuu +2 \kud - \kdd = - (\kuu-2 \kud +\kdd) \\
+&= - (\xv_2-\xv_1)^T(\xv_2-\xv_1)= - \norm{\xv_2-\xv_1} \leq 0
+}
+
+Por ende debemos manejar dos casos $\eta < 0$ y $\eta =0$. 
+
+Si $\eta =0$, $G=y_2 ( E_1^v - E_2^v) \ad$ es una función lineal, y entonces su máximo se encuentra en alguno de los dos límites de los valores posibles para $\ad$, $L$ o $H$. La regla sería entonces:
+\newcommand{\updatezeta}{\argmax_{ \ad \in \literalset{L,H}} y_2 ( E_1^v - E_2^v) \ad}
+
+\ma{
+\ad \ass  \updatezeta
+}
+   
+Si $\eta <0$, tenemos una función cuadrática en $\ad$. Revisando la ecuación $\adadvequation{}$, el cambio necesario en $\ad$ sería:
+
+\ma{
+\Delta \ad = \frac{ y_2 ( E_2^v - E_1^v )}{\eta} 
+}
+
+Entonces, podemos utilizar la regla de actualización:: 
+
+\ma{\ad \ass \adv+ \Delta \ad}
+
+Esta regla es preliminar porque, nuevamente, falta analizar los valores límites de $\ad$. Asumiendo la existencia de las constantes $L$ y $H$, y dada una función $restrict_{L,H}(x) = min(max(L,x),H)$ que devuelve su argumento restringido al intervalo $[L,H]$, la regla quedaría como:
+
+\ma{\ad \ass \updateneta}
+
+En resumen, la regla final de actualización sería:
+\ma{
+\ad \ass \case{\updatezeta}{\updateneta}{\eta = 0}{\eta \leq 0}
+}
+
+
+A continuación derivamos expresiones para los límites $L$ y $H$, y tratamos el problema de la actualización de las variables $E_i$ al finalizar un paso de optimización exitoso. Luego continuamos con los dos puntos restantes: la elección de $\ai$ y $\aj$ y la condición de fín del algoritmo.
+
+\subsubsection{Límites para la variable dual $\ad$}
+
+Sabemos que cualquier nueva solución debe cumplir $0 \leq \ai \leq c$, pero los límites no son simplemente $L=0$ y $H=c$ ya que debe cumplirse  $\au+s \ad = \gamma$ también. Por ende, para elegir un nuevo valor de $\ad$ (y $\au$, en consecuencia) debemos mantener ambas relaciones. 
+
+Si $s=1$, tenemos $\auv+\adv=\gamma$. Entonces, si $\ad>\gamma$, como $0 \leq \au$, no se puede hacer negativo a $\au$ para restarle a $\ad$ y entonces no se puede cumplir la restricción.
+
+Por otro lado, si $\ad < \gamma-c$, entonces $\au$ debería ser mayor que $c$ para llegar a $\gamma$. Entonces:
+
+\ma{
+s=1 \tn 
+\begin{cases} 
+L = max(0,\gamma-c) \\
+H = min(c,\gamma) 
+\end{cases}
+}
+
+
+Si $s=-1$, tenemos $\au- \ad = \gamma$. Si $\gamma \geq 0$, entonces $-\ad \leq  \gamma-c$ ya que sino $\au - \ad$ no podría alcanzar a $\gamma$, debido a que $\au \leq c$. Entonces, $c-\gamma \leq \ad$. Si $\gamma <0$, entonces como sólo $\ad$ es negativo, $-\ad \leq \gamma$, o sea $\ad \geq -\gamma$. Por ende:
+
+\ma{
+s=-1 \tn 
+\begin{cases} 
+L = max(0,-\gamma) \\s
+H = min(c,c-\gamma) 
+\end{cases}
+}
+
+Definiendo funciones $pos$ y $neg$ tales que:
+
+\ma{
+pos(1)&=1 & neg(1)&=0 \\
+pos(-1)&=0 & neg(-1)&=1 
+}
+
+y teniendo en cuenta la relación de los segundos argumentos a $max$ y $min$ con el signo de $s$, podemos combinar ambos casos: 
+
+\ma{
+L= max(0,s(\gamma- pos(s) c )) \\
+H= min(c,s(\gamma+ neg(s) c ))
+}
+
+
+\subsubsection{Actualización luego de un paso de optimización exitoso}
+
+Cuando $\au$ y $\ad$ se cambian con $\Delta \au$ y $\Delta \ad$, debemos actualizar los $E_i$ y $b$ para que reflejen los nuevos valores de las variables duales.
+
+Sabemos que el error $E_i$ es:
+
+\ma{
+E_i = h(\xi)-y_i =\wv \cdot \xi + b - y_i = \sumj a_j \kij y_j + b - y_i
+}
+
+Podríamos calcular los $E_i$ de esta manera, pero no conocemos el nuevo valor de $b$. Pero si $0 < \au < c$ o $0 < \ad < c$, esto quiere decir que dichas variables, que llamaremos variables de soporte, corresponden a vectores de soporte y por ende $E_1=0$ o $E_2=0$, respectivamente. Entonces podemos despejar $b$ con alguna de las siguientes ecuaciones:
+
+\ma{
+b &= -\sumj a_j \kuj y_j + y_1 \; \text{o} \\
+b &= -\sumj a_j \kdj y_j + y_2 
+}
+
+Luego, calculamos $E_i$ para todas las variables duales, utilizando la fórmula anterior o el hecho de que:
+
+\ma{
+\Delta E_i = \Delta \au y_1 \kui + \Delta \ad y_1 \kdi + \Delta b
+}
+
+Si $\au=0$ o $\au=c$ y $\ad = 0$ o $\ad = c$, entonces no podemos calcular directamente $b$, y en la práctica se computa $b$ tanto con $\au$ y $\ad$, y se promedian los valores como una forma de aproximar el nuevo $b$. 
+
+\subsection{Elección de las variables $\ai$ y $\aj$ y pseudocódigo del algoritmo}
+
+A continuación, presentamos un pseudocódigo del algoritmo, con tres módulos principales: el procedimiento principal, la función $findAjAndOptimize(i)$ y la función $optimize(i,j)$. El primero selecciona la primer variable dual para optimizar y verifica la condición de fin del algoritmo. La segunda busca una segunda variable dual adecuada para optimizar. La tercera realiza la optimización en base a las variables seleccionadas por los procedimientos previos. Dejamos, en esta parte, de utilizar las variables $\au$ y $\ad$ como las seleccionadas, y generalizamos utilizando $\ai$ y $\aj$, respectivamente.
+
+\subsubsection{Procedimiento principal}
+
+La elección de las variables duales a optimizar se realiza escogiendo primero un $\ai$ apropiado, y luego un $\aj, \; j \neq i$ en base al $\ai$ seleccionado (siempre que sea posible). El procedimiento principal de SMO es:
+
+\begin{algorithm}[H]
+\KwData{ \\Un conjunto de ejemplares $D \in \reals^d$\\
+Una clase $y_i \in \{-1,1\}$ asociada a cada $\xi \in D$ \\
+Una tolerancia a la violación de las KKT, $\epsilon$}
+\KwResult{Un hiperplano descripto implícitamente por las variables duales $\av \in \reals^{|D|}$ y un bias $b \in \reals$}
+global $\av=(0,\cdots,0)$ \;
+global $b=0$ \;
+global $\ve{E}=(-y_1,\cdots,-y_n)$ \;
+changed = false \;
+examineAll = true \;
+\While{changed OR  examineAll}{ 
+  changed= false \;
+  \eIf{ examineAll}{
+  	randomOffset=random(1,$|D|$) \;
+  	\For{index=1 to $|D|$}{
+  		i= (index + randomOffset) \% $|D|$ \;
+  		changed = changed OR findAjAndOptimize(i) \;
+  	}
+  }{
+	  randomOffset=random(1,$|D|$) \;
+	  \For{i=1 to $|D|$}{
+	    i= (index + randomOffset) \% $|D|$ \;
+	    \If{$ 0 < \ai < c$}{
+	      changed = changed OR findAjAndOptimize(i) \;
+	    }  
+	  }
+  }
+  
+  examineAll = NOT (changed OR examineAll) \;
+}
+Retornar  $b$ y $\av$ \;
+\caption{Procedimiento principal del algoritmo SMO} 
+\end{algorithm}
+
+Donde la función $findAjAndOptimize(i)$ \textit{intenta} optimizar $G$ utilizando la variable $\ai$ y devuelve $true$ si pudo hacerlo o $false$ de lo contrario. 
+
+El algoritmo alterna entre intentar optimizar con las variables de soporte ($0<\ai<c$) e intentar con todas. La razón por la cual preferimos utilizar las variables de soporte es que son las que definen realmente el hiperplano, y por ende cambiarlas nos da una chance mayor de converger rápidamente. 
+
+Se alterna entre estas dos estrategias ya que llamar a $findAjAndOptimize(i)$ con una variable no implica que se optimizará la función respecto a esa variable (ver la definición de $findAjAndOptimize(i)$) y puede que no haya variables de soporte (por ejemplo, al principio cuando todas las variables duales son $0$).
+
+El recorrido por las variables duales se realiza comenzando desde una posición aleatoria del vector de variables duales $\av$ para evitar sesgar al algoritmo a favor de las primeras variables.
+
+La variable $changed$ se utiliza para detectar cuando no se pudo optimizar respecto a ninguna variable dual. Esto implica, según la definición de los otros módulos, que todas las variables cumplen las $kkt$ a un nivel $\epsilon$, condición de fin del algoritmo. 
+
+\subsubsection{Función $findAjAndOptimize(i)$}
+
+Dado el primer $\ai$, buscaremos un $\aj$ apropiado. Antes de eso, debemos verificar que $\ai$ no cumpla las KKT. Para ello, definimos $R_i=y_i E_i$, una variable fácil de computar, y reescribimos las KKT en términos $R_i$:
+
+\ma{
+\ai=0 &\tn 0 \leq R_i \\
+0< \ai<c  &\tn  R_i \simeq 0 \\
+\ai=c &\tn R_i \leq 0 
+}
+
+que, introduciendo además la tolerancia, se pueden escribir más sintéticamente como:
+
+\ma{
+(0<\ai \wedge R_i > 0) \vee (\ai<c \wedge R_i < 0) &\tn \text{$\ai$ no cumple las KKT}
+}
+
+
+
+Si $\ai$ viola dichas condiciones, procedemos a buscar el $\aj$ apropiado. Utilizaremos una heurística que intenta tres cosas en sucesión:
+\begin{itemize}
+\item Primero, tratamos de encontrar un $\aj$ que sea una variable de soporte, y tal que $|E_i-E_j|$ sea lo más grande posible. Dado que $\Delta \aj = y_j (E_2-E_1) / \eta$, esta heurística intenta que el cambio $\Delta \aj$ sea lo más grande posible para que el algoritmo converja rápidamente.
+\item Si el primer criterio falla, tratamos de encontrar un $\aj$ que sea una variable de soporte, por las mismas razones que antes.
+\item Por último, intentamos con cualquier $\aj$.
+\end{itemize}
+
+De nuevo, seleccionar un $\aj$ con estos criterio no significa que con el par $(\ai,\aj)$ se pueda optimizar $G$, ya que puede suceder que $L=H$ o que $\Delta \aj$ sea muy pequeño, con lo cual el algoritmo no hace realmente un paso de optimización. Por último, en esta búsqueda también comenzamos siempre desde una posición aleatoria del vector para no sesgar el algoritmo.
+
+En pseudocódigo:
+
+\begin{function}[H]
+\textbf{function} findAndOptimize(i) \;
+	$R_i = y_i * E_i$ \;
+	\If{($0<\ai$ OR $R_i > 0$) AND ( $\ai<c$ OR $R_i < 0$)}{
+		return false \;
+	}
+  \If{ $\exists \aj: \quad 0 <\aj < c $}{
+  	randomOffset=random(1,$|D|$) \;
+  	max=0 \;
+  	\For{index=1 to $|D|$}{
+  		j= (index + randomOffset) \% $|D|$ \;
+  		\If{ $0 < \aj<c$ AND $|E_i - E_j|>=max $}{
+  		 	max = $|E_i - E_j|$ \;
+  		 	jmax= j \;
+  		}
+  	}
+ 		\If{optimize(i,jmax)}{
+ 		  			return true\;
+ 		}
+  }
+  randomOffset=random(1,$|D|$) \;
+ 	\For{index=1 to $|D|$}{
+ 		j= (index + randomOffset) \% $|D|$ \;
+ 		\If{ $0 < \aj<c$ AND optimize(i,j)}{
+ 			return true\;
+ 		} 
+ 	}
+ 	randomOffset=random(1,$|D|$) \;
+ 	\For{index=1 to $|D|$}{
+ 		j= (index + randomOffset) \% $|D|$ \;
+ 		\If{ optimize(i,j)}{
+ 			return true\;
+ 		} 
+ 	}
+  return false;
+\caption{findAndOptimize(i) } 
+\end{function}
+
+
+\subsubsection{Función $optimize(i,j)$}
+
+Finalmente, llegamos al proceso de optimización de $\lagd$ respecto a $\ai$ y $\aj$. Primero, se calculan las variables relevantes: $H$, $L$, $s$, $\gamma$, $\eta$, $\Delta \aj$, $\Delta \ai$, luego el nuevo valor de las variables $\ai$ y $\aj$, y finalmente el nuevo valor de $b$ y los $E_i$. Antes de eso, se verifica que el cambio a realizar sea significativo, como ya mencionamos. Para ello, queremos que $\Delta \aj / \aj$ sea más grande que un valor pequeño $\epsilon'$, a definir.
+
+
+\begin{function}[H]
+\textbf{function} findAndOptimize(i) \;
+	Calcular $H$, $L$, $s$, $\gamma$, $\eta$, $\Delta \aj$, $\Delta \ai$ según las fórmulas dadas anteriormente \;
+	\If{($L \geq H$ OR $\Delta \aj / \aj < \epsilon$) }{
+		return false \;
+	}
+	Actualizar $\ai$ y $\aj$ \;
+	Actualizar $b$ \;
+	Actualizar $\ve{E}$ \;
+	return true \;
+\caption{optimize(i,j) } 
+\end{function}
+
+
+
+Los cálculos y actualizaciones e hacen en base a ls fórmulas de las secciones anteriores, y para un pseudocódigo más detallado se puede consultar el artículo original de Platt \cite{platt1998}.
+

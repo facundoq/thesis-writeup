@@ -1,0 +1,10 @@
+El objetivo de esta tesina es estudiar, desarrollar, analizar y comparar distintas técnicas de aprendizaje automático aplicables al reconocimiento automático de gestos dinámicos. Para ello, se definió un modelo de gestos a reconocer, se generó una base de datos de prueba con gestos, y se estudiaron e implementaron clasificadores basados en máquinas de vectores de soporte (SVM), redes neuronales feedfoward (FF) y redes neuronales competitivas (CPN), utilizando  representaciones locales y globales para caracterizar los gestos. 
+
+Los gestos a reconocer son movimientos de la mano, con invariancia a la velocidad, la rotación, la escala y la traslación. 
+
+La captura de la información referida a los gestos para generar la base de datos se realizó mediante el dispositivo Kinect y su SDK correspondiente, que reconoce las partes del cuerpo y determina sus posiciones en tiempo real. Los clasificadores se entrenaron con dichos datos para poder determinar si una secuencia de posiciones de la mano es un gesto. 
+
+Se implementó una librería de clasificadores con los métodos mencionados anteriormente, junto con las transformaciones para llevar una secuencia de posiciones a una representación adecuada para el reconocimiento \footnote{Todo el código utilizado en esta tesina se encuentra disponible en https://github.com/facundoq/gest}.
+
+Se realizaron experimentos con la base de datos  generada, compuesta de gestos que representan dígitos y letras, y con otra de gestos típicos de interacción, obteniendo resultados satisfactorios.
+

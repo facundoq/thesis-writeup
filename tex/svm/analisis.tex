@@ -1,0 +1,39 @@
+Cuando consideramos un ejemplar utilizado para encontrar un hiperplano $(\wv,b)$ en el proceso de optimización y analizamos su posición en el espacio, debe ocurrir alguno de estos tres casos:
+
+\begin{itemize}
+\item $\hyi =1$: El ejemplar está bien clasificado y es un vector de soporte 
+\item $\hyi >1$: El ejemplar está bien clasificado y no es un vector de soporte 
+\item $\hyi <1$: El ejemplar está mal clasificado
+\end{itemize}
+
+-\\
+3 gráficos, con los tres casos\\
+Los tres casos posibles en la posición de un ejemplar $\xvp$ luego de encontrar el hiperplano de máximo margen.
+
+Podemos determinar parcialmente estos casos en base a los valores de $\ai$ y las relaciones:
+
+\begin{align*}
+\aizc & \ai+\ui=c & \ai \ri = 0 & \ui \si =0 
+\end{align*}
+
+Dividiremos en tres casos, $\ai =0$ , $0 <\ai < c$ y $\ai = c$
+
+\ma{
+\ai &< c \tn \ui > 0 \tn \si =0 \tn 
+	\begin{cases}
+	\ai =0 \tn \riz \tn \text{Caso 1 o 2}\\
+	0 < \ai<c  \tn \ri =0 \tn \text{Caso 1}	
+	\end{cases} \\
+\ai &= c \tn \ui =0 \tn \siz \nd \ri =0 \tn \text{Caso 1 o 3}
+}
+
+Entonces, sabemos que:
+
+\begin{itemize}
+\item $\ai =0$ $\tn$ $\xi$ está bien clasificado o es un vector de soporte.
+\item $0 <\ai < c$ $\tn$ $\xi$ es un vector de soporte
+\item $\ai = c$ $\tn$ $\xi$ está mal clasificado o es un vector de soporte.
+\end{itemize}
+ 
+Entonces, con seguridad, si $0 <\aj < c$, podemos utilizar el hecho de que $h(\xj) y_j =1 $ para determinar el valor de $b$. 
+

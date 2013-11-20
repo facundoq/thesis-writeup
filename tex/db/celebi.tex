@@ -1,0 +1,26 @@
+
+Se realizaron experimentos con la base de datos \textbf{Celebi2013} \cite{celebi2013}, también generada utilizando el Kinect \footnote{Visitar http://datascience.sehir.edu.tr/visapp2013/ para más información.}. En el trabajo para el cual se creó dicha base de datos, desarrollaron una versión modificada de Dynamic Type Warping que considera el movimiento de las dos manos y el de otras seis partes del cuerpo: mano izquierda,  mano derecha, muñeca izquierda, muñeca derecha, codo izquierdo, codo derecho. El algoritmo DTW modificado determina automáticamente la relevancia de cada parte del cuerpo para un gesto determinado. Entonces, dicho reconocimiento tiene en cuenta varias partes del cuerpo, y no una sola. 
+
+La base datos consiste de 8 clases de gestos:
+
+
+\begin{itemize}
+\item Empuje hacia arriba con la mano izquierda
+\item Empuje hacia arriba con la mano derecha
+
+\item Empuje hacia abajo con la mano izquierda
+\item Empuje hacia abajo con la mano derecha
+
+\item Swipe hacia la derecha con la mano izquierda
+\item Swipe hacia la izquierda con la mano derecha
+
+\item Saludo con la mano izquierda
+\item Saludo con la mano derecha
+\end{itemize}
+
+\image{db/celebi}{0.5}{Gesto de subir la mano izquierda (arriba) y de saludo (abajo).}
+
+Para cada clase de gesto, los autores obtuvieron 8 ejemplares realizados por un usuario experto y 20 con usuarios inexpertos, dando un total de  224 ejemplares de gestos. Los autores reportan un porcentaje de clasificación del 60\% para el DTW clásico y de un 97.5\% para el DTW modificado que proponen. Los resultados para los experimentos con los clasificadores desarrollados en esta tesina se presentan en el siguiente capítulo.
+
+
+

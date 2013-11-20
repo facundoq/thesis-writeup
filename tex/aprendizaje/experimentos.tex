@@ -1,0 +1,21 @@
+
+Una vez que entrenamos un clasificador, típicamente queremos saber que tan bien clasifica a los ejemplares del dominio del problema a resolver. Para evaluar un clasificador generalmente se realizan los siguientes pasos:
+
+\begin{itemize}
+	\item Leer los datos, preprocesarlos, calcular las características correspondientes
+  \item Seleccionar los parámetros del clasificador \footnote{Por ejemplo, si el clasificador es un perceptrón, se debe seleccionar la tasa de aprendizaje.}
+  \item Entrenar un clasificador con los datos y algún algoritmo de entrenamiento
+  \item Probar el modelo generado obteniendo alguna medida de error (discutiremos varias formas de hacer esto en las siguientes secciones)
+\end{itemize}
+
+Llamaremos a esta serie de pasos un \textbf{experimento}. El resultado del experimento es el modelo entrenado y una medida de error del mismo respecto al dominio $\ddp$ y la asignación de etiquetas $y_i$.
+
+El objetivo del experimento es el último punto, la evaluación del desempeño del modelo. Para ello, pensaremos en el experimento como un experimento estadístico, que estimará el desempeño del modelo dado el dominio $\ddp$ y la asignación de etiquetas $y_i$.
+
+Un experimento tiene dos fuentes de aleatoreidad. La primera está dada por los datos utilizados para entrenar y probar el clasificador. Distintos datos darán distinto resultado, y por ende distinto error. En general, cuantos más datos para entrenar tengamos y mejor sea su calidad (representatividad de la variabilidad del dominio del problema, poco error de medición), mejor será el modelo generado, por las mismas razones que el ajuste a una curva en base a puntos de ejemplo de la misma es más preciso con más puntos. De la misma forma, cuanto más y mejores datos se utilicen para evaluar el error del clasificador mejor será la confianza de las pruebas, por las mismas razones que dichas cualidades son deseables en un test estadístico.
+
+La segunda se encuentra en la generación del clasificador. Muchos algoritmos de entrenamiento utilizan el enforme de de partir de un estado generado aleatoriamente, como suele sucede en el caso de las redes neuronales entrenadas con el algoritmo backpropagation, y luego mejorarla iterativamente durante el entrenamiento. La inicialización es aleatoria ya que del estado inicial depende el estado final, y por ende el error del clasificador. En otros casos, el estado inicial puede estar fijado de antemano, pero los pasos para llegar al estado final contienen elementos aleatorios como en los algoritmos genéticos o entrenamiento estocástico. 
+
+Si bien esta fuente de aleatoriedad puede eliminarse utilizando una semilla fija en la generación de números aleatorios, dicha estrategia impediría el análisis de una serie de experimentos con herramientas estadíticas, lo cual es necesario para obtener una medida de error del clasificador en promedio realizando varios experimentos y agregando los resultados. 
+
+Entonces, definimos el concepto de experimento para referirnos a esta serie de pasos en las siguientes secciones. El objetivo de un experimento es generar y evaluar un clasificador. En la evaluación, nos interesa esencialmente el comportamiento del clasificador entrenado en \textit{nuevos} ejemplares del problema, no vistos en la etapa de entrenamiento; este es el problema de la \textbf{generalización}.

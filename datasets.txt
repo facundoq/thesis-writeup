@@ -1,0 +1,10 @@
+﻿Kinect/joint data
+http://mll.sehir.edu.tr/visapp2013/
+http://research.microsoft.com/en-us/um/people/zliu/actionrecorsrc/
+http://research.microsoft.com/en-us/um/cambridge/projects/msrc12/
+http://gesturedb.korea.ac.kr/
+
+Handwritten digits:
+
+http://cis.jhu.edu/~sachin/digit/digit.html
+http://www.cedar.buffalo.edu/Databases/

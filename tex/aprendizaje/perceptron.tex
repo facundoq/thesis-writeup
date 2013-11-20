@@ -1,0 +1,191 @@
+
+A modo de ejemplo, consideremos un tipo de clasificador muy simple, el \textbf{Perceptrón} \cite{rosenblatt1958}. Si bien el mismo tiene origen en el campo particular de las redes neuronales dentro del aprendizaje automático, puede comprenderse solamente en términos geométricos. 
+
+El perceptrón es arquetípico porque es un tipo de clasificador que divide ejemplares de dos clases bajo la asunción de que existe un \textbf{hiperplano afín} en $\ddp$ que separa las dos clases; es decir, los ejemplares de una clase se encuentran de un lado del hiperplano, y viceversa. En este caso al tener solo dos clases consideraremos $y=\pm 1$; los positivos se encuentran del lado a donde apunta la normal al hiperplano, $\wv$, y los negativos del otro lado. \footnote{Los hiperplanos afines están dados por la ecuación $\hiper$, los hiperplanos lineales por $\hiperlineal$}
+
+-gráfico de un conjunto de datos y un hiperplano entre medio de los dos, se ve la normal apuntando al lado de los + y del otro lado los negativos \\
+Hiperplano separador de los ejemplos de dos clases.\\
+
+La idea esencial es, dado un conjunto de datos $D$ como el descripto más arriba, generar un hiperplano inicial de forma aleatoria y lo movemos (con algún criterio) hasta que que clasifique bien los ejemplares.
+
+-gráficos de un conjunto de datos y un hiperplano entre medio de los dos, cada vez mejor\\
+Mejora paulatina del hiperplano seleccionado como separador de las clases\\
+
+En particular, podemos generar un hiperplano inicial cuyos coeficientes sean ceros, o con valores aleatorios cercanos a cero. Luego, tomamos un ejemplar $\xi$ del conjunto $D$ y nos fijamos si se está clasificando bien. Si es así, no se hace nada y volvemos a elegir un ejemplar; sino, se rota el hiperplano ligeramente de manera de que el ejemplar $\xi$ quede más cerca del otro lado del hiperplano. Este procedimiento se repite hasta que todos los ejemplares se encuentran en el lado correcto del hiperplano, es decir, sean clasificados correctamente. En pseudocódigo:
+
+\begin{algorithm}[H]
+\KwData{ Un conjunto de ejemplares $D \in \reals^d$\\
+Una clase $y_i \in \{-1,1\}$ asociada a cada $\xi \in D$}
+\KwResult{Un hiperplano descripto por $\wv \in \reals^{d}$, un bias $b \in \reals$}
+$\wv=random(d+1)$\;
+$b=random(1)$\;
+\While{haya ejemplares que $\wv$ no clasifique correctamente}{ 
+  \For{$\xi \in D$}{
+      \If{$\wv$ y $b$ no clasifican bien a $\xi$}{
+        Modificar $\wv$ y $b$ de manera que $\xi$ esté más cerca del lado correcto \;
+      }  
+  }    
+}
+\caption{Esquema del algoritmo de aprendizaje del Perceptrón} 
+\end{algorithm}
+
+Formalizando las nociones de ``clasifica bien'' y ``modificar $\wv$ y $b$'', podemos definir un hiperplano en función de su vector normal $\wv \in \reals^{d}$ y su \textit{bias} $b$, con ecuación:
+
+\begin{equation}
+ h(\xv)= \wv \cdot \xv + b = 0
+ \end{equation}
+
+Entonces, para los ejemplares $\xv$ sobre el hiperplano, tenemos $h(\xv)=0$; para los ejemplares $\xv$ del lado del vector normal $h(\xv)>0$, y para los ejemplares del lado opuesto al vector normal, $h(\xv)<0$. Para clasificar un ejemplar $\xv$, utilizamos entonces la función:
+
+\begin{equation}
+ f(\xv)= \theta(\xv) \\
+\theta_t(x) = \caseotherwise{1}{-1}{x> 0}
+ \end{equation}
+
+Imagen: Funcion $\theta$
+caption: Función $\theta$, comúnmente llamada \textit{step function} o función escalón.
+
+
+Entonces, consideramos que no hay ejemplares clasificados incorrectamente si:
+
+\begin{equation}
+\forall \xi \in D, \quad f(\xi) = y_i
+\end{equation}
+
+Para la modificación, asumamos $b=0$ momentáneamente y veamos como podemos cambiar $\wv$ de manera de que dado un $\xv$ clasificado incorrectamente obtengamos un $\wv'$ que tenga menos error que $\wv$ con respecto a $\xv$. Para eso, notemos que si $b=0$ y $\alpha$ es el ``ángulo'' entre $\xv$ y $\wv$, tenemos $h(\xv)=\wv \cdot \xv= \norm{\wv} \norm{\xv} cos(\alpha)$. Entonces, el signo de $h$ es el signo de $cos(\alpha)$; por ende si $\alpha \in (-90,90) \rightarrow h>0$ y si $\theta \in (90,270) \rightarrow h < 0 $. 
+
+-\\
+Gráfico donde se ve un hiperplano, el vector normal $w$ y un circulo unitario alrededor de $w$ marcando las regiones donde cos es positivo y donde es negativo\\
+Regiones positivas y negativas para un hiperplano con $b=0$ en $\reals^2$
+
+
+
+Supongamos $\xvp$, con $y_{+}=1$. Si $h(\xvp)=-1$, el ejemplar está clasificado incorrectamente. 
+
+-\\
+Gráfico con un hiperplano con vector normal w, algunos datos bien clasificados, y un + del otro de la normal\\
+Un ejemplar $+$ mal clasificado.\\
+
+De forma tentativa, podemos definir una regla simple de modificación de $\wv$ para arreglar dicho error: asignar $\wv \leftarrow \xvp$. De esta manera, claramente $\wv \cdot \xvp>0 $ y entonces el patrón se clasifica correctamente \footnote{Asumiendo $\xv_0 \neq \mathbf{0}$}. 
+
+-\\
+Gráfico donde se cambió el hiperplano y ahora $x_o$ está sobre w, y bien clasificado. El resto de los patrones queda mal\\ El ejemplar es clasificado correctamente, pero se ha perdido la clasificación correcta de los otros ejemplares.\\
+
+Esta idea también funciona con $\xvm$ tal que $y_{-}=-1$ y $h(\xvm)=1$, donde el problema es que $\xvm$ está del mismo lado que la normal $\wv$.
+
+-\\
+Gráfico con un hiperplano con vector normal w, algunos datos bien clasificados, y un - del lado de la normal\\
+Un ejemplar $-$ mal clasificado.\\
+
+En este caso, asignamos $\wv \leftarrow -\xvm$ y así $\wv \cdot \xvp = \xvp \cdot \xvp <0$.
+
+-\\
+Gráfico donde se cambio el hiperplano y ahora $x_o$ está sobre $-w$, y bien clasificado. El resto de los patrones queda mal\\
+El ejemplar es clasificado correctamente, pero se ha perdido la clasificación correcta de los otros ejemplares.\\
+
+En cierto sentido, de esta forma se elige el $\wv$ óptimo para $\xv$ ya que se maximiza la distancia desde el ejemplar al hiperplano, pero el cambio es muy extremo ya que ahora no se clasifican bien algunos de los otros ejemplares. Si repetimos esto para todos los ejemplares, $\wv$ se irá adaptando a cada uno en particular, olvidando completamente los hiperplanos anteriores. Con esta regla de modificación solo conseguiremos clasificar correctamente a todos los ejemplares si por casualidad algún $\xv$ es un hiperplano adecuado para ello. Necesitamos una regla que sea más conservadora con los cambios, que modifique $\wv$ para que tenga menos error respecto a un $\xv$, pero que no descarte todo el progreso hecho en las iteraciones anteriores.
+
+El algoritmo tradicional para entrenar un Perceptrón propone corregir $\wv$, dado un ejemplar mal clasificado $\xv$ de clase $y$, con la regla:
+
+\begin{equation}
+\wv \leftarrow \caseotherwise{\wv+\xv}{\wv-\xv}{ y>0}
+\end{equation}
+
+La idea es que en vez de reemplazar $\wv$ directamente por $\xv$ o $-\xv$, $\wv$ se convierte de a poco en los vectores $\xv$. Podemos pensar en dicha conversión de la siguiente manera. Si $\wv_m= \wv + m \xvp$, a medida que $m \rightarrow \inf$, $\wv_m$ apunta cada vez más en la dirección de $\xvp$, ya que en comparación $ \norm{\wv} \ll \norm{m \xvp}$. Hablamos de dirección ya que $m \xvp$ representa el mismo hiperplano para todo $m in \reals$, por ende no importa que $\norm{\wv_m}$ también se haga arbitrariamente grande. Entonces, en cada iteración el algoritmo toma un ejemplar mal clasificado y ``acerca'' o ``aleja'' $\wv$ a dicho ejemplar.
+ 
+Podemos simplificar dicha regla de correción eliminando los casos ya que $y$ nos dice con su signo justamente si hay que sumar o restar $\xv$:
+
+\begin{equation}
+\wv \leftarrow \wv + y \xv
+\end{equation}
+
+También podemos controlar la magnitud de las correcciones introduciendo una \textbf{tasa de aprendizaje} $\alpha \in \reals$:
+
+\begin{equation}
+\wv \leftarrow \wv +  \alpha y \xv
+\end{equation}
+
+Si $\alpha \approx 0$, $\wv$ se corrige poco en cada iteración y el aprendizaje es muy lento pero seguro, ya que recorre el espacio de posibles $\wv$ minuciosamente. Si $\alpha \gg 0$, $\wv$ se corrige mucho en cada iteración y por ende el comportamiento del entrenamiento se vuelve más errático, similar al de la regla $\wv \leftarrow \xv$; se debe encontrar un punto medio para dicho valor, dependiente de cada problema a resolver.
+
+Por último, para esta derivación asumimos que $b=0$, o sea, que el hiperplano era lineal, pasando por el origen de coordenadas. Para volver a incluir el bias en nuestra formulación podemos utilizar el truco de ampliar los ejemplares de entrada de vectores en $\xv \in \reals^d$ a vectores en $\xv' \in \reals^{d+1}$, donde $\xv_0=1$, y lo mismo con $\wv \in \reals^n$ a  $\wv' \in \reals^n+1$. De esta manera el componente $\wv_0=b$, es decir, $\wv_0$ representa el bias $b$, y así podemos mantener la misma regla de actualización, ya que:
+
+\begin{equation}
+ h(\xv')= \wv' \cdot \xv' = (b,\wv) \cdot (1,\xv) = b + \wv \cdot \xv
+ \end{equation}
+
+El algoritmo final es, entonces:
+
+\begin{algorithm}[H]
+\KwData{Un conjunto de ejemplares $\xi \in D$, $D \subset \reals^d+1$, donde a cada $\xi \reals^d$ original se le agregó un 1 con el objetivo descripto en el párrafo anterior\\
+Una clase $y_i \in \{-1,1\}$ asociada a cada $\xi \in D$ \\
+Una tasa de aprendizaje $\alpha$. }
+\KwResult{Un hiperplano descripto por $\wv \in \reals^{d+1}$}
+$\wv \leftarrow random(d+1)$\;
+\While{ $\exists \xi \in D: f(\xi) \neq y_i$ }{ 
+  \For{$\xi \in D$}{
+      \If{$f(\xi) \neq y_i$ }{
+        $\wv \leftarrow \wv +  \alpha y_i \xi$ \;
+      }  
+  }    
+}
+\caption{Algoritmo de aprendizaje del Perceptrón} 
+\end{algorithm}
+
+Hay obviamente aquí una esperanza de que ejecutando este procedimiento, luego de una cantidad finita de pasos se encuentre un hiperplano que divida los dos conjuntos. Según el teorema de convergencia del perceptrón \cite{haykin1994}, esto está garantizado  \textit{siempre y cuando} $D$ sea \textbf{linealmente separable}. Un conjunto de ejemplares pertenecientes a dos clases es linealmente separable justamente cuando existe un hiperplano afín $\wv \cdot \xv +b=0$ que puede separar los ejemplares de una clase de la otra.
+
+-\\ gráfico con un conjunto linealmente separable y otro que no lo es\\
+a) Un conjunto linealmente separable b) Un conjunto que no es linealmente separable\\
+
+En la práctica, la gran mayoría de los dominios está compuesto por problemas cuyos conjuntos de datos ejemplares no son linealmente separables. En dichos casos encontramos dos alternativas: la primera, entrenar un clasificador que no utilice hiperplanos y emplee algún método de clasificación no lineal. El hiperplano es un tipo de \textbf{superficie de separación}, de tipo lineal o afín. Un clasificador no lineal emplea una superficie de separación no-lineal, que aumenta el poder de clasificación porque resulta más flexible que un hiperplano.
+
+-\\
+Gráfico con una curva que clasifica los ejemplares del gráfico anterior correctamente \\ 
+Un clasificador no lineal\\
+
+La segunda es aplicar una \textbf{transformación no-lineal} del espacio de entrada a otro espacio en donde los ejemplares si sean linealmente separables. En el problema clásico del \textbf{xor}, tenemos un conjunto de datos que no se puede separar con un Perceptrón. Si aplicamos una transformación no lineal, a un espacio de la misma dimensión, obtenemos nuevas representaciones de los ejemplares de entrada que si son linealmente separables. Esto es equivalente en muchos casos a tener una superficie no-lineal de separación, pero con la simpleza de trabajar con un hiperplanos en el clasificador.
+
+\image{aprendizaje/xor}{0.5}{as}
+
+a) El problema del xor: un clasificador no-lineal basado en esferas ubica 4, una en cada elemento del conjunto de entrenamiento, para clasificarlos. b) El problema del xor: Se transformó el espacio descripto en a) con la función $ \phi(\xv)= (e^{-( norm(\xv -(1,1))} , e^{-( norm(\xv-(0,0))} ) $ obteniendo un conjunto de datos linealmente separable.
+
+Por este motivo, el concepto de separabilidad lineal sigue siendo extremadamente útil en todo tipo de problemas.
+
+En este contexto, podemos ver el truco de embeber los ejemplares en $\realdp$ como una transformación no lineal. La función $h$ define un hiperplano afín en $\reald$, ya que la función $h$ es afín en $\reald$. El término $b$ es necesario para aumentar el poder clasificador del Perceptrón, ya que ciertos conjuntos de ejemplares no son separables con un hiperplano lineal pero si con uno afín, y si $b=0$, $h$ define un hiperplano afín. \footnote{Por conveniencia, cuando decimos que $h$ define un hiperplano, nos referimos al hiperplano $h(\xv)=0$.}.
+
+
+Pero en realidad $h$, definida con el truco de embeber los ejemplares en $\realdp$, representa un hiperplano lineal en $\realdp$, y esta transformación no-lineal en los ejemplares a un espacio de mayor dimensionalidad permite que sean separados. Es debido a esta simple equivalencia que hablamos de separabilidad \textit{lineal}, cuya definición involucra en realidad un hiperplano afín.
+
+
+Por último, en la gran mayoría de casos, resulta imposible clasificar perfectamente un conjunto de datos. Podemos proponer entonces un algoritmo modificado de entrenamiento del perceptron que no se detenga cuando todos los ejemplares de entrenamiento están clasificados correctamente, sino cuando el error cometido por el perceptrón es lo suficientemente bajo.
+
+\begin{algorithm}[H]
+\KwData{ \\
+Un conjunto de ejemplares $D \in \reals^d$\\
+Una clase $y_i \in \{-1,1\}$ asociada a cada $\xi \in D$ \\
+Una tasa de aprendizaje $\alpha$.\\ 
+Una tolerancia al error $\epsilon$\\
+Una función que mide el error de clasificación $\loss$}
+\KwResult{Un hiperplano descripto por $\wv \in \reals^{d+1}$}
+$\wv \leftarrow random(d+1)$\;
+$error \leftarrow \infty$\;
+\While{ $error > \epsilon $ }{ 
+  \For{$\xi \in D$}{
+      \If{$f(\xi) \neq y_i$ }{
+        $\wv \leftarrow \wv +  \alpha y_i \xi$ \;
+      }  
+  }
+  $error =  \rho(D,f)$\;    
+}
+\caption{Algoritmo de aprendizaje del Perceptrón con tolerancia al error.} 
+\end{algorithm}
+
+Como ejemplo de una función de error $\rho$, podemos calcular el porcentaje de patrones mal clasificados:
+
+\ma{
+\rho(D,f)=1- \frac{\suml_{\xi \in D} pos(f(\xi) y_i))} {|D|} \\
+pos(r)=\caseotherwise{1}{r>0}{0}
+}
+
+Como caso especial, si $\epsilon=0$, volvemos a exigir que el entrenamiento continue hasta que se separen perfectamente todos los ejemplares.
+
+Existen varias funciones $\loss$ que podemos definir para medir el error de clasificación, y presentaremos otras en las siguientes secciones. 

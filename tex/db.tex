@@ -1,0 +1,36 @@
+
+
+Para probar los algoritmos, se generó una base de datos con gestos de números y letras utilizando un dispositivo Kinect y su SDK. A continuación describimos el proceso de captura, el funcionamiento del Kinect, y las etapas preprocesamiento y generación de características para cada ejemplar de gesto. La captura se realizó con el SDK del Kinect, que provee las posiciones de las partes del cuerpo en tiempo real. El preprocesamiento constó en rotar los gestos a una dirección canónica, suavizarlos para quitar el posible \textit{jitter} en la captura, y volver a muestrear cada gesto para que todos tengan una cantidad de posiciones igual y constante, interpolando con los valores originales para llegar a los nuevos. Como características se utilizaron las direcciones entre posiciones consecutivas del gesto, normalizadas para que sean invariantes a la escala.
+
+También presentamos un experimento sobre una base de datos ajena, que llamaremos VizApp \cite{}, para la cual obtuvimos resultados comparables al algoritmo de Dynamic Time Warping presentado en el artículo original que dio lugar a la base de datos, si tenemos en cuenta ciertas diferencias importantes entre los experimentos. 
+
+\section{Base de datos de letras y números arábigos}
+
+Para probar los algoritmos, creamos la Letters and Numbers Hand Gesture Database (LNHGDB) \footnote{En https://sites.google.com/site/dbanhg/ se encuentra una versión anterior de la base de datos que sólo contiene gestos de números arábigos}, una pequeña DB con 20 ejemplares de cada uno de los 10 dígitos arábigos y las 26 letras del abecedario (sin contar la ñ), obteniendo un conjunto de 720 ejemplares en total, con 36 clases. Los gestos se realizaron con la mano izquierda, todos por la misma persona, con descansos de 5 minutos entre la grabación de cada gesto. Los datos de posición de la mano fueron capturados utilizando el SDK del Kinect. La grabación fue realizada a una tasa de captura de 28fps en promedio. 
+
+En la grabación de los distintos ejemplares de cada clase la orientación de la persona con respecto a la cámara fue la misma respecto a rotaciones del eje $x$ y $z$, pero hubo variedad en la rotación del eje $y$ (con origen en el centro de la persona). Además, los ejemplares fueron grabados comenzando desde diferentes posiciones tanto de la mano como del cuerpo, trazando cada gesto con diferentes tamaños y a distintas velocidades. La captura se realizó indicando el comienzo y fin de cada gesto mediante un pequeño pad numérico usb sostenido en la mano derecha de forma comfortable, para lo cual solo era necesario presionar la tecla \textit{Enter}.
+
+Cada ejemplar $\ve{s_i} \in S$, donde $S$ es nuestra base de datos de gestos, consiste en una secuencia:
+
+\ma{ 
+\ve{s_i}=\ve{s_i}[1], \ve{s_i}[2], \dots,\ve{s_i}[n_i], \quad \ve{s_i}[j] \in \reals^3, \quad j=1  \dots n_i}
+
+correspondiente a las posiciones de la mano en un espacio 3D, con etiquetas de tiempo:
+
+\ma{ T_i=t_1,\dots,t_{n_i}, \qquad t_j \in \reals, \qquad 0= t_1<t_2< \dots <t_{n_i}}
+
+y etiquetas de clase $c_i$. Cada muestra $\ve{s_i}$ puede tener una cantidad distinta de posiciones $n_i$, dependiendo de la velocidad con la cual se ejecutó el gesto, su tamaño y la tasa de captura.
+
+Entonces, cada gesto $\ve{s_i}$ es una versión discreta del modelo de gestos continuos descripto en un capítulo anterior.
+
+\section{El Kinect y su SDK}
+\texinput{db/kinect}
+
+\section{Preprocesamiento}
+\texinput{db/normalization}
+
+\section{Características}
+\texinput{db/features}
+
+\section{Base de datos de gestos Visapp2013 }
+\texinput{db/celebi}

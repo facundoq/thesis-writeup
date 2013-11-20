@@ -1,0 +1,92 @@
+
+A continuación describimos brevemente las condiciones KKT y el problema dual \cite{boyd2004}. Este apéndice no intenta se exhaustivo ni explicativo, sino de referencia para las secciones anteriores.
+
+
+Los problemas de optimización en general consisten de una función $f$ a optimizar, un objetivo (minimizar o maximizar) y un conjunto de restricciones sobre el dominio de $f$ que indican que soluciones son posibles.
+
+
+% imagen regiones posibles, y en las posibles color para indicar optimalidad
+
+Para cada familia de funciones y restricciones existen técnicas para encontrar soluciones, distintas en naturaleza. Algunas técnicas son de más generalidad que otras.
+
+Por ejemplo, los problemas de minimización (optimización, en general) de funciones $f \in \continuous^1$ y restricciones $h(x)=0, \; h \in \continuous^1$ pueden tratarse mediante el conocido método de los \textbf{multiplicadores de Lagrange}. En dicho método se busca minimizar la función $\lag(x,\lambda) = f(x) + \lambda h(x)$, ya que se sabe que si  $f(x^*)$ es el mínimo de $f$, entonces existe $\lambda^*$ tal que $\nabla \lag = \derivative{\lag}{x^*,\lambda^*} = (0,0)$. Esta es una condición necesaria, que limita el espacio de búsqueda y simplifica la tarea de encontrar un mínimo.
+
+Entonces, transformamos nuestro problema a otro que es, en cierto modo, equivalente, para simplificar la tarea original de optimización.
+
+
+\subsection{Condiciones KKT}
+
+El método de los multiplicadores de Lagrange no puede lidiar con problemas con restricciones de la forma $g(x) \leq 0$. Pero se puede generalizar con el concepto de  las condiciones KKT. Para un problema de optimización:
+
+\ma{
+& \minarg{\xv}
+& & f(\xv) \\
+& \text{sujeto a}
+& & h_i(\xv)=0, \; \range{i}{0}{n} \\
+&
+& & g_i(\xv) \leq 0, \; \range{i}{0}{m} 
+}
+
+Asumiendo que $f$, $g_i$ y $h_i$ son funciones suaves en un entorno del óptimo $\xv^*$, y que el subconjunto del dominio definido por las restricciones no es vacío, e introduciendo un Lagrangiano modificado que tome en cuenta ambos tipos de restricciones en la función de coste:
+
+\ma{
+\lag(\xv,\lv,\uv) = f(\xv) + \sum_{i=1}^{m} \lambda_i h_i(\xv) + \sum_{i=1}^{n} u_i g_i(\xv) 
+}
+
+Las condiciones KKT para un mínimo local $\xv^*$ del problema son que existan constantes $\range{\lv}{(\lambda_1}{\lambda_m)}$ y $\range{\uv}{(u_1}{u_n)}$, llamadas multiplicadores KKT, tales que:
+
+\begin{itemize}
+
+\item Estacionalidad\\
+\ma{
+\derivative{\lag}{\xv^*} &= 0 & \;  \derivative{\lag}{\lv} &= 0 & \; \derivative{\lag}{\uv} &= 0
+} 
+
+\item Feasibilidad Primal \\
+\ma{
+g_i(\xv^*) \leq 0, \; \rangein \\
+h_i(\xv^*) = 0, \; \rangeim
+} 
+
+\item Feasibilidad dual\\
+\ma{
+u_i \geq 0, \; \rangeim
+}
+
+\item Holgura complementaria\\
+\ma{
+ u_i g_i(\xv^*) = 0, \; \rangein
+} 
+
+\end{itemize}
+
+
+Para que dicho punto $\xv^*$ satisfaga las condiciones KKT, el problema deberá también satisfacer una condición de regularidad. Existen varias condiciones de regularidad posibles; la más simple para nuestro propósito es la condición de linealidad de las restricciones, o sea;
+
+\ma{
+g_i(\xv) \; \text{es afín}, \; \rangein \\
+h_i(\xv) \; \text{es afín}, \; \rangeim
+} 
+
+
+Estas son condiciones \textbf{necesarias} para cualquier óptimo del problema $\xv^*$. Son además suficientes si la función objetivo $f$ y las funciones de restricción $g_i$ son diferenciables y convexas y las funciones $h_i$ son afines.
+
+\subsection{Problema Dual}
+
+
+Para todo problema de optimización de estas características existe un \textbf{problema dual} asociado. El problema dual está relacionado al problema original, que llamamos primal, por las condiciones de optimalidad KKT. Tiene la siguiente forma:
+
+\ma{
+& \maxarg{\lv,\uv}
+& & q(\lv,\uv) \\
+& \text{sujeto a}
+& & \lambda_i \geq 0, \; \range{i}{0}{m} \\
+& \text{donde}
+& & q(\lv,\uv) = \minarg{\xv} f(\xv)+  \sum_{i=1}^{m} \lambda_i h_i(\xv) + \sum_{i=1}^{n} u_i g_i(\xv) = \minarg{\xv}  \lag   
+}
+
+Los multiplicadores KKT son las variables de este problema, llamadas \textbf{variables duales}. Los problemas primales y duales están además relacionados por el teorema de \textbf{dualidad débil}, consecuencia de las KKT. El mismo dice que para todo par de soluciones feasibles  $\xv$ y $(\lv,\uv)$ se cumple que $f(\xv) \geq q(\lv,\uv)$.
+
+En particular, para los dos óptimos $f(\xv^*)$ y $q(\lv^*,\uv^*)$ también se cumple, por ende $f(\xv^*) \geq q(\lv^*,\uv^*)$; a la cantidad $f(\xv^*) - q(\lv^*,\uv^*)$ se la conoce como \textbf{duality gap}, o hueco dual.
+
+Otra condición, \textbf{dualidad fuerte} relaciona aún más los problemas primales y duales; en este caso, en el óptimo $f(\xv^*) = q(\lv^*,\uv^*)$ y entonces no hay hueco dual. De esta forma, si podemos encontrar relaciones entre las variables del dual y del primal que nos permiten calcular las segundas en base a las primeras, podemos resolver el problema dual, y luego calcular el valor de la solución del primal ($\xv^*$) a partir de las variables duales ($u_i^*$ y $\lambda_i^*$). La condición más utilizada, que aplica al problema de programación cuadrática planteado por SVM, es que el problema sea convexo en sus restricciones y función objetivo, y que cumpla la condición de Slater \cite{boyd2004}.

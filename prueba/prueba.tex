@@ -1,0 +1,25 @@
+		\documentclass[a4paper, 12pt]{book}
+		\usepackage{amssymb}
+		\usepackage{amsmath}
+		
+		\begin{document}
+		% new command
+		\newcommand{\optal}[1][=]{a #1 b}
+		%trying it out
+		$\optal$ \\
+		$\optal[ \neq ]$ \\
+		% trying it out inside align
+		\begin{align}
+		\optal
+		\end{align}
+		%so far, so good
+		% trying it out with & as parameter
+		\begin{align}
+		\optal[{&=}]
+		\end{align}
+		
+		% Fails with "Argument of \\optal has an extra } \end{align}"
+		% Paragraph ended before \\optal was complete \end{align}
+		
+		
+		\end{document}

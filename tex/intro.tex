@@ -1,0 +1,37 @@
+
+La aparición de nuevas tecnologías en sensores y la popularidad de los dispositivos móbiles ha introducido nuevas posibilidades de interacción hombre-máquina, y a su vez han generado cambios radicales en los paradigmas de las interfaces de usuario. 
+
+La evolución de las interfaces de usuario ha visto el desarrollo desde las interfaces textuales controladas por teclado a la interfaz gráfica basada en el mouse, y actualmente el auge de las pantallas táctiles; queda por ver cuál será la próxima tecnología que cambie radicalmente los patrones de interacción máquina-hombre (HCI). Por ende, el uso de gestos como método de interacción, especialmente gestos con la mano, se ha convertido en una herramienta importante en el área de HCI en los años recientes, motivando la investigación en su modelado, análisis y reconocimiento.
+
+Definimos un gesto como ciertos movimientos o configuraciones del cuerpo cuyo objetivo es comunicar información o interactuar con el ambiente. 
+
+El reconocimiento de gestos es una tarea compleja que involucra diversos aspectos tales como el modelado y análisis del movimiento, reconocimiento de patrones, aprendizaje automático, y estudios psicolingüisticos. Tiene un gran rango de aplicaciones como:
+
+\begin{itemize}
+\item Ayudas para hipoacúsicos
+\item Facilitación la interacción con la computadora a niños pequeños
+\item Diseño de técnicas para reconocimiento forense
+\item Reconocimiento automático de lenguaje de señas
+\item Monitoreo y rehabilitación médica de pacientes
+\item Elaboración de perfiles psicológicos
+\item Navegación y manipulación de entornos virtuales
+\item Monitoreo del nivel de alerta en conductores de vehículos
+\item Entrenamiento de deportistas
+\item Elementos de control en video juegos
+\item Detección de sonrisas en cámaras fotográficas
+\end{itemize}
+
+
+El reconocimiento de gestos es más un término global que engloba diversos tipos de ``reconocimientos y ``gestos''. A grandes rasgos, podemos distinguir \textbf{gestos corporales} que se realizan con movimientos de todo el cuerpo, \textbf{gestos con las manos} como el típico \textit{swipe}, \textbf{gestos con los dedos y las manos} como el lenguaje de señas y \textbf{gestos faciales} como guiños y movimientos de los labios. Otra distinción importante es entre \textbf{gestos estáticos}, comúnmente llamados \textit{poses}, definidos por una configuración particular del cuerpo en el entorno, y \textbf{gestos dinámicos} compuestos por una serie de movimientos de ciertas partes del cuerpo. 
+
+El reconocimiento de gestos tiene una larga historia, aunque ha estado marcada por el avance de los sensores utilizados para captar los gestos \cite{myers1998}. En las primeras épocas, los gestos no eran verdaderos gestos corporales sino que se realizaban indirectamente con tabletas y lápices especiales que capturaban la escritura \cite{davis1964,ellis1969,Coleman1969}. interfaces sensibles al toque \cite{madeira1978} o se utilizaron también dispositivos para apuntar \cite{Bolt1980}. Finalmente en los años 80 se comenzaron a utilizar guantes con sensores de flexión y de posición y feedback táctil \cite{zimmerman1987} o joysticks \cite{pausch1992}. En los 90 se incrementó el trabajo en identificación de gestos y acciones de las personas en imágenes y video con métodos de visión por computadora \cite{tamura1988,yamato1992}, los cuales han desde entonces mejorado hasta tener hoy sistemas de \textbf{tracking} de personas y sus partes del cuerpo que son robustas y funcionan en tiempo real \cite{Shotton2011}. Los métodos de reconocimiento basados en visión no requieren en general elementos que deben llevarse en el cuerpo y por ende proveen una solución más natural y conveniente que otros sensores.  
+
+Aún con estos avances, mientras que el uso de touch-screens se ha convertido en un estándar para dispositivos móbiles en ciertas aplicaciones, y el reemplazo de los joysticks tradicionales por interfaces de voz y movimiento en las consolas de juegos se está consolidando, el retiro de la dupla teclado-mouse en las PCs de propósito general por interfaces más naturales basadas en gestos todavía se encuentra lejos de ser una realidad. 
+
+En este panorama, encontramos que las tecnologías con más promesa para proveer una interfaz hombre-máquina completa y eficiente son el reconocimiento de voz y de gestos en tiempo real \cite{Jain2011}. El reconocimiento del habla consta de la traducción automática de las palabras contenidas en una grabación de audio a texto. Si bien ambos han estado en activa investigación desde hace décadas \cite{madeira1978,myers1998,juang2005} y han encontrado nichos con gran aplicación, no alcanzan todavía un grado de desarrollo y sofisticación suficiente para emplearlos como sustituto completo de dicha dupla en el uso diario de la computadora. Estos métodos se diferencian, sin embargo, en que la investigación en reconocimiento de voz ha dispuesto de sensores adecuados desde un comienzo (micrófonos), y ha estado más enfocada en una tarea más o menos única, la de reconocer palabras en una grabación de audio. Por estos y otros motivos, se encuentra bastante cerca de dicho objetivo en términos de capacidad de reconocimiento \cite{anusuya2010,schalkwyk2010,hinton2012}, salvando las dificultades inherentes al reconocimiento de voz como el cansancio y sobresfuerzo de las cuerdas vocales en el uso diario, y aquellas particulares al dicha tecnología pero todavía no resueltas como la habilidad de reconocer de forma fiable varios interlocutores, hablando en distintos idiomas, en entornos no controlados \cite{Rashmi2013,heigold2013} o su aplicación de forma natural \cite{deng2004}. Otras dos tecnologías prometedoras, las interfaces musculares \cite{chowdhury2013} y cerebrales \cite{lebedev2006,millan2013}, han hecho grandes progresos pero todavía distan de proveer una alternativa usable.
+
+Es de especial interés notar los diversos problemas de salud asociados con el sobreuso de las computadoras con entornos e interfaces tradicionales, ampliamente documentados y considerados ``epidémicos'' \cite{kiesler1988,keller1998,epstein2012,saroshe2012,Coggon2013}. El reconocimiento de gestos, en conjunto con otras tecnologías, parece un enfoque prometedor para, además de proveer un interfaz más natural, prevenir nuevas ocurrencias de estos problemas y proveer medios de comunicación e interacción asistivos para los afectados \cite{chen2009,Perera2005}. 
+
+El reconocimiento automático de gestos puede realizarse de dos formas básicas; definiendo explícitamente cada tipo de gesto con algún lenguaje de especifícación, reconociéndolos si cumplen con dicha especificación, o grabando con algún tipo de sensor la realización de los gestos y entrenando un modelo que pueda luego reconocerlos por su similitud con los gestos grabados. Este es el enfoque de aprendizaje automático que tomamos en esta tesina.
+
+Esta tesina consta de dos partes. En la primera, de métodos, se establecen las bases teóricas de los algoritmos de aprendizaje automático, los modelos de clasificación  y el modelo de gestos utilizados (capítulos \ref{chap:aprendizaje}, \ref{chap:svm}, \ref{chap:neuronales} y \ref{chap:gestos}). En la segunda, se presenta una aplicación de dichos conceptos al reconocimiento de gestos con la mano en espacios 3D en el capítulo \ref{chap:db}, finalizando con una descripción de los experimentos realizados y sus resultados en el capítulo \ref{chap:resultados}.

@@ -1,0 +1,82 @@
+\documentclass[a4paper,draft, 12pt]{book}
+
+
+% TODO: 
+
+% experimentos
+% Templates
+% CNC
+
+% Redes neuronales:
+% COMPETITIVA
+
+%IMAGENES
+% Aprendizaje
+% SVM
+% Redes
+% gestos
+% db
+% resultados
+
+% Más experimentos y conclusiones
+
+
+% Aprendizaje:
+% definir \rho para VC aleatoria y estratificada, con k y aleatoria
+%Separar mejor la etapa de entrenamiento y la de ejecución o clasificación.
+% calcular exactamente cuantas particiones posibles hay en kfold cv
+
+
+\input{tex/general/packages}
+%\input{tex/general/biber}
+\input{tex/general/style}
+\raggedbottom
+\begin{document}
+
+\renewcommand{\chaptername}{}
+\input{tex/general/commands} 
+\texinput{general/titulo}
+
+\frontmatter
+\tableofcontents
+\mainmatter 
+ 
+\chapter{Resumen }
+\chapterinput{resumen}
+
+\chapter{Introducción}
+\chapterinput{intro}
+
+\part{Métodos}
+\label{part:metodos}
+
+\chapter{Aprendizaje Automático }
+\chapterinput{aprendizaje}
+
+  \chapter{Maquinas de Vectores de Soporte (SVM)}
+  \chapterinput{svm}
+  
+  \chapter{Redes neuronales }
+  \chapterinput{neuronales}
+
+\chapter{Gestos}
+\chapterinput{gestos}
+
+\part{Aplicaciones}
+\label{part:aplicaciones}
+
+\chapter{Bases de datos y características para el reconocimiento de gestos }
+\chaptermark{Bases de datos y características}
+\chapterinput{db}
+
+\chapter{Experimentos y resultados}
+\chapterinput{resultados}
+
+\backmatter
+
+%\printbibheading
+%\bibbysegment[heading = subbibliography]
+\bibliographystyle{unsrt}	
+\bibliography{bib/intro,bib/surveys,bib/kinect,bib/gestos,bib/simple,bib/small-training-set,bib/db,bib/ff,bib/neural,bib/gmm,bib/cpn,bib/psom,bib/aprendizaje,bib/svm}
+
+\end{document}

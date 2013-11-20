@@ -1,0 +1,14 @@
+
+Formalmente, podemos definir un clasificador como una función $\fdef{f}{\ddp}{C}$, donde $\ddp$ es el conjunto de todos los ejemplares del problema, y $C=\{1..N\} \cup \bot $ es el conjunto de etiquetas de las $N$ clases, donde $\bot$ representa la clase nula, es decir, que un ejemplar no pertenece a ninguna clase. Esta función particiona $\ddp$ en subconjuntos disjuntos $\ddp_i$ (posiblemente infinitos) llamados \textbf{regiones de Voronoi} con $\cup_{i} \ddp_i = \ddp$, y luego asigna a cada $\ddp_i$ una clase (o ninguna). 
+
+-\\(Gráfico voronoi)
+Regiones de voronoi en $\reals^2$ para un problema de clasificación con dominio $\ddp$ y 3 clases.\\
+
+Tal función $f$ generalmente se genera con un algoritmo de entrenamiento que en base a un conjunto de datos de entrenamiento para el clasificador y a ciertos conocimientos específicos del dominio del problema a resolver.
+
+(Grafico datos $\rightarrow$ regiones de voronoi)
+Un conjunto de datos con 3 clases y las regiones de voronoi estimadas por un clasificador entrenado con dichos datos.
+
+Entonces, de forma análoga a nuestro argumento general sobre aprendizaje automático, en esencia $f$ aproxima una función $f'$ que codifica las clases ``verdaderas'' de los ejemplares de $\ddp$.
+
+El clasificador $f$ se genera en base a un conjunto ordenado $D$ de $n$ ejemplares $\xi$,  $D= \{ \xi \in \ddp \} \quad i=1..n$, donde por ejemplo podríamos tener $\ddp=\reals^d$, como será en el caso de los gestos. A su vez, cada ejemplar pertenece a una de las $|C|$ clases conocidas, por ende asociado a cada $\xi$ hay una etiqueta $y_i \in C$ que nos indica a qué clase pertenece $\xi$. 	

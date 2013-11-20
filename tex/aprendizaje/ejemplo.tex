@@ -1,0 +1,25 @@
+
+Para ilustrar la idea del reconocimiento automático, veamos el caso del problema de reconocimiento de gestos. 
+
+Supongamos que en una base de datos (BD) tenemos un conjunto de 20 ejemplares de gestos realizados con la mano: 10 son gestos de saludo y 10 de un movimiento de golpe. Por ahora, no es importante qué información se guarda sobre cada ejemplar de gesto o cómo se representa, pero podría ser una secuencia de posiciones de la mano, por ejemplo. Queremos desarrollar un programa que pueda, dado un nuevo ejemplar de gesto, decidir si es de la primer clase (un saludo) o de la segunda (un golpe). 
+
+
+\newcommand{\tuple}[3]{ \{ \text{#1}\} \; #2 \; \{ \text{#1}\}}
+
+En un enfoque más tradicional, se ignoraría la BD de 20 ejemplares, y se intentaría definir matemáticamente los conceptos de gesto de saludo y de golpe. Podríamos describir un golpe como una trayectoría de la mano bastante recta, de una longitud mayor a cierto mínimo recorrida de forma rápida y con una parada abrupta. Luego, se escribiría un algoritmo que tome un nuevo ejemplar, realice un ajuste del mismo a los dos modelos, y decida si pertenece a alguno de los dos, o a ninguno. Esto corresponde más al enfoque de Hoare a la computación, donde podríamos definir una tupla hoariana $ \tuple{La entrada se ajusta al modelo de gesto golpe }{p}{El gesto es de golpe} $ o $\tuple{La entrada no se ajusta a ninguno de los modelos}{p}{El gesto no es un golpe ni un saludo}$. Si bien es cierto que estas tuplas son triviales, lo importante es notar que \textit{podemos} escribirlas porque dichos modelos se definieron explícitamente. 
+
+El enfoque de aprendizaje automático, en cambio, entrenaría un clasificador que aprenda las características particulares de los ejemplares de cada clase de gestos a partir de los ejemplares de la BD con algunas de las técnicas del próximo capítulo, por ejemplo. De esa manera, el modelo surge de  los datos, con lo cual prescinde de la necesidad de programación explícita de cada nuevo tipo de gestos. Luego probamos el clasificador con nuevos ejemplares de gestos; si el clasificador es bueno y tenemos suerte, todos los nuevos ejemplares de gestos se clasificarán correctamente; en la práctica, obtendremos un porcentaje de clasificación correcta que nos habla del error de nuestro clasificador.
+
+Entonces, en el enfoque de aprendizaje automática nos desligamos la noción hoariana de computación donde dado un programa un programa $\fdef{p}{Input}{Output}$ y una tupla $\tuple{Pre}{p}{Post}$, se cumple $\forall i \in Input, Pre(i) \rightarrow Post(p(i))$, y pensamos en $p$ como un programa que realiza una tarea con cierto grado de error, de forma similar a cómo se trabaja con métodos numéricos. De este modo, dado un conjunto de datos $D$ podemos definir como objetivo general de un algoritmo de entrenamiento o entrenamiento la resolución del problema de optimización:
+
+\begin{equation*}
+\begin{aligned}
+\underset{p}{\text{Minimizar}} & & error(p,D) 
+\end{aligned}
+\end{equation*}
+
+Las distintas maneras de generar el programa $p$ dan lugar a distintos algoritmos de aprendizaje automático. En general $p$ implementa de forma interna una \textbf{función de entrenamiento} $ \fdef{g}{\power{\ddp}}{f}$, donde $P$ es el dominio de los ejemplares del problema, $f$ es una \textbf{función de inferencia} tal que $\fdef{f}{\ddp}{Inferencia}$, donde Inferencia es un conjunto de inferencias posibles a realizar sobre $\ddp$, dependiente del problema a resolver. En nuestro ejemplo, $Inferencia=\{ Saludo, Golpe, Ninguno \}$. 
+
+Entonces, $f$ es una función de inferencia generada por $g$, una función de aprendizaje:  una vez ``entrenada'' $f$ con un conjunto de datos de $\ddp$, podemos utilizarla para hacer inferencia sobre el dominio $P$. Por otro lado, asumiendo la existencia de una ``verdadera'' función $\fdef{f'}{\ddp}{Inferencia}$ que asigna correctamente una inferencia para cada ejemplar del problema, podemos considerar $f$ aproxima o estima $f'$ en base a un conjunto de datos $D \subset \ddp$ y una función de aprendizaje $g$. Es usual llamar a $f$ el \textbf{modelo} del problema\footnote{En verdad, generalmente no se puede definir a $g$ como una verdadera función ya que el entrenamiento suele contener elementos aleatorios; es decir, un algoritmo de entrenamiento puede generar distintos clasificadores entrenados con el mismo conjunto de datos}.
+
+Es importante notar que $Inferencia$ puede ser cualquier cosa, no solamente un conjunto de clases o categorías a asignar a los ejemplares como en nuestro ejemplo; podríamos tener $\ddp=Inferencia=\reals$ si estamos intentando aproximar una función $\reals \rightarrow \reals$. A continuación detallamos varias de las aplicaciones de aprendizaje automático.

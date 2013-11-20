@@ -1,0 +1,17 @@
+﻿Letters+numbers( 720 gestures,20 per class)
+N=64
+CNC: 88.69 (1.54)
+FF+Rprop: 82.13 (4.61) (n=32)  (n=64 ->  74.51 (9.68))
+Template: 53.20 (0.05) 
+SVM+Linear: 87.04 (1.23)
+SVM+Gaussian: 87.53 (2.25)
+
+
+w/ Rotation:
+
+CNC: 86.99 (1.70)
+FF+Rprop: 
+FF+Backprop:
+Template:
+SVM+Linear:
+SVM+Gaussian: 

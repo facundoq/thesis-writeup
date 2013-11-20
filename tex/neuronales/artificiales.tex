@@ -1,0 +1,74 @@
+
+
+Una red neuronal artificial (ANN, por artificial neural network) puede representarse como un digrafo $G=(V,E)$, donde los vértices $v_i$ representan neuronas y las aristas $e_i$ representan conexiones entre ellas, o sea, una tripla axón, sinapsis y dendrita. Las conexiones son, en principio, arbitrarias, de acuerdo a la función que la red realiza.
+
+
+Como ya mencionamos, suelen considerarse tres conjuntos de neuronas en la red:
+
+\begin{itemize}
+\item \textbf{De entrada:} Reciben los estímulos iniciales y los propagan a la red. Corresponden a las neuronas sensoriales.
+\item \textbf{Ocultas:} Modelan la dinámica interna (no observable) de la red. Corresponden a las interneuronas.
+\item \textbf{De salida:} Modelan el resultado observable de la computación de la red. Corresponden a las neuronas motrices.
+\end{itemize}
+
+
+En la práctica, en las ANN se suele dar que dichos conjuntos son disjuntos, y que además las neuronas de entradas son aquellas cuyos vértices tienen grado de entrada $0$ (no son estimuladas por otras neuronas) y las de salida aquellas con grado de salida $0$ (no estimulan otras neuronas).
+
+
+El funcionamiento general de la red es el siguiente: las neuronas de entrada son estimuladas (asumimos que todas al mismo tiempo), lo cual causa que estas estimulen a sus adyacentes, y así sucesivamente, en algún orden determinado. Trataremos solo grafos acíclicos, en donde el orden de estimulación es el topológico \footnote{Si el grafo tiene ciclos, entonces debe definirse algún orden de evaluación que rompa la dependencia circular entre los estímulos de las neuronas del ciclo, lo cual en general involucra introducir alguna noción de tiempo en la red para determinar que neurona fue estimulada antes o después.}. 
+
+imagen: propagación de estímulos desde la neurona de más a la izquierda al resto de la red
+
+Cada neurona, al recibir los estímulos de otras neuronas, calcula alguna función en base a esos estímulos, y genera otro estímulo en respuesta que transmite a sus adyacentes. Los estímulos suelen representarse con números reales, y cada neurona $v_i$ calcula una función $\fdef{f_i}{\reals^{n_i}}{\reals}$, donde $n_i$ es el grado de entrada de la neurona $v_i$ \footnote{Generalizando, los estímulos podrían ser vectores de reales, enteros, cadenas de caracteres, imágenes, etc, dependiendo de la función de la red.}.
+
+
+imagen: red con funciones $f_i$ adentro de cada vértice
+
+
+
+En este sentido, la red representa una combinación de funciones $f_i$ en una función arbitraria $f$, donde si existen $d$ neuronas de entrada y $k$ de salida, $\fdef{f}{\reals^d}{\reals^k}$.
+
+Dado un problema, y un conjunto de datos de entrenamiento para ese problema, un algoritmo de entrenamiento de una red neuronal debe buscar la topología de la red, las funciones de cada neurona y los parámetros de dichas funciones que resuelvan esa instancia del problema con el menor error posible.
+
+En la práctica, muchos algoritmos de entrenamiento requieren que la topología y las funciones de cada neurona sean especificadas a priori y quedan fijas; se busca minimizar el error con respecto a los parámetros de las funciones solamente. La elección de la topología y las funciones se realizan con información del dominio del problema y el conjunto de datos de entrenamiento disponible. 
+
+
+\begin{algorithm}[H]
+\KwData{ \\Un conjunto de ejemplares $D \in \reals^d$, posiblemente con una clase una clase $y_i \in \{-1,1\}$ asociada a cada $\xi \in D$ \\
+Una topología de la red $G=(V,E)$, y una función $f_i$ asociada a cada $v_i$.\\
+Una tolerancia al error, $\epsilon$ \\
+Un valor inicial para el conjunto de parámetros de las funciones, $W$
+}
+\KwResult{Un valor final del conjunto de parámetros de las funciones, $W$}
+
+\While{$error(D,W) > \epsilon $}{ 
+	Modificar $W$ para que la red tenga menor error con los ejemplares de $D$ \;
+  }
+Retornar $W$
+\caption{Esquema general de un algoritmo de entrenamiento para una red neuronal} 
+\end{algorithm}
+
+
+\subsection{El perceptrón: una red neuronal simple}
+
+Podemos revisitar el perceptrón como una red neuronal para un problema de clasificación de $2$ clases, donde si $\xv \in \reals^d$, entonces tenemos $d$ neuronas de  entrada, todas conectadas a una neurona de salida que calcula la clase estimada del ejemplar. Llamaremos $o(\xv)$ a la salida de la red:
+
+IMAGEN: d neuronas de entrada, una de salida, $o(\xv)$
+
+Cada neurona de entrada representa un componente del ejemplar $\xv$, simulando la estimulación de un órgano sensorial con los valores del ejemplar.
+
+La neurona de salida utiliza la función:
+\ma{ f(\xv) &= \theta_t(h(\xv)) \quad \text{donde:} \\
+h(\xv) &= \wv \cdot \xv \\
+\theta_t (x) &= \caseotherwise{1}{-1}{x> 0}
+}
+
+ definida en el capítulo \ref{chap:aprendizaje}, representando un hiperplano separador como antes \footnote{Recordando el truco de embeber un ejemplar $\xv \in \reals^{d-1}$ en un espacio $\reals^{d}$, donde ahora $x_{d}=1$, se puede tomar en cuenta el bias.}.
+
+Dado un ejemplar $\xv$, se estimulan las neuronas ed entrada con los $d$ elementos del vector $\xv$. Luego, cada neurona de entrada estimula la neurona de salida con el mismo valor con que fue estimulada \footnote{Estamos asumiendo que cada neurona de entrada tiene como función la identidad $id(x)=x$, de modo que no se modifican los elementos del ejemplar, una convención habitual. Algunos modelos no incluyen estas neuronas de entrada en el modelo, y asumen que la neurona de salida es estimulada directamente por algún proceso externo.} y la de salida entonces calcula la función $o(\xv)$ que representa su estímulo de salida. Como esta neurona no transmite ese estímulo a otra neurona, asumimos que es la salida observable de la red.
+
+Para entrenar esta versión del perceptrón se puede utilizar el mismo algoritmo que el descripto en la sección \ref{aprendizaje:perceptron}, donde el vector normal $\wv$ corresponde al parámetro de la función de la neurona de salida de la red.
+
+El perceptrón es una red neuronal que tiene una capacidad de separación limitada a un hiperplano. A continuación, presentamos la arquitectura feedforward de red neuronal, una extensión natural del perceptrón. Se desarrollará el algoritmo tradicional de entrenamiento para esas redes, backpropagation, y una de sus variantes, de mayor efectividad, resilient backpropagation. Luego, trataremos las redes competitivas, también con su algoritmo de entrenamiento clásico, vector quantization.
+
+

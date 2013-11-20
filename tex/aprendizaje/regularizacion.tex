@@ -1,0 +1,45 @@
+Como mencionamos, hacer un experimento de clasificación involucra medir el error de $f$ con $D$. Para eso utilizamos alguna variante de validación cruzada que divida $D$ en $\cdp$ y $\cde$, y medimos el error en $\cdp$. Si dicho error es aceptable, consideramos que el clasificador es adecuado para la tarea. Ahora bien, si el error es muy grande puede ser que el clasificador no sea adecuado para la tarea, no se haya entrenado lo suficiente, o los datos sean insuficientes o de mala calidad. Si además medimos el error de $f$ en $\cde$ y también es alto, tenemos nuestra confirmación. Pero si $f$ se comporta bien con $\cde$, existe otra razón posible: el clasificador se adaptó tanto a los ejemplares de $\cde$ que no puede generalizar cuando se presentan los de $\cdp$.
+
+Entonces, si un clasificador se especializa tanto en el conjunto de ejemplares con el cual fue entrenado que pierde o no adquiere la capacidad de generalizar, es decir, clasificar correctamente ejemplares no vistos, ejemplares de $\ddp$ en general, decimos que sufre del fenómeno de \textbf{overfitting} (sobre-especialización) que se da cuando un clasificador tiene un nivel de error significativamente menor en el conjunto de entrenamiento que en nuevos ejemplares del problema. Esto puede suceder cuando un clasificador se entrena de forma excesiva o utilizando métodos que no se adaptan bien al dominio del problema.
+
+-\\gráfico error vs cantidad de entrenamiento.
+``curvas típicas de $\rho(D,f)$ en función de la cantidad de entrenamiento o fuerza del ajuste de $f$ con $D$.''\\
+
+En este sentido, vemos que si bien es importante entrenar un clasificador adecuadamente para minimizar el error en $\cde$, un entrenamiento que ajuste $f$ demasiado a $\cde$ traerá un error mayor en $\cdp$. 
+
+-\\gráfico de dos clases con un outlier y un hiperplano ``correcto'' que obvia al outlier $\rightarrow$ idem pero con un hiperplano overfitted $\rightarrow$ idem pero con un nuevo ejemplar, que lo clasifica bien el 1er hip pero no el 2do
+``a) Conjunto de datos $D$ con dos clases, donde hay un outlier. Si bien el hiperplano no clasifica correctamente todos los ejemplares, provee una separación coherente entre clases b) Mismo $D$, con un hiperplano sobre-entrenado: clasifica bien todas las instancias de $D$ pero no refleja la distribución real de las clases c) Comportamiento de ambos clasificadores ante un nuevo ejemplar.\\
+
+El problema del overfitting también se da, en ocasiones, cuando la potencia del clasificador utilizado excede la necesaria para resolver un problema dado. En este caso, puede que el mismo se ajuste tan bien a los datos de entrenamiento que no pueda lidiar con desviaciones mayores de los mismos, como se muestra en la figura.
+
+-\\gráfico de una distribución real de clases y un muestra $D$ superpuesta $\rightarrow$ gráfico de una región de voronoi por cada elemento de $D$ sin cubrir el espacio entre muestras.
+``a) Distribución real de ejemplares por clases b) Distribución aprendida por el clasificador. Las regiones de Voronoi se ajustan tan perfectamente a cada ejemplar que no consideran el espacio entre ejemplares de una clase como de la misma clase.''\\
+
+
+En ocasiones, cambiar a un modelo de clasificador que se adapte mejor al problema puede tener el mismo efecto.
+
+-\\gráfico de una distribución real de clases y un muestra $D$ superpuesta $\rightarrow$ gráfico con un hiperplano que separa las regiones de las clases, con algunos errores.
+``a) Distribución real de ejemplares por clases b) Distribución aprendida por un clasificador basado en hiperplanos.''\\
+
+
+En otras, lo que necesitamos es limitar el poder del clasificador. En la figura $X-1$, consideramos el poder computacional del clasificador como bastante alto ya que debe de alguna manera recordar o incluir en su modelo todos los ejemplares usados para el entrenamiento de forma bastante específica. Por eso, muchas veces es en realidad necesario limitar el poder clasificatorio con el que se genera $f$ para obtener mejores resultados. Por ejemplo, si limitamos la cantidad de ejemplares a recordar en el clasificador en el caso anterior, podríamos obtener una clasificación mejor como la de la figura $X$.
+
+-\\gráfico de una distribución real de clases y un muestra $D$ superpuesta $\rightarrow$ gráfico de varias regiones de voronoi por cada elemento de $D$ cubriendo el espacio entre muestras.
+``a) Distribución real de ejemplares por clases b) Distribución aprendida por el clasificador con capacidad limitada. Hay menos regiones de Voronoi que en el caso anterior, pero son más grandes y menos específicas, obteniendo una clasificación más acertada.\\
+
+En este caso podemos considerar la cantidad de ejemplares en los que basarse como un parámetro del modelo. Este método de limitación del poder computacional se conoce como un esquema de \textbf{regularización}, y sigue el principio de la navaja de Occam: si dos modelos explican un fenómeno, por principio se elige el más simple de los dos. Dicho esquema puede estar basado en la selección de algún parámetro del entrenamiento del clasificador, o puede estar incluido directamente mediante un proceso de entrenamiento que penalice clasificadores complejos en preferencia de los más simples. En el último caso, podemos decir que nuestro esquema general para entrenar un clasificador podría ser:
+
+\begin{equation*}
+\begin{aligned}
+\underset{f=g(\cde)}{\text{Minimizar}} & & error(f,\cde) + complejidad(f) 
+\end{aligned}
+\end{equation*}
+
+Donde $complejidad$ es alguna función que mide la complejidad de $f$, dependiente del algoritmo de entrenamiento del clasificador utilizado.
+
+
+-\\gráfico error vs complejidad del modelo.
+``curvas típicas de $\rho(D,f)$ en función de la complejidad del modelo $f$''\\
+
+
+

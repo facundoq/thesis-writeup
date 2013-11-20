@@ -1,0 +1,46 @@
+﻿Todo problema de optimización tiene un problema dual asociado. El problema dual es distinto al problema original o primal, pero están relacionados por la \textbf{condiciones de optimalidad de Karush-Kuhn-Tucker} (KKT). 
+
+El problema dual se obtiene a partir del primal introduciendo variables duales $\ai$ por cada restricción del problema primal. Si las restricciones son desigualdades, como en nuestro, caso, las mismas deben ser $\ai \geq 0$. Las restricciones se incorporan o codifican en la función de coste, de manera que cuando más se optimizan los términos relacionados a las restricciones en la función, más se cumplen las restricciones. Luego, se eliminan las variables primales (y con ello las restricciones del primal), obteniendo la formulación dual en términos de solamente las variables duales $\ai$. 
+
+En el caso de nuestro problema, como la función a optimizar es convexa y las restricciones son afines (y representan un conjunto convexo), cumple las condiciones de dualidad fuerte, lo cual mediante las condiciones KKT implica que el valor del mínimo del primal es igual al máximo del dual, y entonces si encontramos una relación entre las variables del primal y las del dual que nos permitan calcular las primeras a partir de las segundas, podemos resolver el dual y luego obtener dos valores de las variables del primal.
+
+Esta será nuestra estrategia para obtener el dual del problema del máximo margen. 
+
+Entonces, introducimos variables duales $\ai$, $\range{i}{1}{|D|}$, una por cada restricción $r_i \geq 0$ y otro conjunto de variables duales $\ui$, $\range{i}{1}{|D|}$, una por cada restricción $\si \geq 0$, para plantear el comúnmente llamado \textbf{lagrangiano} $\lag$:
+
+\newcommand{\costes}{c \sum_\limits_i \si}
+\newcommand{\costeu}{\sum_\limits_i \si \ui}
+\newcommand{\costea}{c \sum_\limits_i \ai r_i }
+\newcommand{\costew}{\wv \cdot \wv^t}
+
+\begin{equation}
+\lag(\wv,b,\si,\ai,\ui) = \costew + \costes + \costea + \costeu 
+\end{equation}
+
+Ahora bien, para eliminar las variables primales utilizaremos las condiciones de KKT. Para nuestro problema, dicen que:
+
+$r_i = f(\xi) yi +\si - 1$
+
+\begin{itemize}
+
+\item Estacionalidad\\
+\begin{align}
+\derivative{\lag}{\wv} &= 0 & \;  \derivative{\lag}{b} &= 0 & \; \derivative{\lag}{\si} &= 0
+\end{align} 
+
+\item Feasibilidad Primal\\
+\begin{align}
+r_i &\geq 0 & \; \si \geq 0
+\end{align} 
+
+\item Feasibilidad dual\\
+\begin{align}
+\ai &\geq 0 & \; \ui &\geq 0
+\end{align} 
+
+\item Holgura complementaria\\
+\begin{align}
+\ai r_i &= 0  & \; \ui \si &= 0
+\end{align} 
+
+\end{itemize}

@@ -1,0 +1,33 @@
+En las próximas secciones, se hablará sobre la regla de Hebb y los modelos de interacción lateral, para luego desarrollar el modelo de Grossberg con el fin de realizar clasificación no supervisada. 
+
+\subsubsection{Regla de Hebb}
+
+Como se ha señalado, en el aprendizaje automático no existe ninguna información externa que indique si se están produciendo resultado erróneos ni que ayude a decidir cómo y en que grado modificar las conexiones. Entonces, ¿con qué criterio se van a modificar las conexiones? ¿cómo se guiará el aprendizaje de la red?.
+
+Donald Hebb realizó una primera aproximación a la resolución de estas preguntas en 1949 \cite{hebb2002}, cuando enunció una regla que lleva su nombre y ha pasado a ser un aporte fundamental en las redes neuronales artificiales. La regla se refería a cierto comportamiento biológico que Hebb observó en las células cerebrales:
+
+\begin{quotation}
+Cuando un axón de una célula A está lo suficientemente cerca para excitar una célula B, y se toma parte repetidamente en el proceso de disparo de dicha célula, se produce algún tipo de cambio metabólico en una de las células (o en las dos), que hace que la eficacia con la que A disparaba a B se vea incrementada.
+\end{quotation}
+
+Como se ve, esta regla de modificación sináptica no depende de ningún factor externo; simplemente hace que las células vayan incluyéndose unas a otras, es decir, que se autoconfigure la permeabilidad sináptica de la red, a partir de las reacciones a los estímulos recibidos. Esta regla ha demostrado ser de alta eficacia en las Redes de Neuronas Artificiales, y es casi universalmente utilizada en los sistemas no supervisados.
+
+Esta regla, tal y como fue enunciada por Hebb, deja abierto un gran abanico de posibilidades, de manera que cuando una regla de aprendizaje en una red tiene forma análoga a lo expresado por Hebb se dice que posee una regla de aprendizaje Hebbiano. Es decir, no existe una única implementación de la regla de Hebb, sino un aspecto hebbiano en las reglas de aprendizaje. 
+
+Todas estas podrían ser ejemplos de reglas de aprendizaje hebbiano:
+\ma{
+\Delta W_{i,j} &= a_i \cdot a_j & 
+\Delta W_{i,j} &= \Delta a_i \cdot \Delta a_j \\
+\Delta W_{i,j} &= \alpha ( a_i - \hat{a_i}) \cdot(a_j- \hat{a_j})&  
+\Delta W_{i,j} &= \alpha a_i W_{i,j} a_j \\ 
+}
+
+donde:
+
+\ma{
+ W_{i,j} &= \text{Peso de la conexión entre las células $i$ y $j$.} \\
+ a_i &= \text{Valor de activación de la neurona $i$.}\\
+ \hat{a_i} &= \text{Media de los valores de activación.}\\
+ \sigma &= \text{Función de umbral, tipo sigmoidal.} \\
+ \alpha &= \text{Tasa de aprendizaje.}
+}

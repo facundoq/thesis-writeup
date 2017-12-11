@@ -1,12 +1,14 @@
 En la formulación tradicional de SVM, el modelo resultante se describe en términos de $\wv$ y $b$, los coeficientes del hiperplano. Es un modelo lineal, y para problemas de naturaleza no-lineal requeriría una transformación del espacio de entrada que reduzca el problema al caso lineal o casi lineal. SVM ofrece la posibilidad de incorporar dicha transformación de forma implícita, dándole capacidades de clasificación no lineales. 
 
-La idea es simple. Generalmente usamos una función no-lineal $\fdef{\tra}{\ddp}{\ddp'}$ para transformar ejemplares $\xv$ del dominio $\ddp$ a ejemplares $\xv'$ de $\ddp'$ en donde son linealmente separables o más separables, y $\ddp'$ es un espacio con un producto interno $\innerg$ definido. Si planteamos y derivamos la formulación de SVM con $\txi$ en lugar de $\xi$, obtendríamos con las condiciones KKT que:
+\image{kernel}{0.4}{ A la izquierda, un dominio donde el separador \textit{natural} de las clases es una superficie no lineal. Transformando el dominio mediante una función $\tra$ se puede llevar el problema a un espacio $\ddp'$ (derecha) en donde los ejemplares sean linealmente separables, y clasificarlos utilizando el hiperplano determinado por el modelo SVM.}
+
+La idea es simple. Generalmente se utiliza una función no-lineal $\fdef{\tra}{\ddp}{\ddp'}$ para transformar ejemplares $\xv$ del dominio $\ddp$ a ejemplares $\xv'$ de $\ddp'$ en donde son linealmente separables o más separables, y $\ddp'$ es un espacio con un producto interno $\innerg$ definido. Si se plantea y deriva la formulación de SVM con $\txi$ en lugar de $\xi$, se obtiene, con las condiciones KKT, que:
 
 \ma{
 \wv = \suml \txi \ai y_i
 }
 
-Y para clasificar un nuevo ejemplar, calculamos:
+Y para clasificar un nuevo ejemplar, se calcula:
 
 \ma{
 h'(\xv) &= \wv \cdot \txi +b  \\
@@ -14,7 +16,10 @@ h'(\xv) &= \wv \cdot \txi +b  \\
 &= (\suml ( \txi \cdot \tra({\xv}) \ai y_i)  + b
 }
 
-Esto no difiere de la metodología genérica que funciona con cualquier método de clasificación. Pero en ocasiones, la transformación $\tra$ puede ser difícil de calcular explícitamente de forma eficiente, o hasta imposible si el $\ddp'$ es un espacio de dimensionalidad infinita. 
+Esto no difiere de la metodología genérica que funciona con cualquier método de clasificación. Como con las transformaciones no lineales antes de aplicar el perceptrón del capítulo \ref{chap:aprendizaje}, la característica $\tra$ busca complejizar las regiones de voronoi simples que genera el modelo lineal de un hiperplano separador.
+
+
+El problema es que, en ocasiones, la transformación $\tra$ puede ser difícil de calcular explícitamente de forma eficiente, o hasta imposible si el $\ddp'$ es un espacio de dimensionalidad infinita. 
 
 El truco del kernel consiste en evitar calcular explícitamente dicha transformación. Para ello, se expresa el modelo de clasificación en base a un operador de similitud $K(\xv_1,\xv_2)$ entre ejemplares $\xv_1$ y $\xv_2$ de $\ddp$. El operador de similitud se suele llamar \textbf{kernel},  y en un mismo paso realiza la transformación $\tra$ de los ejemplares y aplica el producto interno del espacio $\ddp'$ al par de ejemplares transformados. Entonces $\fdef{K}{(\ddp,\ddp)}{\field}$, donde $\field$ es un campo, generalmente $\reals$. Dada una transformación $\tra$ y un producto interno $\innerg$:
 
@@ -23,7 +28,7 @@ K(\xv_1,\xv_2)
 = \inner{\tra(\xv_1)}{\tra(\xv_2)} 
 }
 
-Como ejemplo, tomemos un kernel polinomial $
+Como ejemplo, tomando un kernel polinomial $
 K(\xv_1,\xv_2)=(\xv_1 \cdot \xv_2+b)^d $ con $d=2$ y bias $b=0$, y $\ddp = \reals^2$:
 
 \ma{
@@ -51,17 +56,26 @@ Comprobando que son iguales:
 &= ( \xv \cdot \xv')^2
 }
 
-Como podemos ver, la imágen de $\tra$ es $\reals^3$, un espacio de distinta dimensión que el de origen y la transformación es no lineal, pero aplicando luego el producto interno se convierte en un simple producto punto entre los vectores elevado al cuadrado. 
+La imagen de $\tra$ es $\reals^3$, un espacio de distinta dimensión que el de origen y la transformación es no lineal, pero aplicando luego el producto interno se convierte en un simple producto punto entre los vectores elevado al cuadrado. 
 
-En la etapa de optimización, se utilizan repetidamente los valores $K(\xi,\xj)$ para ejemplares de entrenamiento $\xi$ y $\xi$, por lo cual es usual construir una matriz simétrica $\mathbf{K}$ donde se precalcula el kernel entre todos los pares de ejemplares tal que $K_{i,j}= K(\xi,\xj)$.
+En la etapa de optimización, se utilizan repetidamente los valores $K(\xi,\xj)$ para ejemplares de entrenamiento $\xi$ y $\xi$, por lo cual es usual construir una matriz simétrica $\ve{\kappa}$ donde se precalcula el kernel entre todos los pares de ejemplares tal que $\kappa_{\xi,\xj}=\kij= K(\xi,\xj)$. Entonces, la función a optimizar en la formulación dual queda como:
 
 
-Ciertos kernels son, hasta cierto grado, de propósito general, como el \textbf{kernel gaussiano} $e^{- \frac{|| \xv_1-\xv_2||}{2 \sigma^2} }$, el \textbf{kernel polinomial} $(\xv_1 \cdot \xv_2^t + b)^d$, y con el \textbf{kernel lineal} $\xv_1 \cdot \xv_2$ recuperamos la formulación original de SVM. Distintos dominios pueden requerir distintos kernels que representen medidas de similitud apropiadas. Si los ejemplares son strings, por ejemplo, podemos utilizar un kernel basado en la \textbf{distancia de Damerau-Levenshtein} \cite{Damerau1964}, o uno basado en \textbf{Dynamic Time Warping} (DTW) \cite{Bellman1959} para secuencias temporales.
+\ec{
+\lagd= \sumi \ai - \oh \sumi \suml_j  (\ai y_i \aj y_j \kij )
+}
+
+Si se resuelve el problema dual con un $K$ no lineal que aproveche el truco del kernel, es generalmente preferible no calcular $\wv$ explícitamente, ya que de esa manera al clasificar un nuevo ejemplar con la función $f(\xv)=\wv \cdot \tra(\xv) +b$, se necesita calcular también a $\tra(\xv)$ explícitamente (lo cual puede ser imposible, como con espacios de características de dimensión infinita) . En ese caso, es mejor guardar los valores de los vectores de soporte, así como de las variables duales y el bias $b$, y calcular $f$ como $f(\xv)=   \sumi \ai \yi \kn{\xi}{\xv} +b$.
+
+
+\subsubsection{Condición de Mercer}
+
+Ciertos kernels son, hasta cierto grado, de propósito general, como el \textbf{kernel gaussiano} $e^{- \frac{|| \xv_1-\xv_2||}{2 \sigma^2} }$, el \textbf{kernel polinomial} $(\xv_1 \cdot \xv_2^t + b)^d$, y con el \textbf{kernel lineal} $\xv_1 \cdot \xv_2$ se recupera la formulación original de SVM. Distintos dominios pueden requerir distintos kernels que representen medidas de similitud apropiadas. Si los ejemplares son strings, por ejemplo, se puede utilizar un kernel basado en la \textbf{distancia de Damerau-Levenshtein} \cite{Damerau1964}, o uno basado en \textbf{Dynamic Time Warping} (DTW) \cite{Bellman1959} para secuencias temporales.
 
 
 En general, el diseño de un kernel no parte de definir una transformación a otro dominio y un producto interno en ese dominio, sino de una medida de similitud $K$ como la distancia de Damerau-Levenshtein. En tales casos, es necesario saber si dicha función $K$ corresponde a una transformación a y un producto interno en algún dominio $\ddp'$. 
 
-En términos formales, queremos saber si $\exists (\tra, \innerg)$ tal que $K(\xv_1,\xv_2) = \inner{\tra(\xv_1)}{\tra(\xv_2)}$ . Una condición necesaria y suficiente es la \textbf{condición de Mercer}:
+En términos formales, se necesita saber si $\exists (\tra, \innerg)$ tal que $K(\xv_1,\xv_2) = \inner{\tra(\xv_1)}{\tra(\xv_2)}$ . Una condición necesaria y suficiente es la \textbf{condición de Mercer}:
 
 \ma{
 \forall g \in \mathbf{L}^2 &: \int_y \int_x K(x,y) g(x) g(y) dx dy
@@ -69,10 +83,10 @@ En términos formales, queremos saber si $\exists (\tra, \innerg)$ tal que $K(\x
 
 Donde $\mathbf{L}^2$ es el espacio de las funciones $g$ cuadráticamente integrables, o sea, $\int_{-\infty}^{\infty} |g(x)|^2 dx < \infty$. 
 
- Los kernels $K$ para los cuales esto se cumple se llaman \textbf{kernels de Mercer}.  Dichos kernels aseguran que pueden interpretarse en términos de una transformación y un producto interno. En cierto sentido estos son los \textit{verdaderos} kernels, y aquellas funciones $K$ que no cumplen la condición de mercer serían simplemente medidas de similitud, pero en la práctica se suele hablar de kernels para toda función que representa una medida de similitud y kernels de Mercer para aquellos que cumplen la condición. Los kernels gaussianos, lineales y polinomiales son kernels de Mercer.
+Los kernels $K$ para los cuales esto se cumple se llaman \textbf{kernels de Mercer}.  Dichos kernels aseguran que pueden interpretarse en términos de una transformación y un producto interno. En cierto sentido estos son los \textit{verdaderos} kernels, y aquellas funciones $K$ que no cumplen la condición de mercer serían simplemente medidas de similitud, pero en la práctica se suele hablar de kernels para toda función que representa una medida de similitud y kernels de Mercer para aquellos que cumplen la condición. Los kernels gaussianos, lineales y polinomiales son kernels de Mercer.
  
- En la práctica, la condición de Mercer puede ser difícil de comprobar, ya que involucra toda $g \in \mathbf{L}^2$, y por ende se han desarrollado condiciones más simples sobre la matriz $\mathbf{K}$ generada a partir de un conjunto de ejemplares para el uso particular de SVM y otros métodos. Una de ellas es que la matriz $\mathbf{K}$ sea simétrica y positiva semi-definida, o sea $K(\xi,\xj)=K_{i,j}=K_{j,i} \geq 0$ para ejemplares $\xi,\xj$ de cualquier conjunto de datos $D$, lo cual es mucho más fácil de verificar.
+En la práctica, la condición de Mercer puede ser difícil de comprobar, ya que involucra toda $g \in \mathbf{L}^2$, y por ende se han desarrollado condiciones más simples sobre la matriz $\ve{\kappa}$ generada a partir de un conjunto de ejemplares para el uso particular de SVM y otros métodos. Una de ellas es que la matriz $\ve{\kappa}$ sea simétrica y positiva semi-definida, o sea $\kappa(\xi,\xj)=\kij=\kji \geq 0$ para ejemplares $\xi,\xj$ de cualquier conjunto de datos $D$, lo cual es mucho más fácil de verificar.
 
-Es de notar que ciertas funciones de similitud $K$, aún sin cumplir la condición de Mercer, pueden ser utilizadas si la matriz $\mathbf{K}$ para un conjunto asociada cumple las condiciones de Mercer simplificadas, y  $K$ cumple las propiedades de un producto interno. Sin esta condición, el hessiano de $K$ puede no ser positivo semi-definido y entonces el problema de optimización pierde su convexidad y puede tener más de una solución óptima.
+Es de notar que ciertas funciones de similitud $K$, aún sin cumplir la condición de Mercer, pueden ser utilizadas si la matriz $\ve{\kappa}$ para un conjunto asociada cumple las condiciones de Mercer simplificadas, y  $K$ cumple las propiedades de un producto interno. Sin esta condición, el hessiano de $K$ puede no ser positivo semi-definido y entonces el problema de optimización pierde su convexidad y puede tener más de una solución óptima.
   
   

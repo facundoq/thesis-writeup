@@ -1,0 +1,20 @@
+\input{../base}
+\tikzdrawing{
+
+
+
+\newcommand{\clase}[2]{\draw [ultra thick, fill={rgb:black,1;white,20}] (#1,#2) circle [radius=2.8];
+}
+
+\pgfplotsset{ticks=none}
+
+\squareaxis{
+\addgaussianscatter[10]{diamond*}{-3}{-3}
+\addgaussianscatter[10]{diamond*}{3}{-3}
+\addgaussianscatter[10]{diamond*}{0}{3}
+
+}{6}
+
+
+}
+}

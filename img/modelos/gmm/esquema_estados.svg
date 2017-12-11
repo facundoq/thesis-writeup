@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg3366"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="esquema_estados.svg">
+  <defs
+     id="defs3368">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend"
+       style="overflow:visible">
+      <path
+         id="path4127"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 z"
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="260.33743"
+     inkscape:cy="834.91557"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1211"
+     inkscape:window-height="745"
+     inkscape:window-x="146"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3371">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g3566"
+       transform="translate(234.28572,12)"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418">
+      <path
+         d="m 65.714285,187.36218 c 0,1.97245 -1.598983,3.57143 -3.571428,3.57143 -1.972446,0 -3.571429,-1.59898 -3.571429,-3.57143 0,-1.97244 1.598983,-3.57143 3.571429,-3.57143 1.972445,0 3.571428,1.59899 3.571428,3.57143 z"
+         sodipodi:ry="3.5714285"
+         sodipodi:rx="3.5714285"
+         sodipodi:cy="187.36218"
+         sodipodi:cx="62.142857"
+         id="path3858-23-8"
+         style="fill:none;stroke:#000000;stroke-width:1.39999998;stroke-miterlimit:14.19999981;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(1.2593334,0,0,1.2593334,86.027139,-23.886509)" />
+      <path
+         d="m 65.714285,187.36218 c 0,1.97245 -1.598983,3.57143 -3.571428,3.57143 -1.972446,0 -3.571429,-1.59898 -3.571429,-3.57143 0,-1.97244 1.598983,-3.57143 3.571429,-3.57143 1.972445,0 3.571428,1.59899 3.571428,3.57143 z"
+         sodipodi:ry="3.5714285"
+         sodipodi:rx="3.5714285"
+         sodipodi:cy="187.36218"
+         sodipodi:cx="62.142857"
+         id="path3858-23-2-5"
+         style="fill:none;stroke:#000000;stroke-width:1.39999998;stroke-miterlimit:14.19999981;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(1.2593334,0,0,1.2593334,86.027139,-7.8750035)" />
+      <path
+         d="m 65.714285,187.36218 c 0,1.97245 -1.598983,3.57143 -3.571428,3.57143 -1.972446,0 -3.571429,-1.59898 -3.571429,-3.57143 0,-1.97244 1.598983,-3.57143 3.571429,-3.57143 1.972445,0 3.571428,1.59899 3.571428,3.57143 z"
+         sodipodi:ry="3.5714285"
+         sodipodi:rx="3.5714285"
+         sodipodi:cy="187.36218"
+         sodipodi:cx="62.142857"
+         id="path3858-23-21-7"
+         style="fill:none;stroke:#000000;stroke-width:1.39999998;stroke-miterlimit:14.19999981;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(1.2593334,0,0,1.2593334,86.027139,8.1365393)" />
+    </g>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3641"
+       style="font-size:32px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(21.428571,17.181404)"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418"><flowRegion
+         id="flowRegion3643"><rect
+           id="rect3645"
+           width="71.428574"
+           height="82.85714"
+           x="8.5714283"
+           y="92.362183"
+           style="font-size:32px" /></flowRegion><flowPara
+         id="flowPara3647"
+         style="font-size:;baseline-shift:baseline">C<flowSpan
+   style="font-size:65%;baseline-shift:sub"
+   id="flowSpan3847">1</flowSpan></flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3641-2"
+       style="font-size:32px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(25.97433,233.12584)"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418"><flowRegion
+         id="flowRegion3643-1"><rect
+           id="rect3645-6"
+           width="71.428574"
+           height="82.85714"
+           x="8.5714283"
+           y="92.362183"
+           style="font-size:32px" /></flowRegion><flowPara
+         id="flowPara3647-8">C<flowSpan
+   style="font-size:65%;baseline-shift:sub"
+   id="flowSpan3681">n</flowSpan></flowPara></flowRoot>    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.15740739;stroke:none"
+       id="path4796-8"
+       sodipodi:cx="74.285713"
+       sodipodi:cy="95.219322"
+       sodipodi:rx="42.857143"
+       sodipodi:ry="42.857143"
+       d="m 117.14286,95.219322 a 42.857143,42.857143 0 1 1 -85.71429,0 42.857143,42.857143 0 1 1 85.71429,0 z"
+       transform="matrix(1.15,0,0,1.15,85.857151,18.344097)"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4809-6"
+       style="font-size:16px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="matrix(2.0785515,0,0,2.0785515,13.129497,-30.851184)"
+       inkscape:transform-center-x="31.178269"
+       inkscape:transform-center-y="66.810585"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418"><flowRegion
+         id="flowRegion4811-0"><rect
+           id="rect4813-2"
+           width="86.699814"
+           height="83.791901"
+           x="33.335033"
+           y="66.4533"
+           style="font-size:16px;text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara3144">S<flowSpan
+   style="font-size:65.00091553%;baseline-shift:sub"
+   id="flowSpan3577">1,1</flowSpan></flowPara></flowRoot>    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.81699997;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3579"
+       width="614.28571"
+       height="127.14286"
+       x="91.428581"
+       y="64.274887"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418" />
+    <g
+       id="g3566-4"
+       transform="matrix(0,1,-1,0,628.07647,-36.439396)"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418">
+      <path
+         d="m 65.714285,187.36218 c 0,1.97245 -1.598983,3.57143 -3.571428,3.57143 -1.972446,0 -3.571429,-1.59898 -3.571429,-3.57143 0,-1.97244 1.598983,-3.57143 3.571429,-3.57143 1.972445,0 3.571428,1.59899 3.571428,3.57143 z"
+         sodipodi:ry="3.5714285"
+         sodipodi:rx="3.5714285"
+         sodipodi:cy="187.36218"
+         sodipodi:cx="62.142857"
+         id="path3858-23-8-2"
+         style="fill:none;stroke:#000000;stroke-width:1.39999998;stroke-miterlimit:14.19999981;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(1.2593334,0,0,1.2593334,86.027139,-23.886509)" />
+      <path
+         d="m 65.714285,187.36218 c 0,1.97245 -1.598983,3.57143 -3.571428,3.57143 -1.972446,0 -3.571429,-1.59898 -3.571429,-3.57143 0,-1.97244 1.598983,-3.57143 3.571429,-3.57143 1.972445,0 3.571428,1.59899 3.571428,3.57143 z"
+         sodipodi:ry="3.5714285"
+         sodipodi:rx="3.5714285"
+         sodipodi:cy="187.36218"
+         sodipodi:cx="62.142857"
+         id="path3858-23-2-5-3"
+         style="fill:none;stroke:#000000;stroke-width:1.39999998;stroke-miterlimit:14.19999981;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(1.2593334,0,0,1.2593334,86.027139,-7.8750035)" />
+      <path
+         d="m 65.714285,187.36218 c 0,1.97245 -1.598983,3.57143 -3.571428,3.57143 -1.972446,0 -3.571429,-1.59898 -3.571429,-3.57143 0,-1.97244 1.598983,-3.57143 3.571429,-3.57143 1.972445,0 3.571428,1.59899 3.571428,3.57143 z"
+         sodipodi:ry="3.5714285"
+         sodipodi:rx="3.5714285"
+         sodipodi:cy="187.36218"
+         sodipodi:cx="62.142857"
+         id="path3858-23-21-7-2"
+         style="fill:none;stroke:#000000;stroke-width:1.39999998;stroke-miterlimit:14.19999981;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(1.2593334,0,0,1.2593334,86.027139,8.1365393)" />
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.15740739;stroke:none"
+       id="path4796-8-7"
+       sodipodi:cx="74.285713"
+       sodipodi:cy="95.219322"
+       sodipodi:rx="42.857143"
+       sodipodi:ry="42.857143"
+       d="m 117.14286,95.219322 a 42.857143,42.857143 0 1 1 -85.71429,0 42.857143,42.857143 0 1 1 85.71429,0 z"
+       transform="matrix(1.15,0,0,1.15,543.14287,18.344097)"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4809-6-6"
+       style="font-size:16px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="matrix(2.0785515,0,0,2.0785515,470.41522,-30.851184)"
+       inkscape:transform-center-x="31.178269"
+       inkscape:transform-center-y="66.810585"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418"><flowRegion
+         id="flowRegion4811-0-1"><rect
+           id="rect4813-2-8"
+           width="86.699814"
+           height="83.791901"
+           x="33.335033"
+           y="66.4533"
+           style="font-size:16px;text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara3144-9">S<flowSpan
+   style="font-size:65.00091553%;baseline-shift:sub"
+   id="flowSpan3577-2">1,C</flowSpan></flowPara></flowRoot>    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.15740739;stroke:none"
+       id="path4796-8-79"
+       sodipodi:cx="74.285713"
+       sodipodi:cy="95.219322"
+       sodipodi:rx="42.857143"
+       sodipodi:ry="42.857143"
+       d="m 117.14286,95.219322 a 42.857143,42.857143 0 1 1 -85.71429,0 42.857143,42.857143 0 1 1 85.71429,0 z"
+       transform="matrix(1.15,0,0,1.15,85.857144,248.57425)"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4809-6-5"
+       style="font-size:16px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="matrix(2.0785515,0,0,2.0785515,13.129494,199.37897)"
+       inkscape:transform-center-x="31.178269"
+       inkscape:transform-center-y="66.810585"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418"><flowRegion
+         id="flowRegion4811-0-4"><rect
+           id="rect4813-2-3"
+           width="86.699814"
+           height="83.791901"
+           x="33.335033"
+           y="66.4533"
+           style="font-size:16px;text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara3144-1">S<flowSpan
+   id="flowSpan3849"
+   style="font-size:10.39666325px;baseline-shift:sub">n</flowSpan><flowSpan
+   style="font-size:65.00091553%;baseline-shift:sub"
+   id="flowSpan3577-23">,1</flowSpan></flowPara></flowRoot>    <rect
+       style="fill:none;stroke:#000000;stroke-width:0.81699997;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="rect3579-3"
+       width="614.28571"
+       height="127.14286"
+       x="91.428581"
+       y="294.50504"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418" />
+    <g
+       id="g3566-4-4"
+       transform="matrix(0,1,-1,0,628.07646,193.79076)"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418">
+      <path
+         d="m 65.714285,187.36218 c 0,1.97245 -1.598983,3.57143 -3.571428,3.57143 -1.972446,0 -3.571429,-1.59898 -3.571429,-3.57143 0,-1.97244 1.598983,-3.57143 3.571429,-3.57143 1.972445,0 3.571428,1.59899 3.571428,3.57143 z"
+         sodipodi:ry="3.5714285"
+         sodipodi:rx="3.5714285"
+         sodipodi:cy="187.36218"
+         sodipodi:cx="62.142857"
+         id="path3858-23-8-2-1"
+         style="fill:none;stroke:#000000;stroke-width:1.39999998;stroke-miterlimit:14.19999981;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(1.2593334,0,0,1.2593334,86.027139,-23.886509)" />
+      <path
+         d="m 65.714285,187.36218 c 0,1.97245 -1.598983,3.57143 -3.571428,3.57143 -1.972446,0 -3.571429,-1.59898 -3.571429,-3.57143 0,-1.97244 1.598983,-3.57143 3.571429,-3.57143 1.972445,0 3.571428,1.59899 3.571428,3.57143 z"
+         sodipodi:ry="3.5714285"
+         sodipodi:rx="3.5714285"
+         sodipodi:cy="187.36218"
+         sodipodi:cx="62.142857"
+         id="path3858-23-2-5-3-1"
+         style="fill:none;stroke:#000000;stroke-width:1.39999998;stroke-miterlimit:14.19999981;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(1.2593334,0,0,1.2593334,86.027139,-7.8750035)" />
+      <path
+         d="m 65.714285,187.36218 c 0,1.97245 -1.598983,3.57143 -3.571428,3.57143 -1.972446,0 -3.571429,-1.59898 -3.571429,-3.57143 0,-1.97244 1.598983,-3.57143 3.571429,-3.57143 1.972445,0 3.571428,1.59899 3.571428,3.57143 z"
+         sodipodi:ry="3.5714285"
+         sodipodi:rx="3.5714285"
+         sodipodi:cy="187.36218"
+         sodipodi:cx="62.142857"
+         id="path3858-23-21-7-2-3"
+         style="fill:none;stroke:#000000;stroke-width:1.39999998;stroke-miterlimit:14.19999981;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(1.2593334,0,0,1.2593334,86.027139,8.1365393)" />
+    </g>
+    <path
+       sodipodi:type="arc"
+       style="fill:#000000;fill-opacity:0.15740739;stroke:none"
+       id="path4796-8-7-8"
+       sodipodi:cx="74.285713"
+       sodipodi:cy="95.219322"
+       sodipodi:rx="42.857143"
+       sodipodi:ry="42.857143"
+       d="m 117.14286,95.219322 a 42.857143,42.857143 0 1 1 -85.71429,0 42.857143,42.857143 0 1 1 85.71429,0 z"
+       transform="matrix(1.15,0,0,1.15,543.14286,248.57425)"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4809-6-6-7"
+       style="font-size:16px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="matrix(2.0785515,0,0,2.0785515,470.41521,199.37897)"
+       inkscape:transform-center-x="31.178269"
+       inkscape:transform-center-y="66.810585"
+       inkscape:export-filename="D:\Dropbox\tesina\img\resultados\gmm\esquema_estados.png"
+       inkscape:export-xdpi="418"
+       inkscape:export-ydpi="418"><flowRegion
+         id="flowRegion4811-0-1-4"><rect
+           id="rect4813-2-8-2"
+           width="86.699814"
+           height="83.791901"
+           x="33.335033"
+           y="66.4533"
+           style="font-size:16px;text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara3144-9-7">S<flowSpan
+   style="font-size:10.39666325px;baseline-shift:sub"
+   id="flowSpan3886">n</flowSpan><flowSpan
+   style="font-size:65.00091553%;baseline-shift:sub"
+   id="flowSpan3577-2-7">,C</flowSpan></flowPara></flowRoot>  </g>
+</svg>

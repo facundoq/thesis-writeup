@@ -1,7 +1,10 @@
-El modelo de SVM que desarrollamos solo considera dos clases. Para resolver problemas multiclase, debemos buscar alguna forma de extender el algoritmo. Hay dos enfoques principales; el primero, replantear el formalismo detrás de SVM para funciones con varios resultados (o sea, $\fdef{f}{\ddp}{\reals^C}$). El segundo, combinar varios SVM de dos clases para formar un SVM multiclase.
+El modelo de SVM que se ha desarrollado solo considera dos clases. Para resolver problemas multiclase, se debe buscar alguna forma de extender el algoritmo. Hay dos enfoques principales; el primero, replantear el formalismo detrás de SVM para funciones con varios resultados (o sea, $\fdef{f}{\ddp}{\reals^C}$). El segundo, combinar varios SVM de dos clases para formar un SVM multiclase.
 
-Nosotros tomaremos este último camino, que a su vez tiene dos estrategias posibles.
+Este último camino a su vez tiene dos estrategias posibles:
 
-La primera es entrenar $C(C-1)/2$ clasificadores, donde cada clasificador distingue entre dos clases. Este enfoque tiene la ventaja de que puede distinguir entre clases individualmente y cada clasificador se entrenaría rápidamente ya que habría una cantidad mucho menor de ejemplos, pero el número de SVMs a entrenar crece cuadráticamente con la cantidad de clases y también se incrementa la necesidad computacional del algoritmo en total.
+\begin{itemize}
+\item La primera es entrenar $C(C-1)/2$ clasificadores SVM, donde cada clasificador distingue entre dos clases. Este enfoque tiene la ventaja de que puede distinguir entre clases individualmente y cada clasificador se entrenaría rápidamente ya que habría una cantidad mucho menor de ejemplos, pero el número de SVMs a entrenar crece cuadráticamente con la cantidad de clases y también se incrementa la necesidad computacional del algoritmo en total.
 
-La segunda es entrenar una SVM por clase, que distinga entre ejemplares de esa clase y el resto, teniendo de esta manera hay $C$ clasificadores. Esta última técnica tiene ventajas y desventajas opuestas a la primera opción. Cada clasificador se asemejaría a la función $f_c$ descripta en la sección de aprendizaje automático, y el criterio para elegir la clase correspondiente en base a las salidas de cada clasificador $f_c$ podría ser $ \argmax_c f_c(\xv)$.
+\item La segunda es entrenar una SVM por clase, que distinga entre ejemplares de esa clase y el resto, teniendo de esta manera hay $C$ clasificadores. Esta última técnica tiene ventajas y desventajas opuestas a la primera opción. Cada clasificador se asemejaría a la función $f_c$ descripta en la sección de aprendizaje automático, y el criterio para elegir la clase correspondiente en base a las salidas de cada clasificador $f_c$ podría ser $ \argmax_c f_c(\xv)$.
+
+\end{itemize}

@@ -1,0 +1,19 @@
+\input{../base}
+\tikzdrawing{
+\draw [line width=4] (-9.1,-10) -- (10,9.1);
+\draw [line width=2] (-5.65,-10) -- (10,5.65);
+\draw [line width=2] (-10,-7.4) -- (7.4,10);
+
+\standardaxis{\datosdosclases
+\addplot[color=black,solid,only marks,thick,mark=oplus,fill=white] coordinates {(1.5, -2)};
+\addplot[color=black,solid,only marks,thick,mark=halfcircle,fill=white] coordinates {(1.5, 2) (5,2)};
+}[legend style={font=\Large}]
+
+\draw [line width=2,->] (1.5,-5) -- (1.5,-2.7);
+\node [below,align=center] at (1.5,-5) {Ejemplar\\ con $s_i > 0$};
+
+\draw [line width=2,<-] (1.5,5) -- (1.5,2.7);
+\draw [line width=2,->] (4.7,2.3) -- (1.9,5.1);
+\node [above,align=center] at (1.2,5.5) {Ejemplar\\ con $s_i > 0$};
+
+}

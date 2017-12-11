@@ -1,0 +1,10 @@
+\input{../base}
+
+\tikzdrawing{
+
+\pgfplotsset{ticks=none}
+\rectangularaxis{
+\datosdosclasesnolineal
+\addplot[domain=-5:5, samples=200,ultra thick,color= blue]{0.2*(x-0.4)*(x-0.2)*(x-0.5)};
+}{10}{6}
+}

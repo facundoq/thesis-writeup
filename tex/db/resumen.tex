@@ -1,0 +1,27 @@
+En este capítulo se presentó la base de datos LNHG generada para realizar los experimentos con los clasificadores, y los detalles de cómo fue generada y el funcionamiento del dispositivo utilizado para grabar los gestos. Se describe también la base de datos Celebi2013, definida en \cite{celebi2013}, para comparar el CNC contra el método de reconocimiento descripto en dicho artículo.
+
+Se detalló como, para cada ejemplar de gesto grabado, se realiza un preprocesamiento para mejorar la señal del gesto, y luego se calcula una característica $\tra_d$ a partir del mismo para facilitar su reconocimiento. La característica calculada, en base a las posiciones preprocesadas, es una lista de vectores de dirección $(dx,dy,dz)$ entre cada posición consecutiva del gesto, donde cada vector de dirección está normalizado para que tenga norma euclídea $1$. 
+
+Estos cálculos aseguran que la representación elegida para el gesto sea invariante a la rotación del usuario, a la escala, a la velocidad de realización del gesto, y a la posición en donde se realiza. Por último, se justificó la adecuación de dicha característica al modelo de gestos desarrollado en el capítulo \ref{chap:gestos}.
+
+En base a esta característica se definen los clasificadores a comparar, incluyendo el CNC, en el capítulo \ref{chap:modelos}, y por ende la misma se utiliza en todos los experimentos de clasificación presentados en el capítulo \ref{chap:resultados}.
+
+
+%Se describió también el funcionamiento del dispositivo utilizado para grabar los gestos, el procesamiento de los gestos, la característica $\ve{r}$ a utilizar para clasificar, y se justificó la adecuación de dicha característica al modelo de gestos desarrollado en el capítulo \ref{chap:gestos}.
+
+%Para generar la base de datos se grabaron 720 ejemplares de gestos, con 36 clases y 20 gestos por clase. Las clases están compuestas por los 10 dígitos arábigos y letras imprenta minúscula. Los gestos se realizaron con la mano izquierda, trazando la forma de los mismos. Los ejemplares se segmentaron manualmente, para trabajar solo con la parte relevante de los movimientos del usuario.
+%
+%La posición de la mano durante la realización del gesto fue capturada mediante un dispositivo Kinect y su SDK. El dispositivo Kinect está compuesto por una cámara VGA y un sensor de profundidad, que permite detectar la distancia de los objetos a la cámara. El SDK del Kinect, desarrollado por Microsoft, permite además detectar en tiempo real la posición de 20 partes del cuerpo de una persona que se encuentra frente a la cámara, mientras se mueve.
+
+
+%El preprocesamiento consiste en tomar las posiciones de la mano de un ejemplar, aplicar un algoritmo de suavizado para mejorar la coherencia de la trayectoria realizada, rotar el gesto de modo que se encuentre en una posición canónica respecto al usuario, y luego realizar un re-muestreo para normalizar la cantidad de posiciones tomadas a una constante $n$, de modo que todos los gestos sean vectores de la misma longitud.
+
+%\image{normalization}{0.8}{Suavizado y re-muestreo de un ejemplar previamente rotado.}
+
+
+
+%\image{features}{0.8}{Cálculo de características a partir de un ejemplar de gesto normalizado.}
+
+
+
+%\image{celebi}{0.5}{Gesto de subir la mano izquierda (arriba) y de saludo (abajo) de la base datos Celebi2013}

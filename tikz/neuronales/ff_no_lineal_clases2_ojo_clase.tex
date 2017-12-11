@@ -1,0 +1,18 @@
+\input{../base}
+\tikzdrawing{
+
+\draw [thick,fill=black!30] (0,0) circle [radius=3];
+
+\standardaxis{
+\simmetricgaussianscatter[12]{\classm}{6}{6}
+\simmetricgaussianscatter[10]{\classm}{6}{1}
+\simmetricgaussianscatter[10]{\classm}{0}{-6}
+\simmetricgaussianscatter[10]{\classm}{6}{4}
+\simmetricgaussianscatter[5]{\classm}{0}{6}
+
+\addgaussianscatter[13]{\classp}{0}{0}
+}
+
+}
+
+  

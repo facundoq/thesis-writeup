@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="problema_ejemplares_modelo.svg"
+   inkscape:export-filename="D:\Dropbox\tesina\img\aprendizaje\problema_ejemplares_modelo.png"
+   inkscape:export-xdpi="418"
+   inkscape:export-ydpi="418">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="EmptyTriangleOutL"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="EmptyTriangleOutL"
+       style="overflow:visible">
+      <path
+         id="path4398"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         style="fill-rule:evenodd;fill:#FFFFFF;stroke:#000000;stroke-width:1.0pt"
+         transform="scale(0.8) translate(-6,0)" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;">
+      <path
+         id="path4241"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective2985" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="335.68852"
+     inkscape:cy="860.91427"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1211"
+     inkscape:window-height="745"
+     inkscape:window-x="146"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       sodipodi:type="arc"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.81699997;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path3001"
+       sodipodi:cx="24.285715"
+       sodipodi:cy="48.076469"
+       sodipodi:rx="162.85715"
+       sodipodi:ry="162.85715"
+       d="m 187.14286,48.076469 a 162.85715,162.85715 0 1 1 -325.71429,0 162.85715,162.85715 0 1 1 325.71429,0 z"
+       transform="translate(144.28571,191.42857)" />
+    <path
+       sodipodi:type="arc"
+       style="fill:#f9f9f9;fill-opacity:1;stroke:#000000;stroke-width:0.81699997;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       id="path3001-1"
+       sodipodi:cx="24.285715"
+       sodipodi:cy="48.076469"
+       sodipodi:rx="162.85715"
+       sodipodi:ry="162.85715"
+       d="m 187.14286,48.076469 a 162.85715,162.85715 0 1 1 -325.71429,0 162.85715,162.85715 0 1 1 325.71429,0 z"
+       transform="matrix(0.45750113,0,0,0.45750113,157.46068,217.51)" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3021"
+       style="font-size:36px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(-35.714286,2.8571429)"><flowRegion
+         id="flowRegion3023"><rect
+           id="rect3025"
+           width="301.42859"
+           height="98.571426"
+           x="52.857143"
+           y="30.933611"
+           style="font-size:36px;text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara3027">Problema</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot3021-7"
+       style="font-size:24px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(-34.177735,194.01786)"><flowRegion
+         id="flowRegion3023-4"><rect
+           id="rect3025-0"
+           width="301.42859"
+           height="98.571426"
+           x="52.857143"
+           y="30.933611"
+           style="font-size:24px;text-align:center;text-anchor:middle" /></flowRegion><flowPara
+         id="flowPara3027-9">Ejemplares</flowPara></flowRoot>    <g
+       id="g3097"
+       transform="translate(66,-7.638248)">
+      <rect
+         y="110.93362"
+         x="520"
+         height="274.28571"
+         width="274.28571"
+         id="rect3056"
+         style="fill:#f9f9f9;fill-opacity:1;stroke:#000000;stroke-width:0.81699997;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <flowRoot
+         transform="translate(452.92117,199.73215)"
+         style="font-size:36px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         id="flowRoot3021-4"
+         xml:space="preserve"><flowRegion
+           id="flowRegion3023-8"><rect
+             style="font-size:36px;text-align:center;text-anchor:middle"
+             y="30.933611"
+             x="52.857143"
+             height="98.571426"
+             width="301.42859"
+             id="rect3025-8" /></flowRegion><flowPara
+           id="flowPara3027-2">Modelo</flowPara></flowRoot>    </g>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:42, 3.5;stroke-dashoffset:29.75000243;marker-end:url(#EmptyTriangleOutL);display:inline"
+       d="M 243.07865,239.63041 586,240.20745"
+       id="path3104"
+       inkscape:connector-type="polyline"
+       inkscape:connector-curvature="0"
+       inkscape:connection-end="#g3097"
+       inkscape:connection-end-point="d4"
+       inkscape:connection-start="#path3001-1"
+       inkscape:connection-start-point="d4" />
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5387"
+       style="font-size:13px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(34,24)"><flowRegion
+         id="flowRegion5389"><rect
+           id="rect5391"
+           width="285.71429"
+           height="45.714287"
+           x="341.42856"
+           y="172.36218" /></flowRegion><flowPara
+         id="flowPara5393"
+         style="font-size:24px">Aprendizaje</flowPara></flowRoot>  </g>
+</svg>

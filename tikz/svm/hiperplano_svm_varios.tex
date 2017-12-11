@@ -1,0 +1,14 @@
+  \input{../base}
+\tikzdrawing{
+
+\standardaxis{
+\datosdosclases
+
+\addplot[domain=-10:10, samples=100]{x};
+\addplot[domain=-10:10, samples=100]{3*x-6};
+\addplot[domain=-10:10, samples=100]{3*x+6};
+\addplot[domain=-10:10, samples=100]{-3*x+6};
+\addplot[domain=-10:10, samples=100]{0.3*x-0.5};
+
+}[legend style={font=\Large}]
+}

@@ -1,0 +1,80 @@
+
+%El Aprendizaje Automático es la rama de la Inteligencia Artificial que se dedica al estudio de los agentes/programas que aprenden basados en su experiencia, para realizar cada vez mejor una tarea determinada. El objetivo principal de todo proceso de aprendizaje es utilizar instancias de problemas conocidas para poder crear una hipótesis y poder dar una respuesta a nuevas instancias desconocidas.
+%
+%Algunos sistemas de Aprendizaje Automático intentan eliminar la necesidad de intuición o conocimiento experto en los sistemas computacionales. De todas formas, la intuición humana no puede ser reemplazada en su totalidad, ya que el diseñador del sistema ha de especificar la forma de representación de los datos y los métodos de manipulación y caracterización de los mismos.
+%
+%Los algoritmos de aprendizaje automático generan o \textbf{entrenan} el modelo a partir de un conjunto de datos, que se denomina \textbf{conjunto de entrenamiento} $D_e$. Este modelo brinda información sobre el dominio del problema, a la vez que permite realizar inferencias o transformaciones en base a nuevos datos del problema.
+%
+%El aprendizaje automático tiene varias áreas de aplicación, como:
+%
+%\begin{itemize}
+%\item Motores de búsqueda
+%\item Diagnóstico médico
+%\item Detección de fraudes con el uso de tarjetas de crédito
+%\item Análisis del mercado de valores
+%\item Clasificación de secuencias de ADN
+%\item Reconocimiento del habla
+%\item Robótica
+%\end{itemize}
+%
+%Es también de gran importancia para el reconocimiento de gestos ya que permite que el usuario elija y ejecute sus propios gestos, entrenando así un sistema de reconocimiento de gestos que luego pueda detectar cuando el mismo usuario u otro los realiza.
+%
+%La clasificación más importante de algoritmos de aprendizaje automático es la distinción entre la noción de \textbf{aprendizaje supervisado} y \textbf{no supervisado}. 
+%
+%En el aprendizaje supervisado, el algoritmo produce una función que establece una correspondencia entre las entradas y las salidas deseadas del sistema. Un ejemplo de este tipo de algoritmo es el problema de \textbf{clasificación}, donde el sistema de aprendizaje trata de etiquetar (clasificar) una serie de vectores utilizando una entre varias categorías (clases). La base de conocimiento del sistema está formada por ejemplos de etiquetados anteriores. 
+%
+%En el no-supervisado, todo el proceso de modelado se lleva a cabo sobre un conjunto de ejemplos formado tan sólo por entradas al sistema. No se tiene información sobre las categorías de esos ejemplos. Por lo tanto, en este caso, el sistema tiene que ser capaz de reconocer patrones para poder etiquetar las nuevas entradas. 
+%
+%
+%Existen diversos modelos de aprendizaje automático, de los cuales se pueden destacar:
+%
+%\begin{itemize}
+%\item Redes neuronales artificiales
+%\item Árboles de decisión
+%\item Modelos de regresión múltiple no postulados
+%\item Modelos de mixturas gaussianas
+%\item k-vecinos más próximos
+%\item Perceptrón
+%\item Funciones de base radial
+%\item Máquinas de vectores de soporte
+%\item Modelos gráficos, como las redes bayesianas y los campos aleatorios de Markov
+%\end{itemize}
+%
+%En esta tesina, se hace énfasis en Redes Neuronales Artificiales (ANN) y Máquinas de vectores de soporte (SVM).
+%
+%El problema de reconocimiento de gestos puede verse como un problema de aprendizaje supervisado. Más específicamente, es un problema de clasificación, donde cada tipo de gesto es una clase distinta (por ejemplo, sacudir la mano o saludar). Se hará énfasis sobre todo en los problemas de clasificación ya que representan el problema de la tesina de forma abstracta.
+%
+%En esencia, la mayoría de los algoritmos de clasificación ven entonces a los ejemplares de cada clase como puntos en un espacio n-dimensional, y buscan \textbf{superficies de separación} separables entre los ejemplares de cada clase.
+%
+%La superficie de separación más simple y conocida es el \textbf{hiperplano}, que es la generalización del concepto es un punto en $\reals$, una linea en $\reals^2$, un plano en $\reals^3$. 
+%
+%El algoritmo más famoso de aprendizaje automático es quizás el algoritmo del \textbf{perceptrón}, que busca un hiperplano que separe ejemplares de dos clases distintas.
+%
+%Un problema muy usual es que los ejemplares de las clases no puedan ser separados por un simple hiperplano, dando lugar a la noción de problemas linealmente \textbf{separables} y \textbf{no linealmente separables}. Esto da una idea de que todo clasificador entonces tendrá algún margen de error.
+%
+%
+%Entonces, clasificadores más avanzados que el perceptrón podrían, por ejemplo, buscar un hiperplano que clasifique bien en general a los ejemplares, o una \textbf{superficie de separación no-lineal}.
+%
+%Un tema central en el aprendizaje automático es la utilización de \textbf{características}. En general, los datos de los ejemplares del problema a resolver se encuentran en una forma que los hace poco aptos para encontrar una solución. Una característica $\tra$ es una función que se calcula a partir de los ejemplares que los lleva a una representación en donde es más factible que sean clasificados correctamente. 
+%
+%Las características pueden ser formuladas analíticamente, o generadas automáticamente mediante algún algoritmo de aprendizaje, generalmente del tipo no supervisado. En el caso del reconocimiento de gestos, se derivará una característica apropiada en el capítulo \ref{chap:gestos}, y en el capítulo \ref{chap:resultados} se describirá el clasificador CNC que genera sus propias características para los gestos.
+%
+%Como los modelos de aprendizaje automático no dan respuestas exactas, luego de construido debe evaluarse el modelo mediante experimentos para validar su efectividad. 
+%
+%La performance del clasificador para el problema en general, es decir, para cualquier ejemplar del mismo (aunque no sea conocido) se denomina su poder de generalización. Es decir, un modelo se genera con un conjunto de entrenamiento $D_e$ que es reducido en tamaño respecto a los ejemplares del dominio completo del problema, por lo cual no contiene todos los posibles ejemplares del mismo. El modelo generaliza bien si dado un nuevo ejemplar que no ha sido parte del conjunto de entrenamiento, se le asigna una etiqueta correcta en la gran mayoría de los casos.
+%
+%Al conjunto de datos utilizado para estimar el poder de clasificación del modelo se lo denomina \textbf{conjunto de prueba} $D_p$, y se han desarrollado diversas técnicas, como la \textbf{validación cruzada} y sus variantes, que permiten determinar el poder de generalización de un modelo para cierto problema, estimándolo con $D_p$.
+%
+
+En este capítulo se brindan los conceptos básicos de aprendizaje automático para el resto de la tesina. Se introduce, mediante un ejemplo de reconocimiento de gestos, el desafío central del área, que consta del desarrollo de técnicas para
+generar modelos de problemas en base a instancias o ejemplares de los mismos, un proceso conocido como el entrenamiento del modelo. A su vez, se hace referencia a la gran cantidad de aplicaciones de estas técnicas y su importancia para todas las áreas.
+
+Luego se presenta una distinción entre el aprendizaje supervisado y el no supervisado, y en particular, un modelo supervisado de clasificación de ejemplares. Estos son de central importancia en esta tesina, ya que el reconocimiento de gestos es, principalmente, un problema de clasificación.
+
+El algoritmo de perceptrón provee un ejemplo concreto de aprendizaje automático, y las secciones sobre experimentos, generalización, sobre-entrenamiento y regularización describen conceptos claves para poder entrenar un modelo con éxito, es decir, un modelo que tenga poco error.
+
+Finalmente, se presenta un modelo alternativo de clasificación, más general que el primero y con menos simplificaciones, que además considera la clasificación de ejemplares en múltiples categorías o clases.
+
+Estos conceptos sientan las bases teóricas para los siguientes capítulos, y son centrales para el desarrollo de un modelo de clasificación adecuado que permita un eficaz reconocimiento de gestos. Los capítulos \ref{chap:svm}  y \ref{chap:neuronales} describen modelos de clasificación y generación de características, con las cuales en el capítulo \ref{chap:resultados} se describen distintos tipos de clasificadores para el reconocimiento de gestos.
+
+A continuación, se construye sobre dichos conceptos para ampliar el método de clasificación del perceptrón de dos maneras diferentes: Maquinas de Vectores de Soporte (capítulo \ref{chap:svm}) y Redes Neuronales (capítulo \ref{chap:neuronales}).

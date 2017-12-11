@@ -1,72 +1,116 @@
 
-Si bien disponer de un conjunto de prueba es una gran mejora sobre estimar con $\cde$, plantea dos nuevos preguntas:
+\section{Validación cruzada}
+  
+En el capítulo de aprendizaje automático se planteó el problema de la medición del error de un clasificador en un conjunto de ejemplares $D$. En dicho capítulo, se mencionó el problema de probar un modelo con el mismo conjunto de ejemplares con el cual fue generado, y como solución tentativa se propuso dividirlo en dos, el conjunto de entrenamiento $\cde$ y el de prueba $\cdp$; el primero se utiliza para entrenar el clasificador, el segundo para medir su error.
+
+Si bien disponer de un conjunto de prueba es una gran mejora sobre entrenar y estimar con $\cde$, plantea dos nuevas preguntas:
 
 \begin{itemize}
 \item ¿Qué tamaño debe tener $\cdp$ (o $\cde$, ya que $\cde = D - \cdp$)?
 \item ¿Qué ejemplares deben ir en cada conjunto? 
 \end{itemize}
 
-Si bien se han desarrollado algunas reglas empíricas para responder a estas preguntas, como usar el 80\% de los ejemplares para entrenar y el resto para probar, y muchas veces las respuestas a tales preguntas dependen del contexto, la calidad y la cantidad de los datos disponibles. 
+Si bien se han desarrollado algunas reglas empíricas para responder a estas preguntas, como usar el 80\% de los ejemplares para entrenar y el resto para probar, y muchas veces las respuestas a tales preguntas dependen del contexto, la calidad y la cantidad de los datos disponibles, no hay una solución perfecta al problema de estimación del error de un clasificador.
 
-La primer pregunta depende de cual es nuestro objetivo; en términos generales, cuanto más grande sea el tamaño de $\cde$ mejor, ya que nos permitirá desarrollar un modelo más certero. Por otro lado, lo mismo sucede con el conjunto de validación, respecto a la significatividad estadítica en la evaluación del error del modelo.
+La primer pregunta depende de cual es el objetivo del experimento; en términos generales, cuanto más grande sea el tamaño de $\cde$ mejor, ya que permitirá desarrollar un modelo más certero. Por otro lado, lo mismo sucede con el conjunto de validación, respecto a la significancia estadística en la evaluación del error del modelo.
 
-Estas preguntas no son tan importantes si $|D|$ es muy grande (relativo al problema a resolver), ya que por motivos estadísticos es muy probable que ambos conjuntos representen la variabilidad del dominio del problema y por ende se pueda generar un buen modelo y realizar pruebas fiables. Sin embargo, al seleccionar arbitrariamente a $\cde$ y $\cdp$, y especialmente si $|D|$ es muy chico, estamos atando nuestro estimador a una de las posibles particiones de los dos conjuntos lo cual puede traer problemas ya que nos exponemos a realizar alguna partición desafortunada o afortunada, que nos de resultados que no representen el comportamiento promedio del clasificador.
+Estas preguntas no son tan importantes si $|D|$ es muy grande (relativo al problema a resolver), ya que por motivos estadísticos es muy probable que ambos conjuntos representen la variabilidad del dominio del problema y por ende se pueda generar un buen modelo y realizar pruebas fiables.  Sin embargo, si $|D|$ es chico, al seleccionar arbitrariamente a $\cde$ y $\cdp$ se ata el valor del estimador a una de las posibles particiones de los dos conjuntos, con lo cual se expone el experimento a realizar alguna partición desafortunada, que de resultados que no representen el comportamiento esperado del clasificador.
 
-El problema de elegir nuestros conjuntos de prueba y entrenamiento de forma arbitraria radica en que la performance del clasificador en un experimento puede dar bien o mal de acuerdo a la división particular del conjunto de datos con el que estamos trabajando. Una mala división nos puede llevar a asumir que nuestro clasificar no funciona sobre el conjunto de datos, cuando en realidad si lo hace en general, y viceversa.
+El problema de elegir los conjuntos de prueba y entrenamiento de forma arbitraria radica en que el error del clasificador en un experimento puede dar bien o mal de acuerdo a la división particular del conjunto de datos con el que se está trabajando. Una mala división puede llevar a asumir que el clasificador no funciona sobre el conjunto de datos, cuando en realidad si lo hace en general, y viceversa.
 
-La idea de dividir el conjunto de datos en 2, entrenar con uno y probar con el otro es un caso especial del método de \textbf{cross validation} (validación cruzada, VC) \cite{refaeilzadeh2009}, un enfoque más estructurado y justificado teóricamente para estimar el error, que provee respuestas a algunas de estas preguntas, especialmente en los casos donde $|D|$ es chico. 
+La idea de dividir el conjunto de datos en dos, entrenar con uno y probar con el otro es un caso especial del método de \textbf{cross validation} (validación cruzada, VC) \cite{refaeilzadeh2009}, un enfoque más estructurado y justificado teóricamente para estimar el error, que provee respuestas a algunas de estas preguntas, especialmente para los casos donde $|D|$ es chico. 
 
-La premisa básica en validación cruzada es responder a la 2da pregunta, la de cómo realizar la elección de los distintos elementos que van en el conjunto de prueba, haciendo varios experimentos con distintas variaciones sistemáticas de $\cdp$ y $\cde$. De esta manera evitamos la dependencia de la estimación del error sobre la partición particular con la que realizamos la prueba.
+La premisa básica en validación cruzada es intentar responder a la segunda pregunta, la de cómo realizar la elección de los distintos elementos que van en el conjunto de prueba, haciendo varios experimentos con distintas variaciones sistemáticas de $\cdp$ y $\cde$. De esta manera se evita la dependencia de la estimación del error sobre la partición particular con la que se realizó la prueba.
 
-Existen varias versiones y extensiones de validación cruzada, que detallamos a continuación.
+Existen varias versiones y extensiones de validación cruzada, que se detallan a continuación.
 
-\subsubsection{VC de k-iteraciones}
+\subsection{VC de k-iteraciones}
 
-Volviendo al ejemplo del reconocimiento de gestos, supongamos que tenemos un problema de clasificación con 2 clases y un conjunto de 20 ejemplos, 10 de cada clase, y decidimos utilizar 14 ejemplos para entrenar y 6 para probar. Entonces, tenemos $\binom{20}{14}=38760$ formas posibles para dividir $D$ en $\cde$ y $\cdp$. En lugar de hacer un solo experimento con una sola de las combinaciones, podemos hacerlo con todos y promediar los resultados. Dado que es difícil trabajar pensando en $\binom{|D|}{|\cde|}$ particiones, podemos pensar en una formulación equivalente, la de dividir a $D$ en $k$ conjuntos disjuntos de prueba llamados \textbf{folds}, cada uno con $n_k=\frac{|D|}{k}$ ejemplares \footnote{En esta sección asumimos, por simplicidad, que $|D|$ es divisible por $k$}. Hay que notar que si bien cada ejemplar solo está en $\cdp$ una sola vez, formará parte de $\cde$ $k-1$ veces, por ende los conjuntos de entrenamiento $\cde$ no son disjuntos. 
+Volviendo al ejemplo del reconocimiento de gestos, suponiendo un problema de clasificación con 2 clases y un conjunto de 20 ejemplos, 10 de cada clase, y que se decide utilizar 14 ejemplos para entrenar y 6 para probar. Entonces, existen $\binom{20}{14}=38760$ formas posibles para dividir $D$ en $\cde$ y $\cdp$. En lugar de hacer un solo experimento con una sola de las combinaciones, se podría hacer con todas y promediar los resultados. Dado que es difícil trabajar pensando en $\binom{|D|}{|\cde|}$ particiones, se puede pensar en una formulación equivalente, la de dividir a $D$ en $k$ conjuntos disjuntos de prueba llamados \textbf{folds}, cada uno con $n_k=\frac{|D|}{k}$ ejemplares \footnote{En esta sección se asume, por simplicidad, que $|D|$ es divisible por $k$}. Por cada conjunto de prueba $\cdp$, se realiza un experimento con $\cde=D-\cdp$ como conjunto de entrenamiento. Hay que notar que si bien cada ejemplar solo está en $\cdp$ una sola vez, formará parte de $\cde$ $k-1$ veces, por ende los conjuntos de entrenamiento $\cde$ no son disjuntos. 
 
-Se realizan $k$ pruebas, uno por cada conjunto de prueba $\cdp$. De esta manera nos aseguramos que todos los ejemplares sean probados eventualmente. El estimador entonces es:
+Se realizan $k$ pruebas o iteraciones, una por cada conjunto de prueba $\cdp$. De esta manera existe la seguridad de que todos los ejemplares sean probados eventualmente. En el ejemplo de los gestos, si $k=2$ se obtienen dos subconjuntos de prueba, uno con los primeros 10 ejemplares de $D$, el otro con los últimos 10 ejemplares, y se realizan 2 pruebas. Si $k=5$, se realizan 5 experimentos, cada uno con 16 ejemplares de entrenamiento y 4 de prueba. 
+
+\imagegen{aprendizaje/k_fold}{0.5}{Particiones posibles al usar validación cruzada con $k=4$ y un conjunto de 20 ejemplares ($|\cdp|=5$). Cada ejemplar es utilizado una vez como dato de prueba y tres veces como dato de entrenamiento.}
+
+El estimador del error es entonces el error promedio de las $k$ iteraciones.
+
+Formalmente, se define $D^k$ como el conjunto de pares $(\cdp,\cde)$ para realizar validación cruzada con $k$ iteraciones:
 
 \begin{align}
-\ee_k &= \frac{ \sum\limits_{ (\cdp,\cde) \in D^k} {  \ee(\cdp,g(\cde) ) } }{k} \\ 
-D^k &= \{ (D_i,D-D_i) \hspace{0.2em} | 
-\hspace{0.2em} D_i= \{ \xv_{i*n_k+1} \dots \xv_{i*n_k+n_k} \}, \quad i=0..k-1  \}
+D^k &= \{ (D_i,D-D_i) \hspace{0.2em} | \hspace{0.2em}  \range{i}{0}{k-1}  \}
 \end{align}
 
-Donde vemos claramente que $i\neq j \rightarrow D_i \cup D_j = \emptyset $ y $\bigcup{i} D_i = D$. En nuestro ejemplo, si $k=2$ tenemos dos subconjuntos de prueba, uno con los primeros 10 ejemplares de $D$, el otro con los ultimos 10 ejemplares, y haremos 2 pruebas. Si $k=5$, haremos 5 experimentos, cada uno con 16 ejemplares de entrenamiento y 4 de prueba. 
+Donde los conjuntos $D_i$ están formados por $n_k$ elementos consecutivos de $D$ \footnote{Asumiendo que el ordenamiento inicial del conjunto de ejemplares $D$ es aleatorio para que tomar elementos contiguos no genere ningún tipo de correlación.}., es decir:
 
--\\
-gráfico de cross validation para k = 1, 2, 4, 5, 10 y n = 20\\
-``Particiones posibles al usar validación cruzada con k=1, 2, 4, 5 y 10 y un conjunto de 20 ejemplares''\\
+\ma{
+D_i= \{ \xv_{i*n_k+1} \dots \xv_{i*n_k+n_k},\quad \range{i}{0}{k-1} \}
+}
 
-Si bien variando $k$ tenemos una respuesta parcial a nuestra pregunta de qué tamaños deben tener los conjuntos de prueba y entrenamiento, la 2da pregunta queda todavía sin respuesta; si reordenamos los ejemplares de $D$, los elementos de $D_i$ van a variar y por ende también el error calculado.
+Bajo esta definición, está claro que $D_i \cup D_j = \emptyset $ si $i\neq j$ y $\bigcup_i D_i = D$ 
 
-A medida que aumenta $k$ aumenta el coste computacional pero también la fiabilidad de la estimación; hay que encontrar un balance entre ambas. La validación con retención es un caso especial de \kvc con $k=1$; aquí no hay mejora de error pero el coste computacional se mantiene al mínimo. Una configuración popular es $k=10$ \cite{refaeilzadeh2009,dietterich1998}, ya que en general alcanza dicho dicho balance y además es ampliamente utilizada, haciendo fácil en ocasiones comparar experimentos. Llegando a $k=|D|$, encontramos otro caso especial de VC llamado \textbf{Leave-one-out CV} (VC dejando-uno-afuera).
+El estimador entonces es:
+\ma{
+\ee_k &= \frac{ \sum\limits_{ (\cdp,\cde) \in D^k} {  \ee(\cdp,g(\cde) ) } }{k}
+}
 
-\subsubsection{VC dejando-uno-afuera}
+Si bien variando $k$ se obtiene una respuesta parcial a la pregunta de qué tamaños deben tener los conjuntos de prueba y entrenamiento, la segunda pregunta queda todavía sin una respuesta final; si se reordenan los ejemplares de $D$, los elementos de cada fold van a variar y por ende también el error calculado.
+
+A medida que aumenta $k$ aumenta el coste computacional pero también la fiabilidad de la estimación; hay que encontrar un balance entre ambas. La validación con retención es un caso especial de \kvc con $k=1$; aquí no hay mejora de la estimación del error pero el coste computacional se mantiene al mínimo. Una configuración popular es $k=10$ \cite{refaeilzadeh2009,dietterich1998}, ya que en general alcanza dicho balance y además es ampliamente utilizada, haciendo más fácil comparar experimentos en ciertas ocasiones . Llegando a $k=|D|$, hay otro caso especial de VC llamado \textbf{Leave-one-out CV} (VC dejando-uno-afuera).
+
+\subsection{VC dejando-uno-afuera}
 
 El caso particular de \kvc con $k=|D|$ es muy interesante porque da una respuesta simple y elegante a ambas preguntas para ciertos conjuntos de trabajo. 
 
-Tenemos $|D|$ particiones distintas, una por cada ejemplar, por ende la complejidad de las pruebas es de orden lineal a la cantidad de ejemplares. Si tenemos pocos ejemplares, puede que nos falte significancia estadística; si tenemos demasiados, la demanda computacional puede ser muy elevada. Por otro lado, al aplicar un clasificador en un sistema real, típicamente se utilizan todos los datos útiles disponibles para entrenarlo (o sea $D \approx \cde$), ya que el objetivo no es medir su error sino reducirlo lo más posible. En este sentido, el estimador dejando-uno-afuera es óptimo porque refleja mejor el uso real del clasificador, aunque no necesariamente sea un mejor estimador para el error.
+Existen $|D|$ particiones distintas, una por cada ejemplar, por ende la complejidad de las pruebas es de orden lineal a la cantidad de ejemplares. Si hay pocos ejemplares, puede que falte significancia estadística; si hay demasiados, la demanda computacional puede ser muy elevada. Por otro lado, al aplicar un clasificador en un sistema real, típicamente se utilizan todos los datos útiles disponibles para entrenarlo (o sea $D \approx \cde$), ya que el objetivo no es medir su error sino reducirlo lo más posible. En este sentido, el estimador dejando-uno-afuera es óptimo porque refleja mejor el uso real del clasificador, aunque no necesariamente sea un mejor estimador para el error.
 
 
-\subsubsection{VC aleatoria}
+\subsection{VC aleatoria}
 
-En esta variación de VC se elige un tamaño del conjunto de prueba $n_p$, y se elige de forma aleatoria un partición de $D$ con $|\cdp|=n_p$ cada vez que se va a realizar un experimento. La cantidad de experimentos a realizar puede fijarse de antemano o se puede establecer un umbral de significancia a alcanzar y se ejecutan tantos experimentos como sea necesario para alcanzarlo. De esta manera respondemos parcialmente a la pregunta 2; no nos da un criterio para elegir qué ejemplares van en cada conjunto, pero si como reducir al mínimo la cantidad de experimentos alcanzando un nivel de eficiencia deseado.
+En esta variación de VC primero se elige un tamaño del conjunto de prueba $n_p$, y luego, cada vez que se va a realizar un experimento, se elige de forma aleatoria una partición de $D$ con $|\cdp|=n_p$ . La cantidad de experimentos a realizar puede fijarse de antemano o se puede establecer un umbral de significancia a alcanzar y se ejecutan tantos experimentos como sea necesario para alcanzarlo. 
+
+Este método tiene la ventaja de que, con las suficiente cantidad de experimentos, es el menos sesgado en cuanto a la partición de los datos \cite{nadeau2003}.
 
 
-\subsubsection{VC estratificada}
+\subsection{VC estratificada}
+
+La técnica de VC estratíficada no es una variante de VC sino una técnica adicional a aplicar con las variantes anteriores.
 
 Hay ciertas particiones para las cuales tiene más sentido hacer un experimento que otras. En el ejemplo anterior, si se elige hacer VC de $k$ repeticiones con $k=2$, una posible combinación elige $\frac{|D|}{k}=\frac{20}{2}=10$ ejemplares del gesto de saludo para $\cdp$ y los $10$ quedan para entrenar para $\cde$. Pero entonces el clasificador se entrenará con un tipo de gesto y será probado con otro, por lo cual tendrá un error muy grande ya que su conjunto de entrenamiento no era representativo de su conjunto de prueba.
 
-Podemos evitar estos casos de prueba degenerados exigiendo que las proporciones de clases originales, las del conjunto $D$, se mantengan en los conjuntos de entrenamiento y prueba $\cde$ y $\cdp$. La estratificación es un técnica que se aplica en conjunto con VC aleatoria o de $k$ repeticiones, y responde parcialmente a la 2da pregunta, ya que nos da una restricción débil para decidir que ejemplares pueden ir en qué conjuntos.
+Se pueden evitar estos casos de prueba degenerados exigiendo que las proporciones de clases originales, las del conjunto $D$, se mantengan en los conjuntos de entrenamiento y prueba $\cde$ y $\cdp$. La estratificación es un técnica que se aplica en conjunto con VC aleatoria o de $k$ repeticiones, y responde parcialmente a la segunda pregunta, ya que agrega una restricción débil para decidir que ejemplares pueden ir en qué conjuntos.
  
-%En el caso de \kvc, si tenemos dos clases la cantidad de experimentos se reduce a hay EXP. En el caso de VC aleatoria, se reduce a EXP.
+
+
+\subsection{Pruebas de hipótesis con VC}
+
+Si bien hay razones fuertes para preferir alguna combinación de estas técnicas de VC sobre el estimador más simplista $\rho(\cdp,f)$, de todas maneras es necesario justificar estadísticamente la significancia de los estimadores derivados de estas técnicas.  En el caso de VC esto requiere tomar ciertas precauciones ya que los distintos experimentos realizados al variar las particiones de un mismo conjunto de datos no son realmente independientes, ya que son particiones del mismo conjunto original de datos \cite{bengio2004,dietterich1998}.
+
+Volviendo al problema de la clasificación de gestos, y olvidando el concepto de VC, se puede suponer que se dispone un conjunto de datos de 200 ejemplares de gestos, 100 de cada clase, obtenidos de forma independientemente e idénticamente distribuidos. Dividiendo este conjunto de datos en 10 subconjuntos \textit{disjuntos} $D_i$ de 20 muestras (estratificadas, con 10 de cada clase cada uno) y se realizan diez experimentos, uno con cada subconjunto,  dividiendo $D_i$ en $\cdp$ y$\cde$ en cada experimento y obteniendo 10 estimaciones de error $e_i$. Es importante notar que no se está empleando VC, simplemente se dividen los datos sin reutilizar ningún ejemplar, por eso los conjuntos $D_i$ son disjuntos. Debido a eso, cada experimento es independiente del resto respecto de los datos, y por ende también lo son los $e_i$. 
+
+Entonces, se pueden calcular los estimadores:
+
+\begin{equation}
+  \mue_e=\sum_{i=1}^{10} e_i$  \qquad \qquad  $\sde_e= \frac{\sum_{i=1}^{10} (\mue_e-e_i)^2 }{9}
+\end{equation}
+
+Ambos son estimadores insesgados y de máxima verosimilitud de $\mu$ y $\sd$; pero en el caso de $\sd$, este resultado depende de la hipótesis de que $Var(X+Y)= Var(X) + Var(Y)$ si $X$ e $Y$ no están correlacionadas, como en el caso de $e_i$ y $e_j$ si $i \neq j$. 
+
+Ahora, volviendo al ejemplo con 20 ejemplares de gestos, 10 de cada clase, supóngase que se generan 10 particiones utilizando VC de $k=10$ iteraciones, y por ende se obtienen 10 estimaciones de error $e_i$. Éstas estimaciones de error $e_i$ no son independientes unas de otras, porque están realizadas con (en parte) los mismos datos, y por ende están correlacionadas. 
+
+\begin{align}
+  Var(e_i+e_j) &=  Var(e_i) + Var(e_j) + 2 Cov(e_i,e_j) \\
+  &\neq Var(e_i)+Var(e_j)
+\end{align}
+
+Por este motivo, el estimador inocente $\sde_e$ no es adecuado en este caso, ya que subestimará a $\sd$ y por ende cualquier test de hipótesis del error medio del clasificador que utilice $\sd$ tendrá una confianza $\alpha$ real menor que la calculada. Este problema no se da con el estimador de la media $\mue_e$ ya que la linealidad en la suma de la esperanza de dos variables aleatorias no depende de su correlación. 
+
+Lo mismo sucede con VC aleatoria. Por ende, resulta necesario desarrollar pruebas de hipótesis específicas para VC, que tomen en cuenta esta dependencia indeseable entre experimentos y utilicen estimadores corregidos que compensen la estimación de la varianza. Si bien esto se encuentra fuera del alcance de esta tesina, es interesante señalar que se han desarrollado estimadores para VC aleatoria \cite{nadeau2003}, y se ha probado que no existe ningún estimador insesgado para  \kvc \cite{bengio2004}, lo cual sienta al primero en bases teóricas más fuertes.
 
 
 
-\subsubsection{Funciones de pérdida}
+\section{Funciones de pérdida}
 
-Las medidas de error determinan nuestra evaluación de la generalización del modelo. Distintas medidas pueden ser apropiadas para distintos problemas o contextos. 
+Las medidas de error determinan la evaluación de la generalización del modelo. Distintas medidas pueden ser apropiadas para distintos problemas o contextos. 
 
 La generalización de las medidas de error suele utilizar el concepto de \textbf{loss functions} (funciones de pérdida), $\loss$ \cite{wald1950}. Dichas funciones miden el grado de error de un clasificador dado un ejemplar, como antes. Entonces, $\fdef{\loss}{(\ddp,Clasificador)}{\reals}$. Las más comunes son:
 
@@ -82,37 +126,10 @@ La generalización de las medidas de error suele utilizar el concepto de \textbf
 
 donde $sum(\vv)$ suma los elementos de un vector $\vv$, $abs(\vv)$ devuelve un vector con los valores absolutos de $\vv$,  $\norm{\cdot}$ es la norma euclídea de un vector, y $\norm{\cdot}_p$ es la norma $p$.
 
-Dada una $\loss$, podemos calcular entonces el error de un clasificador $f$ en un conjunto de ejemplares $D$, típicamente como:
+Dada una $\loss$, se puede calcular entonces el error de un clasificador $f$ en un conjunto de ejemplares $D$, típicamente como:
 
 \begin{equation}
-\rho_{\loss}(D,f) = \sum_{\xi \in D} \loss(\xi,f)
+\rho_{\loss}(D,f) = \frac{\sum_{\xi \in D} \loss(\xi,f)}{|D|}
 \end{equation}
 
-y podemos aplicar \cv con esta medida de error.
-
-\subsubsection{Pruebas de hipótesis con VC}
-
-Si bien hay razones fuertes para preferir alguna combinación de estas técnicas de VC sobre el estimador más simplista $\rho(\cdp,f)$, de todas maneras es necesario justificar estadísticamente la significancia de los estimadores derivados de estas técnicas.  En el caso de CV esto requiere tomar ciertas precauciones ya que los distintos experimentos realizados al variar las particiones de un mismo conjunto de datos no son realmente independientes, ya que son particiones del mismo conjunto original de datos \cite{bengio2004,dietterich1998}.
-
-Para ilustrar con un ejemplo, volvemos al problema de la clasificación de gestos. Olvidando el concepto de VC, imaginemos tener un conjunto de datos de 200 ejemplares de gestos, 100 de cada clase, obtenidos de forma independientemente e idénticamente distribuidos. Dividimos este conjunto de datos en 10 subconjuntos disjuntos $D_i$ de 20 muestras (estratificadas, con 10 de cada clase cada uno) y realizamos diez experimentos, uno con cada subconjunto,  dividiendo $D_i$ en $\cdp$ y$\cde$ en cada experimento y obteniendo 10 estimaciones de error $e_i$. Es importante notar que no estamos empleando VC, simplemente dividimos los datos sin reutilizar ningún ejemplar, por eso los conjuntos $D_i$ son disjuntos. Debido a eso, cada experimento es independiente del resto respecto de los datos, y por ende también lo son los $e_i$. 
-
-Entonces, podemos calcular los estimadores:
-
-\begin{equation}
-  \mue_e=\sum_{i=1}^{10} e_i$  \qquad \qquad  $\sde_e= \frac{\sum_{i=1}^{10} (\mue_e-e_i)^2 }{9}
-\end{equation}
-
-Ambos son estimadores insesgados y de máxima verosimilitud de $\mu$ y $\sd$; pero en el caso de $\sd$, este resultado depende de la hipótesis de que $Var(X+Y)= Var(X) + Var(Y)$ si $X$ e $Y$ no están correlacionadas, como en el caso de $e_i$ y $e_j$ si $i \neq j$. 
-
-Ahora, si volvemos a nuestro ejemplo con 20 ejemplares de gestos, 10 de cada clase, y generamos 10 particiones utilizando VC de $k=10$ iteraciones, también obtendremos 10 estimaciones de error $e_i$. Pero estas estimaciones de error $e_i$ no son independientes unas de otras, porque están realizadas con (en parte) los mismos datos, y por ende están correlacionadas. 
-
-\begin{align}
-  Var(e_i+e_j) &=  Var(e_i) + Var(e_j) + 2 Cov(e_i,e_j) \\
-  &\neq Var(e_i)+Var(e_j)
-\end{align}
-
-Por este motivo, el estimador inocente $\sde_e$ no es adecuado en este caso, ya que subestimará a $\sd$ y por ende cualquier test de hipótesis del error medio del clasificador que utilice $\sd$ tendrá una confianza $\alpha$ real menor que la calculada. Este problema no se da con el estimador de la media $\mue_e$ ya que la linealidad en la suma de la esperanza dos variables aleatorias no depende de su correlación. 
-
-Lo mismo sucede con VC aleatoria. Por ende, resulta necesario desarrollar pruebas de hipótesis específicas para CV, que tomen en cuenta esta dependencia indeseable entre experimentos y utilicen estimadores corregidos que compensen la estimación de la varianza. Si bien esto se encuentra fuera del alcance de esta tesina, se han desarrollado estimadores para VC aleatoria \cite{nadeau2003}, y se ha probado que no existe ningún estimador insesgado para  \kvc \cite{bengio2004}, lo cual sienta al primero en bases teóricas más fuertes.
-
-
+y se aplica \cv con $\rho$ para medir el error del clasificador.

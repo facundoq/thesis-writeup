@@ -1,0 +1,152 @@
+
+
+El Clasificador Neuronal Competitivo (CNC), el aporte central de esta tesina, es una nueva estrategia de reconocimiento de gestos basada en redes neuronales competitivas, con una técnica de \textbf{bagging} que combina varios clasificadores débiles para construir uno más fuerte. 
+
+El CNC está compuesto por $r$ redes neuronales, entrenadas en paralelo, que son clasificadores por sí mismas. Para clasificar un ejemplar, el CNC hace que cada red lo clasifique, y luego combina sus resultados dando lugar así a un clasificador más robusto. 
+
+\image[\label{cnc/bagging}]{cnc/bagging}{0.5}{Estructura general del clasificador CNC}
+
+Cada red está formada por tres capas: una de entrada, una oculta, y una de salida. La capa 1 sólo se encarga de propagar la información de entrada, correspondiente al gesto a reconocer, hacia cada una de las neuronas de la capa oculta. Esta segunda capa genera una nueva codificación. La capa 2, la oculta, genera una nueva codificación de los ejemplares para mejorar la habilidad de reconocimiento, mediante el algoritmo de entrenamiento competitivo visto en el capítulo \ref{chap:neuronales}. Dicha codificación está basada solamente en las direcciones del ejemplar y no en el orden en el cual se encuentran. La capa 3, de salida, está formada por tantas neuronas competitivas como ejemplares de entrenamiento haya. Cada una de ellas tiene por objetivo medir la distancia entre el gesto ingresado a la entrada y el ejemplar de entrenamiento correspondiente. 
+
+De esta forma, la red neuronal de tres capas convierte el gesto ingresado en un vector de distancias que permite medir la distancia entre dicho gesto y cada uno de los gesto de entrenamiento.  La siguiente figura ilustra el proceso de reconocimiento.
+
+
+\image[\label{cnc/estructura_basica}]{cnc/estructura_basica}{0.7}{Estructura general y funcionamiento de cada red del clasificador CNC}
+
+%Los centroides correspondientes a cada neurona son los ejemplares de entrenamiento, pero codificados mediante la transformación de la capa 2. 
+
+%A grandes rasgos, el funcionamiento de la red a la hora de clasificar es el siguiente. Cuando llega un nuevo gesto, se codifica con la capa 2, y se calcula la similitud entre el nuevo gesto codificado, y los centroides de la capa 3, que son gestos de entrenamiento codificados.
+
+%Las redes comparten la misma arquitectura; solo difieren entre si en la codificación que se genera para la capa 2 mediante el algoritmo de entrenamiento competitivo, y por ende, también en los centroides de las neuronas de la capa 3.
+
+Este proceso es realizado por cada una de las $r$ redes que forman el clasificador CNC. Luego, se promedian los vectores de distancias generados por cada red obteniendo un puntaje de distancia que relaciona el gesto ingresado con cada ejemplar de entrenamiento. Como se ha guardado la clase de cada ejemplar de entrenamiento, se puede asignar al nuevo gesto la clase del ejemplar de entrenamiento al que menos distancia tenga.
+
+A continuación se describe en detalle el funcionamiento de cada red, con sus capas de codificación y de salida. Luego, se dan los detalles de la estrategia de combinación de los resultados de las redes, con lo cual se concluye la descripción del clasificador.
+ 
+Finalmente, se desarrolla la motivación para utilizar varias redes en la sección \textit{Bagging} y la capacidad del CNC de clasificar gestos aunque los ejemplares no tengan todos la misma longitud o cantidad de direcciones.
+
+\subsection{Adaptación y funcionamiento de cada red}
+
+Como se explicó anteriormente, el clasificador CNC está formado por $r$ redes neuronales que operan de forma totalmente independiente (ver figura \ref{cnc/bagging}). Cada una de ellas tiene por objetivo medir el parecido que existe entre el gesto ingresado y los ejemplos de entrenamiento utilizados durante el proceso de adaptación. En esta sección se describe la arquitectura de cada red, la forma de determinar los pesos de sus arcos y su funcionamiento.
+
+
+
+A la hora de entrenar la red o clasificar un gesto, se utiliza la característica $\xv$, calculada mediante el método descripto en el capítulo \ref{chap:db}. Esta característica $\xv$ fue definida como una secuencia de $n$ direcciones $d$ dimensionales ($d=3$ dimensiones, para el problema de los gestos 3D).
+
+%\pdfmarkupcomment[color=yellow,opacity=1.0,markup=Highlight]{(Agregado)} 
+
+
+\image{cnc/direcciones}{0.5}{Característica $\xv$ utilizada como entrada a cada red.}
+
+El clasificador no utiliza información de la secuencia de direcciones del gesto, sino que solamente se basa en cuáles son las direcciones que forman parte del mismo. Es decir, el clasificador toma el vector de direcciones de un ejemplar $\xv$, y genera un conjunto de direcciones sin orden.
+
+\image{cnc/bolsadirecciones}{0.5}{Conjunto de direcciones de la característica $\xv$ .}
+
+
+Tal como se observa en la figura \ref{cnc/estructura_basica} cada red está formada por tres capas. El proceso de entrenamiento se realiza en dos etapas: primero se determinan los pesos de los arcos que unen la capa de entrada con la capa oculta y luego, una vez finalizada esta etapa, se establecen los pesos de los arcos que unen la capa oculta con la de salida.
+
+La capa oculta es una CPN formada por $h$ neuronas competitivas y se encarga de agrupar los vectores de dirección que componen el conjunto de ejemplos de entrenamiento (la variable $h$ es un parámetro del algoritmo y su ajuste se describe en detalle más adelante). La finalidad de este agrupamiento es reducir la diversidad de vectores de dirección presentes en los gestos de entrada. La figura \ref{cnc/bolsadireccionestodoslosgestos} ilustra la manera de obtener la información que ingresará a la red al momento de realizar esta primera etapa del entrenamiento. Nótese que se utilizarán los vectores de dirección sin tener en cuenta el gesto al cual corresponden. 
+
+\image[\label{cnc/bolsadireccionestodoslosgestos}]{cnc/bolsadireccionestodoslosgestos}{0.6}{Conjunto de todas las direcciones de las características $\xv$, de todos los gestos de entrenamiento.}
+
+Por lo tanto, la primera capa se encuentra formada por $d$ neuronas, siendo $d=3$ en el caso del reconocimiento de gestos, mientras que la capa oculta posee $h$ neuronas competitivas. Al finalizar el entrenamiento, los pesos de los $d$ arcos que llegan a cada una de las $h$ neuronas competitivas permitirán identificar las $h$ direcciones canónicas. 
+
+
+\subsubsection{Capa de codificación}
+
+Como se mencionó anteriormente, la capa 2 de cada red se entrena usando como entrada todas las direcciones de \textit{todos} los ejemplares de entrenamiento, y el algoritmo de entrenamiento de la capa 2 es el CPN desarrollado en el capítulo \ref{chap:neuronales}.
+
+De esta manera, se genera un diccionario de direcciones canónicas o más ocurrentes $\xv_c$, con entradas $\xv_c[k] \in \reals^3, \range{k}{1}{h}$. Cada dirección $\xv_c[k]$ representa el centroide de una neurona de esta capa. 
+
+\image{cnc/capa1}{0.5}{Entrenamiento de la capa 2 de una red del CNC.}
+
+El parámetro $h$, mencionado anteriormente, indica cuantas neuronas ocultas o direcciones canónicas se consideran. El mismo se elige de forma manual en función del problema a resolver. Cuanto más grande es $h$, hay más direcciones en el diccionario y por ende se puede ser más preciso, pero se utiliza más memoria y tiempo de cpu para el entrenamiento y la clasificación. Al utilizar valores de $h$ muy altos se corre además el riesgo de overfitting, debido a que la red podría simplemente recordar todas las direcciones de todos los ejemplares en lugar capturar sólo las esenciales o canónicas. Por otro lado, si el valor de $h$ es muy pequeño, la red sólo considera unas pocas direcciones, y puede que no le sea posible distinguir con efectividad ciertos tipos de gestos.
+
+La capa 2 adquiere así la habilidad de codificar ejemplares. Dada una dirección de un ejemplar cualquiera, se puede encontrar entonces la dirección canónica que más se le parece. Dada una secuencia de direcciones $\xv$, se pueden encontrar las direcciones canónicas $\xv_c$ que más se le parecen a cada dirección. Entonces, esto es equivalente a estimular las neuronas de la capa con las direcciones del ejemplar; las más parecidas tendrán nivel de estimulación mayor, y ganarán la competición. 
+
+Con esas direcciones canónicas $\xv_c$, la capa 2 tiene la capacidad de generar un nuevo vector característico $\vv \in \reals^h$ que representa la frecuencia con que cada dirección canónica ocurre en la característica $\xv$ de un gesto. 
+
+\image{cnc/capa1_funcionamiento2}{0.5}{Cálculo del vector $\vv$ a partir de las direcciones de un ejemplar.}
+
+Formalmente, dado un ejemplar $\xv$, y una función de distancia $dist$, el vector $\vv$ está dado por la fórmula:
+
+\ma{
+\vv[k] &= \frac{count(k,\xv)}{n}, \; \range{k}{1}{h} \\
+count(k,\xv) &= \sum_{i=1}^n BMU(k,\xv[i]) \\
+BMU(k,\ve{d}) &= \caseotherwise{1}{0}{dist(\xv_c[k],\ve{d}) < dist(\xv_c[j],\ve{d}), \; j \neq k, \; \range{j}{1}{h}}
+}
+
+Donde $count(k,\xv)$ cuenta la cantidad de direcciones de $\xv$ que están más cerca de la dirección canónica $\xv_c[k]$ que a otras direcciones canónicas, y $BMU(k,\ve{d})$ se fija si la dirección canónica $k$ es la más cercana a la dirección $\ve{d} \in \reals^d$.
+
+\image{cnc/capa1_funcionamiento}{0.6}{Esquema del funcionamiento de la capa 2 al codificar un ejemplar.}
+
+Es importante notar las diferencias entre el uso de esta capa en las etapas de entrenamiento y ejecución. Durante la primera, la entrada a la capa es una sola dirección 3D, y se utiliza el entrenamiento típico de CPN descripto en el capítulo \ref{chap:neuronales}. En la segunda, si bien la entrada a la capa sigue siendo un vector de 3 componentes, la entrada a la red es un ejemplar de gesto con varias direcciones. Entonces, en este caso se identifica el centroide más cercano a cada dirección del gesto para producir el vector $\vv$ resultante.
+
+Esta capa competitiva representa la primera parte del algoritmo, que permite codificar un ejemplar como una distribución sobre las direcciones canónicas, y representa la idea principal del CNC. Se puede pensar en esta representación como una implementación del modelo \textbf{bag-of-words} \cite{zhang2010understanding} para las direcciones del gesto.
+
+A continuación, se describe el entrenamiento y el funcionamiento de la capa 3, y finalmente la función de combinación que une las salidas de cada red.
+
+\subsubsection{Capa de salida}
+
+La capa 3, dado un ejemplar nuevo, genera puntajes de distancia del ejemplar con respecto a cada ejemplar de entrenamiento, pero en base a la codificación que realiza la capa 2, basada en la frecuencia de activación de las neuronas correspondientes a las direcciones canónicas. Estos puntajes serán de utilidad para que el clasificador calcule la clase estimada, ya que se conoce la clase de los ejemplares de entrenamiento. 
+
+%y por ende podría considerarse una variación del algoritmo de $k$ vecinos más cercanos (kNN) \cite{mitchell1997}. 
+
+Esta capa está formada por una red competitiva que no se entrena. Se genera tomando todos los ejemplares de \textit{entrenamiento} $\xv_i$, cuyas clases se conocen, y pasándolos por la capa 2, generando un vector de características $\vv_i$ por cada ejemplar de entrenamiento $\xv_i$, obteniendo entonces $|D_e|$ vectores $\vv_i$, con clase asociada $y_i$. Esta información (los vectores $\vv_i$ y las clases) se guarda para luego poder clasificar nuevos ejemplares.
+
+
+\image{cnc/capa2_entrenamiento}{0.7}{Entrenamiento de la capa 3 de una red del clasificador CNC}
+
+
+El funcionamiento de la capa 3 a la hora de clasificar un nuevo ejemplar es el siguiente. Dado un ejemplar $\xv$ codificado por la capa 2, se obtiene un vector $\vv$. Se estimula la capa 3 con $\vv$ para generar la salida de la capa 3, y por ende de la red. Cada neurona $\range{i}{1}{|D_e|}$ de la capa 3 calcula una función de distancia $dist'$ entre $\vv$ y el vector $\vv_i$ que codifica un ejemplar del conjunto de entrenamiento, generando otro vector de distancias $\wv \in \reals^{|D_e|}$, tal que $w_i=dist'(\vv_i,\vv)$. Esta sería la salida de la red.
+
+
+\image{cnc/capa2_funcionamiento}{0.8}{Funcionamiento de la capa 3 de una red del clasificador CNC}
+
+En resumen, el funcionamiento de la red es el siguiente. Dado un nuevo ejemplar $\xv \in \reals^{d \times n}$, se lo codifica como una distribución sobre las $h$ direcciones canónicas utilizando la capa 2, generando un vector $\vv \in \reals^{d \times h}$. 
+
+Luego, se compara $\vv$ con todos los $\vv_i, \; \range{i}{1}{|D_e|}$ almacenados mediante una función de distancia $dist'$, y se genera otro vector $\wv \in \reals^{|D_e|}$, tal que $\wv_i=dist'(\vv_i,\vv)$.
+ 
+\image{cnc/estructura}{0.8}{Estructura general del funcionamiento de cada red del clasificador CNC}
+
+Finalmente, el clasificador toma la salida de cada red y calcula la clase más adecuada para el ejemplar $\xv$.
+
+Es importante notar que en las primeras pruebas realizadas con el CNC para reconocer gestos con conjuntos de entrenamiento reducidos, en lugar de guardar las codificaciones de todos los gestos de entrenamiento, en la capa 3 se guardaba, para cada clase, la media de los ejemplares codificados de dicha clase. Con tan pocos ejemplares de entrenamiento, esta media representaría el centroide de un agrupamiento de los mismos. 
+
+En los experimentos (capítulo \ref{chap:resultados}), dicha estructura tenía un error de clasificación mayor, y por ende se seleccionó el modelo donde se guardan todos los ejemplares.
+
+\subsection{Combinación de los resultados de cada red} 
+
+El CNC entonces se genera entrenando en paralelo $r$ redes. A la hora de clasificar un nuevo ejemplar $\xv$, se genera la salida de cada red $\wv^j, \; \range{j}{1}{r}$. Es importante notar aquí que como el orden de los ejemplares de entrenamiento es el mismo para todas las redes, la salida $\wv_i^j$ se refiere, para cualquier red $j$, a la comparación de las direcciones canónicas de $\xv$ con el ejemplar de entrenamiento $\xv_i$. 
+
+
+La combinación de resultados de las redes consiste en tomar el promedio de todos los $\wv^j$:
+
+\ma{
+\ov= \frac{\sum_{j=1}^r \wv^j}{r}
+}
+
+De manera que el componente $i$ de $\ov$, $o_i$, se refiere a la distancia promedio entre las direcciones canónicas de $\xv$ y las de $\xv_i$ respecto a todas las redes. La clasificación se hace entonces con la función $f$, que elige la clase $y_i$ del ejemplar de entrenamiento $\xv_i$ más cercana a $\xv$, o sea con el menor $o_i$:
+
+\ma{
+ f(\xv)&= y_c \\
+ c&= \minarg{\range{i}{1}{|D_e|}} \; o_i, \; 
+}
+
+donde $\ov$ es la salida del clasificador cuando se le da como entrada el vector $\xv$, y $o_i$ el elemento i-ésimo de $\ov$. Por ende, la variable $c$ representa el índice del ejemplar de entrenamiento con la menor distancia a $\xv$, según la codificación de la capa oculta.
+
+\image{cnc/output}{0.5}{Esquema de la combinación de resultados del clasificador.}
+
+\subsection{Bagging}
+
+El CNC utiliza la técnica de \textbf{bagging}, en la cual se entrenan múltiples clasificadores internos del mismo tipo en paralelo, y para clasificar se integran los resultados de estos clasificadores mediante un proceso de decisión para añadir robustez al proceso de reconocimiento y aumentar la tasa de aciertos \cite{maclin2011}. 
+
+La idea principal en bagging es que como cada red se entrena de forma separada, cada una tendrá un sesgo distinto, ya que el algoritmo de entrenamiento del agrupamiento competitivo comienza en un estado aleatorio diferente en cada ejecución. Si se combinan varios, es de esperar que el sesgo en promedio decrezca. Visto de otro modo, si cada red está entrenada bien pero falla en algunos ejemplares, y si aquellos en los que falla cada red son distintos, es de esperar que, dado un ejemplar nuevo $\xv$, la mayoría de las redes no fallen al clasificarlo. Esto obviamente no puede aumentar la potencia del clasificador con conjuntos de datos \textit{difíciles}, por ejemplo, con una gran cantidad de ejemplares similares con distinta clase, pero si sirve para paliar posibles entrenamientos desafortunados, y reducir en cierta medida el sesgo del clasificador.
+
+\subsection{Entrada al CNC}
+
+Dado que el CNC no tiene en cuenta la secuencia de direcciones del gesto, no es necesario que la longitud del vector de direcciones sea una constante $n$ para todos los gestos, como sucede con el resto de los clasificadores. 
+
+Esto puede verse ya que la salida de la capa 2 es un vector con la frecuencia de activación de las direcciones guardadas en dicha capa, al ser estimuladas por las direcciones del gesto. Como la cantidad de neuronas de dicha capa es constante, entonces la transformación que realiza la capa 2 implementa también un esquema de normalización de la longitud de los gestos, además de codificarlos de forma distinta.
+
+Entonces, se puede aplicar el algoritmo CNC directamente a un conjunto de ejemplares $D_e$, tal que cada $\xi \in D$ tiene una longitud $n_i$ posiblemente diferente. Para ello, se deberían aplicar todos los pasos de pre-procesamiento y cálculo de la característica excepto el de re-muestreo para hacer constante la cantidad de direcciones de la característica resultante.

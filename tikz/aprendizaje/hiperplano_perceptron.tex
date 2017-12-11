@@ -1,0 +1,15 @@
+\input{../base}
+\tikzdrawing{
+
+
+\draw  [ultra thick, fill={rgb:black,1;white,150}] (0,0) to (-10,-10) to (-10,10) to (10,10) to (0,0);
+\draw  [ultra thick, fill={rgb:black,1;white,50}] (0,0) to (-10,-10) to (10,-10) to (10,10) to (0,0);
+
+\draw [line width=4] (-10,-10) -- (10,10);
+\draw [line width=2,->] (0,0) -- (-2,2);
+\node [above] at (-1,1.2) {$\wv$};
+
+\node [above,rotate=45] at (5,5) {$\wv \cdot \xv =0$};
+\pgfplotsset{ticks=none}
+\standardaxis{\datosdosclases}[legend style={font=\Large}]
+}

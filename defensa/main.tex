@@ -1,0 +1,36 @@
+% Luebeck-default-default: buen outline arriba, lindos numeros/itemize, feo que se ve abajo el autor
+% ilmenau: como Darmstadt pero más ordenado arriba y más feo
+% Darmstadt: bueno pero son feos los itemize
+
+\documentclass[
+hyperref={pdfpagelabels=false},
+x  color={tables}]{beamer}
+
+\input{tex/packages}
+\input{tex/title}
+\input{tex/commands}
+\input{tex/esquemas}
+
+
+\begin{document}
+
+\input{tex/tikz}
+
+\begin{myframe}
+\titlepage
+\end{myframe} 
+
+\input{tex/intro}
+\input{tex/db}
+\input{tex/cnc}
+\input{tex/resultados}
+
+
+%\input{tex/aprendizaje}
+
+%\bibliographystyle{apalike}	
+%\bibliography{tex/ref}
+
+
+\end{document}
+

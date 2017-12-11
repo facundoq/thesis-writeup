@@ -1,11 +1,11 @@
 
-La aparición de nuevas tecnologías en sensores y la popularidad de los dispositivos móbiles ha introducido nuevas posibilidades de interacción hombre-máquina, y a su vez han generado cambios radicales en los paradigmas de las interfaces de usuario. 
+La aparición de nuevas tecnologías en sensores y la popularidad de los dispositivos móviles ha introducido nuevas posibilidades de interacción hombre-máquina, y a su vez han generado cambios radicales en los paradigmas de las interfaces de usuario. 
 
-La evolución de las interfaces de usuario ha visto el desarrollo desde las interfaces textuales controladas por teclado a la interfaz gráfica basada en el mouse, y actualmente el auge de las pantallas táctiles; queda por ver cuál será la próxima tecnología que cambie radicalmente los patrones de interacción máquina-hombre (HCI). Por ende, el uso de gestos como método de interacción, especialmente gestos con la mano, se ha convertido en una herramienta importante en el área de HCI en los años recientes, motivando la investigación en su modelado, análisis y reconocimiento.
+La evolución de las interfaces de usuario ha visto el desarrollo desde las interfaces textuales controladas por teclado a la interfaz gráfica basada en el ratón, y actualmente el auge de las pantallas táctiles; queda por ver cuál será la próxima tecnología que cambie radicalmente los patrones de interacción máquina-hombre (HCI). Por ende, el uso de gestos como método de interacción, especialmente gestos con la mano, se ha convertido en una herramienta importante en el área de HCI en los años recientes, motivando la investigación en su modelado, análisis y reconocimiento.
 
-Definimos un gesto como ciertos movimientos o configuraciones del cuerpo cuyo objetivo es comunicar información o interactuar con el ambiente. 
+Un gesto puede definirse informalmente como una secuencia de movimientos o configuraciones del cuerpo cuyo objetivo es comunicar información o interactuar con el ambiente. 
 
-El reconocimiento de gestos es una tarea compleja que involucra diversos aspectos tales como el modelado y análisis del movimiento, reconocimiento de patrones, aprendizaje automático, y estudios psicolingüisticos. Tiene un gran rango de aplicaciones como:
+El reconocimiento de gestos es una tarea compleja que involucra diversos aspectos tales como el modelado y análisis del movimiento, reconocimiento de patrones, aprendizaje automático, y estudios psicolingüísticos. Tiene un gran rango de aplicaciones como:
 
 \begin{itemize}
 \item Ayudas para hipoacúsicos
@@ -22,16 +22,95 @@ El reconocimiento de gestos es una tarea compleja que involucra diversos aspecto
 \end{itemize}
 
 
-El reconocimiento de gestos es más un término global que engloba diversos tipos de ``reconocimientos y ``gestos''. A grandes rasgos, podemos distinguir \textbf{gestos corporales} que se realizan con movimientos de todo el cuerpo, \textbf{gestos con las manos} como el típico \textit{swipe}, \textbf{gestos con los dedos y las manos} como el lenguaje de señas y \textbf{gestos faciales} como guiños y movimientos de los labios. Otra distinción importante es entre \textbf{gestos estáticos}, comúnmente llamados \textit{poses}, definidos por una configuración particular del cuerpo en el entorno, y \textbf{gestos dinámicos} compuestos por una serie de movimientos de ciertas partes del cuerpo. 
+El reconocimiento de gestos es un término que engloba diversos tipos de ``reconocimientos'' y ``gestos''. A grandes rasgos, se pueden distinguir \textbf{gestos corporales}, que se realizan con movimientos de todo el cuerpo, \textbf{gestos con las manos}, como un saludo, \textbf{gestos con los dedos y las manos}, como el lenguaje de señas y \textbf{gestos faciales}, como los guiños y movimientos de los labios. Otra distinción importante es entre \textbf{gestos estáticos}, comúnmente llamados \textit{poses}, definidos por una configuración particular del cuerpo en el entorno, y \textbf{gestos dinámicos} compuestos por una serie de movimientos de ciertas partes del cuerpo. 
 
-El reconocimiento de gestos tiene una larga historia, aunque ha estado marcada por el avance de los sensores utilizados para captar los gestos \cite{myers1998}. En las primeras épocas, los gestos no eran verdaderos gestos corporales sino que se realizaban indirectamente con tabletas y lápices especiales que capturaban la escritura \cite{davis1964,ellis1969,Coleman1969}. interfaces sensibles al toque \cite{madeira1978} o se utilizaron también dispositivos para apuntar \cite{Bolt1980}. Finalmente en los años 80 se comenzaron a utilizar guantes con sensores de flexión y de posición y feedback táctil \cite{zimmerman1987} o joysticks \cite{pausch1992}. En los 90 se incrementó el trabajo en identificación de gestos y acciones de las personas en imágenes y video con métodos de visión por computadora \cite{tamura1988,yamato1992}, los cuales han desde entonces mejorado hasta tener hoy sistemas de \textbf{tracking} de personas y sus partes del cuerpo que son robustas y funcionan en tiempo real \cite{Shotton2011}. Los métodos de reconocimiento basados en visión no requieren en general elementos que deben llevarse en el cuerpo y por ende proveen una solución más natural y conveniente que otros sensores.  
+El reconocimiento de gestos tiene una larga historia, marcada por el avance de los sensores utilizados para captar los gestos \cite{myers1998}. En las primeras épocas, los gestos no eran verdaderos gestos corporales sino que se realizaban indirectamente con tabletas y lápices especiales que capturaban la escritura \cite{davis1964,ellis1969,Coleman1969}, interfaces sensibles al toque \cite{madeira1978} o dispositivos para apuntar \cite{Bolt1980}. Finalmente en los años 80 se comenzaron a utilizar guantes con sensores de flexión y de posición y feedback táctil \cite{zimmerman1987} o joysticks \cite{pausch1992}. En los 90 se incrementó el trabajo en identificación de gestos y acciones de las personas en imágenes y video con métodos de visión por computadora \cite{tamura1988,yamato1992}, los cuales, han ido mejorando hasta tener hoy sistemas de seguimiento de personas y sus partes del cuerpo que son robustas y funcionan en tiempo real \cite{Shotton2011}. Los métodos de reconocimiento basados en visión no requieren en general elementos que deben llevarse en el cuerpo y por ende proveen una solución más natural y conveniente que otros sensores.  
 
-Aún con estos avances, mientras que el uso de touch-screens se ha convertido en un estándar para dispositivos móbiles en ciertas aplicaciones, y el reemplazo de los joysticks tradicionales por interfaces de voz y movimiento en las consolas de juegos se está consolidando, el retiro de la dupla teclado-mouse en las PCs de propósito general por interfaces más naturales basadas en gestos todavía se encuentra lejos de ser una realidad. 
+Aún con estos avances, mientras que el uso de pantallas táctiles se ha convertido en un estándar para dispositivos móviles en ciertas aplicaciones, y el reemplazo de los joysticks tradicionales por interfaces de voz y movimiento en las consolas de juegos se está consolidando, el retiro de la dupla teclado-mouse en las PCs de propósito general por interfaces más naturales basadas en gestos todavía se encuentra lejos de ser una realidad. 
 
-En este panorama, encontramos que las tecnologías con más promesa para proveer una interfaz hombre-máquina completa y eficiente son el reconocimiento de voz y de gestos en tiempo real \cite{Jain2011}. El reconocimiento del habla consta de la traducción automática de las palabras contenidas en una grabación de audio a texto. Si bien ambos han estado en activa investigación desde hace décadas \cite{madeira1978,myers1998,juang2005} y han encontrado nichos con gran aplicación, no alcanzan todavía un grado de desarrollo y sofisticación suficiente para emplearlos como sustituto completo de dicha dupla en el uso diario de la computadora. Estos métodos se diferencian, sin embargo, en que la investigación en reconocimiento de voz ha dispuesto de sensores adecuados desde un comienzo (micrófonos), y ha estado más enfocada en una tarea más o menos única, la de reconocer palabras en una grabación de audio. Por estos y otros motivos, se encuentra bastante cerca de dicho objetivo en términos de capacidad de reconocimiento \cite{anusuya2010,schalkwyk2010,hinton2012}, salvando las dificultades inherentes al reconocimiento de voz como el cansancio y sobresfuerzo de las cuerdas vocales en el uso diario, y aquellas particulares al dicha tecnología pero todavía no resueltas como la habilidad de reconocer de forma fiable varios interlocutores, hablando en distintos idiomas, en entornos no controlados \cite{Rashmi2013,heigold2013} o su aplicación de forma natural \cite{deng2004}. Otras dos tecnologías prometedoras, las interfaces musculares \cite{chowdhury2013} y cerebrales \cite{lebedev2006,millan2013}, han hecho grandes progresos pero todavía distan de proveer una alternativa usable.
+En este panorama, las tecnologías con más promesa para proveer una interfaz hombre-máquina completa y eficiente son el reconocimiento de voz y de gestos en tiempo real \cite{Jain2011}. El reconocimiento del habla consta de la traducción automática de las palabras contenidas en una grabación de audio a texto. Si bien ambos han estado en activa investigación desde hace décadas \cite{madeira1978,myers1998,juang2005} y han encontrado nichos con gran aplicación, no alcanzan todavía un grado de desarrollo y sofisticación suficiente para emplearlos como sustituto completo de dicha dupla en el uso diario de la computadora. Estos métodos se diferencian, sin embargo, en que la investigación en reconocimiento de voz ha dispuesto de sensores adecuados desde un comienzo (micrófonos), y ha estado más enfocada en una tarea más o menos única, la de reconocer palabras en una grabación de audio. Por estos y otros motivos, se encuentra bastante cerca de dicho objetivo en términos de capacidad de reconocimiento \cite{anusuya2010,schalkwyk2010,hinton2012}, salvando las dificultades inherentes al reconocimiento de voz como el cansancio y sobresfuerzo de las cuerdas vocales en el uso diario, y aquellas particulares a dicha tecnología pero todavía no resueltas como la habilidad de reconocer de forma fiable varios interlocutores, hablando en distintos idiomas, en entornos no controlados \cite{Rashmi2013,heigold2013} o su aplicación de forma más amplia \cite{deng2004} mediante procesamiento de lenguaje natural. Otras dos tecnologías prometedoras, las interfaces musculares \cite{chowdhury2013} y cerebrales \cite{lebedev2006,millan2013}, han hecho grandes progresos pero todavía distan de proveer una alternativa usable.
 
-Es de especial interés notar los diversos problemas de salud asociados con el sobreuso de las computadoras con entornos e interfaces tradicionales, ampliamente documentados y considerados ``epidémicos'' \cite{kiesler1988,keller1998,epstein2012,saroshe2012,Coggon2013}. El reconocimiento de gestos, en conjunto con otras tecnologías, parece un enfoque prometedor para, además de proveer un interfaz más natural, prevenir nuevas ocurrencias de estos problemas y proveer medios de comunicación e interacción asistivos para los afectados \cite{chen2009,Perera2005}. 
+Es de especial interés notar los diversos problemas de salud asociados con el sobre uso de las computadoras con entornos e interfaces tradicionales, ampliamente documentados y considerados ``epidémicos'' \cite{kiesler1988,keller1998,epstein2012,saroshe2012,Coggon2013}. El reconocimiento de gestos, en conjunto con otras tecnologías, parece un enfoque prometedor para, además de proveer una interfaz más natural, prevenir nuevas ocurrencias de estos problemas y desarrollar medios de comunicación e interacción que puedan utilizar sin problemas los afectados \cite{chen2009,Perera2005}. 
 
-El reconocimiento automático de gestos puede realizarse de dos formas básicas; definiendo explícitamente cada tipo de gesto con algún lenguaje de especifícación, reconociéndolos si cumplen con dicha especificación, o grabando con algún tipo de sensor la realización de los gestos y entrenando un modelo que pueda luego reconocerlos por su similitud con los gestos grabados. Este es el enfoque de aprendizaje automático que tomamos en esta tesina.
+El reconocimiento automático de gestos puede realizarse de dos formas básicas; definiendo explícitamente cada tipo de gesto con algún lenguaje de especificación, reconociéndolos si cumplen con dicha especificación, o grabando con algún tipo de sensor la realización de los gestos y entrenando un modelo que pueda luego reconocerlos por su similitud con los gestos grabados. Este último es el enfoque de aprendizaje automático elegido en esta tesina.
 
-Esta tesina consta de dos partes. En la primera, de métodos, se establecen las bases teóricas de los algoritmos de aprendizaje automático, los modelos de clasificación  y el modelo de gestos utilizados (capítulos \ref{chap:aprendizaje}, \ref{chap:svm}, \ref{chap:neuronales} y \ref{chap:gestos}). En la segunda, se presenta una aplicación de dichos conceptos al reconocimiento de gestos con la mano en espacios 3D en el capítulo \ref{chap:db}, finalizando con una descripción de los experimentos realizados y sus resultados en el capítulo \ref{chap:resultados}.
+El presente documento consta de dos partes: métodos y aplicaciones. 
+
+En la primera, de \textbf{métodos}, se establecen las bases teóricas de los algoritmos de aprendizaje automático, los modelos de clasificación  y el modelo de gestos utilizados (capítulos \ref{chap:aprendizaje}, \ref{chap:svm}, \ref{chap:neuronales} y \ref{chap:gestos}). 
+
+Los algoritmos de aprendizaje automático se utilizan para generar modelos de los problemas a partir de datos de los mismos. En este caso, se generan modelos de clasificación de gestos a partir de ejemplares de gestos. El aprendizaje automático permite al usuario grabar gestos prototipos, luego entrenar un modelo de gestos en base a esos prototipos, y finalmente realizar el reconocimiento en base a los gestos grabados. En base a ese modelo se podrían construir aplicaciones que permitan grabar los prototipos, y asignar acciones o comandos a los gestos para interactuar con una computadora o con otros fines. 
+
+El capítulo \ref{chap:aprendizaje} presenta las bases del aprendizaje automático. Esta área estudia diversos algoritmos para generar modelos en base a datos de ejemplares del problema, planteando un enfoque inductivo para la resolución de problemas. Los conceptos desarrollados en este capítulo valen para todo tipo de algoritmos de reconocimiento de gestos inductivos, como los clasificadores que se introducen en los capítulos siguientes.
+
+Luego, el capítulo \ref{chap:svm} introduce un tipo de clasificador llamado Máquina de vectores de soporte (SVM). El modelo SVM refina el concepto de un hiperplano como una superficie de separación entre ejemplares de dos clases, y presenta un modelo muy simple pero potente de clasificación, con fuertes bases teóricas.
+
+El capítulo \ref{chap:neuronales}, describe el modelo computacional llamado Redes Neuronales Artificiales (ANN). Las redes neuronales artificiales son un modelo de aprendizaje automático basado en el funcionamiento de las redes neuronales biológicas. Estos modelos generalmente abstraen las redes biológicas representándolas como un grafo, donde el flujo de los estímulos entre neuronas se realiza a través de las aristas, y cada nodo del grafo realiza cierto procesamiento imitando la modulación de la señales por parte de las neuronas y las sinapsis.
+
+Para finalizar esta parte, en el capítulo \ref{chap:gestos} se realiza una breve introducción al significado de un gesto en el contexto de interacción hombre-computador, seguido por un modelado matemático de los gestos y el desarrollo de una definición conveniente de equivalencia entre los mismos para la interacción por computadora.
+
+En la segunda parte, de \textbf{aplicaciones}, se utilizan los conceptos anteriores para generar y probar modelos de reconocimiento de gestos con la mano en espacios 3D.
+
+El capítulo \ref{chap:db} describe las bases de datos utilizadas para probar los algoritmos de reconocimiento de gestos, así como las características calculadas en base a los ejemplares para implementar de forma efectiva y eficiente el modelo de gestos presentado en el capítulo \ref{chap:gestos}. 
+
+En el capítulo \ref{chap:modelos} se utilizan los conceptos de los capítulos anteriores para describir el nuevo Clasificador Neuronal Competitivo (CNC) propuesto en esta tesina. Dichos conceptos se utilizan además para generar otros 4 modelos distintos de reconocimiento de gestos para comparar con el CNC.
+
+En el capítulo \ref{chap:resultados} se describen los experimentos realizados y sus resultados.
+
+Finalmente, en el capítulo \ref{chap:conclusiones} se realiza un resumen del trabajo de la tesina, y se presentan las conclusiones generales y trabajos futuros.
+
+Cada capítulo finaliza con un resumen que detalla el contenido del mismo en unos pocos párrafos; se espera que los mismos faciliten la lectura de esta tesina.
+
+
+\section*{Un comentario sobre la notación}
+
+A través del texto, se utilizarán las siguientes convenciones y notación:
+
+\begin{itemize}
+
+\item Los escalares se denotan por una letra minúscula, sin negrita o cursiva, como $\alpha$, $b$ o $y_i$.
+
+\item Los vectores se denotan con letras minúsculas en negrita, como $\wv$, $\xi$ o $\av$.
+
+\item El elemento $i$ de un vector $\vv$ se escribe $v_i$. En cambio, el símbolo $\vv_i$, en negrita, denota el i-ésimo vector, y no el elemento $i$ del vector $\vv$.
+
+\item Las matrices se denotan con una letra mayúscula en negrita, como $\ve{A}$ o $\ve{S}$.
+
+\item En general, los conjuntos se denotan con letras mayúsculas, como $D$. Conjuntos especiales, como el de los números se reales, se denotan $\reals$ y otros, como los del dominio de un problema, se denotan como $\ddp$.
+
+\item Las funciones se definen como $\fdef{f}{D}{I}$, donde $f$ es una función con dominio $D$ e imagen $I$.
+
+\item Dado un conjunto $A$, la expresión $|A|$ se refiere a la cardinalidad de $A$.
+
+\item Dados un vector $\xv$, la expresión $\norm{\xv}$ se refiere a la norma de $\xv$. Cuando no se indique lo contrario, la norma referida será la euclídea.
+
+\item Se definirán problemas de minimización de funciones con la siguente notación:
+
+\begin{equation*}
+\begin{aligned}
+\underset{x}{\text{min}} & & f(x)\\
+\text{Sujeto a} \\
+& &  P(x)
+\end{aligned}
+\end{equation*}
+
+donde $f$ es una función escalar, $P$ es un predicado, y $x$ es algún objeto de un dominio $D$ (implícito), que generalmente se deduce del contexto. Dichos problemas plantean encontrar el valor de $x$ que minimiza $f$ dentro de los que cumplen el predicado $P$.  Las expresiones de maximización se interpretan de forma equivalente, donde se busca el $x$ que maximiza $f(x)$.
+
+Formalmente, se define el dominio restricto $D'=\{ x \; | \;P(x) \wedge x \in D \}$, como el subconjunto de $D$ que cumple $P$.  El conjunto $D^*$ de puntos mínimos del problema, $D^* \subset D'$, existe si $D'\neq \emptyset$, y se define como:
+
+\ma{
+D^*= \{ x^* \; | \; \forall x \in D': \; f(x^*) \leq f(x) \}
+} 
+
+Dado que para muchos problemas hay un sólo mínimo, y que si existen muchos generalmente cualquiera resulta igual, se hablará directamente del valor mínimo.
+
+Para el problema de maximización, el conjunto $D^*$ de puntos máximos se define análogamente como:
+ 
+\ma{
+D^*= \{ x^* \; | \; \forall x \in D': \; f(x^*) \geq f(x) \}
+} 
+
+\item El símbolo $\ass$ denota asignación, de modo que $ a \ass b$ se interpreta como asignar a la variable \textit{a} el valor \textit{b}. No obstante, en las porciones de pseudocódigo incluidas en esta tesina se utiliza el símbolo $=$ para denotar asignación, dado que es una notación más familiar en ese contexto.
+
+\item El símbolo $\equiv$ se utiliza para denotar relaciones de equivalencia.
+
+\end{itemize}

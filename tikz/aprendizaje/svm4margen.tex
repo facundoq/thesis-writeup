@@ -1,0 +1,26 @@
+\input{../base}
+\tikzdrawing{
+
+%w=(6,-3)= 3(2,-1)
+\node at (-0.5,-0.5) {$\mathbf{w}$};
+\draw [line width=2,->] (0.5,0) -- (-1.2,0.2);
+
+
+%M
+\node at (2.5,2.5) {$M$};
+\draw [line width=2,<->] (1.15,3.3) -- (4,3);
+
+
+%h
+\draw [line width=4] (-0.5,-6) -- (1.5,6);
+%h+
+\draw [line width=2] (-3.7,-6) -- (-1.7,6);
+%h-
+\draw [line width=2] (2.5,-6) -- (4.5,6);
+
+
+
+
+\pgfplotsset{ticks=none}
+\rectangularaxis{\datosdosclases}{10}{6}
+}

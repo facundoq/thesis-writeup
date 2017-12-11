@@ -2,32 +2,37 @@
 
 La idea esencial, intuitiva, de las SVM es elegir el hiperplano que tenga el mayor margen $M$ entre las dos clases. En otras palabras, la distancia de los ejemplares de entrenamiento más cercanos de cada clase al \textbf{hiperplano de máximo margen} (en adelante, simplemente el hiperplano) es la mayor posible (y es la misma para la dos clases).
 
--\\
-Gráfico mostrando un hiperplano de máximo margen, los hiperplanos de soporte, M, y dos conjuntos de datos\\
-Un conjunto de datos linealmente separable, con un hiperplano de máximo margen\\
 
-Los vectores más cercanos al hiperplano se conocen como \textbf{vectores de soporte}, ya que es su ubicación exacta la que finalmente determina el hiperplano $h$, y los hiperplanos $h^{+}$  y $h^{-}$ que lo contienen se llaman \textbf{hiperplanos de soporte}. La ecuación del hiperplano es:
+\tikzimage{hiperplano_svm_simple}{scale=0.25}{Un conjunto de datos linealmente separable, con un hiperplano de máximo margen.}
 
+
+Los vectores más cercanos al hiperplano se conocen como \textbf{vectores de soporte}, ya que es su ubicación exacta la que finalmente determina el hiperplano $h$, y los hiperplanos $h^{+}$  y $h^{-}$ que lo contienen se llaman \textbf{hiperplanos de soporte}, paralelos al hiperplano $h$. El margen es la distancia entre un hiperplano de soporte y el hiperplano $h$.
+
+La ecuación del hiperplano es:
 
 \begin{align}
 h(\xv) = \hipe{\xv} \quad \wv, \xv \in \reald, b \in \reals
 \end{align}
 
-Para nuestro modelo, será conveniente codificar las clases $y_i$ como $-1$ y $1$ para representar de que lado del hiperplano están sus ejemplares, como con el Perceptrón.
+Para SVM, será conveniente codificar las clases $y_i$ como $-1$ y $1$ para representar de que lado del hiperplano están sus ejemplares, como con el Perceptrón.
 
-Como buscamos un hiperplano que clasifique correctamente a todos los ejemplares $\xi \in D$, podemos definir las siguientes restricciones:
+
+\tikzimage{hiperplano_svm}{scale=0.25}{Un conjunto de datos linealmente separable, con clases $+$ y $-$. El hiperplano de máximo margen $h(\xv)$ que separa las clases.}
+
+
+Como se busca un hiperplano que clasifique correctamente a todos los ejemplares $\xi \in D$ \footnote{En este capítulo y el siguiente se denota $D$ al conjunto de entrenamiento, por simplicidad. El enfoque se encuentra en el desarrollo del modelo de clasificación y su algoritmo de entrenamiento, sin considerar la utilización de métodos de evaluación como VC directamente ya que estos pertenecen a la etapa de evaluación del error del clasificador respecto a un conjunto de datos particular.} , se pueden definir las siguientes restricciones:
 
 \begin{align}
-\forall \xi \in D \quad \case{ h(\xi) >0 }{h(\xi) <0}{y_i=1}{y_i=0} 
+\forall \xi \in D \quad \case{ h(\xi) >0 }{h(\xi) <0}{y_i=1}{y_i=-1} 
 \end{align}
 
-Podemos combinar ambos casos como:
+Como el signo de $y_i$ indica el tipo de desigualdad, se pueden combinar ambos casos como:
 
 \begin{align}
 \forall \xi \in D \quad \hyiz
 \end{align}
 
-De manera informal, podemos especificar el problema asumiendo una función que calcule el margen entre un hiperplano y un conjunto de ejemplares $D$.
+De manera informal, se puede especificar el problema asumiendo una función $M=margen$ que calcule el tamaño del margen entre un hiperplano y un conjunto de ejemplares $D$.
 
 \begin{equation*}
 \begin{aligned}
@@ -38,35 +43,35 @@ De manera informal, podemos especificar el problema asumiendo una función que c
 \end{aligned}
 \end{equation*}
 
-Para formalizar el problema, solo necesitamos una expresión concreta de M, el tamaño del margen, en términos de $\wv$ y $b$. 
+Para formalizar el problema, solo se necesita una expresión concreta de M (el tamaño del margen) en términos de $\wv$ y $b$. 
 
-Pero antes de eso, tenemos que solucionar un pequeño problema técnico; la ecuación $\hipe{\xv}$ está indeterminada ya que multiplicando por cualquier constante obtenemos valores de $\wv$ y $b$ distintos, pero que representan el mismo hiperplano. Esto da lugar a infinitas soluciones del problema. Entonces, asumiremos que buscamos los $\wv$ y $b$ con la condición de que para los vectores de soporte de cada clase, $-1$ y $1$, $h(\xvm) =-1$ y $h(\xvp) =1$, respectivamente. De esta manera $\wv$ y $b$ quedan completamente determinados. 
+Pero antes de eso, se debe solucionar un pequeño problema técnico; la ecuación $\hipe{\xv}$ está indeterminada ya que multiplicando por cualquier constante se obtienen valores de $\wv$ y $b$ distintos, pero que representan el mismo hiperplano. Esto da lugar a infinitas soluciones del problema. Entonces, se asume que se buscan los $\wv$ y $b$ con la condición de que para los vectores de soporte de cada clase, $-1$ y $1$, $h(\xvm) =-1$ y $h(\xvp) =1$, respectivamente. De esta manera $\wv$ y $b$ quedan completamente determinados. 
 
-No escribiremos esta restricción explícitamente en la especificación del problema de máximización del margen ya que surgirá implícitamente en la siguiente derivación de una expresión para el margen $M$. Para ello, supongamos que $\xvp$ es un vector de soporte de la clase $1$, y $\xv_0$ es el vector perteneciente al hiperplano ($h(\xv_0)=0$) más cercano a $\xvp$, tal que la línea que los une es perpendicular al hiperplano, o sea es paralela a $\wv$. 
+Es importante notar que ahora se pide que $\hyio$  en lugar de $\hyiz$, ya que los $\xi$ más cercanos al hiperplano son los vectores de soporte, para los cuales se cumpliría entonces que $\hyi =1$.
 
--\\
-gráfico de $\xvp$ y $\xv_0$, con $\wv$\\
-Los vectores $\xvp$ y $\xv_0$, pertenecientes al hiperplano de soporte y al hiperplano de máximo margen, respectivamente. La distancia entre los vectores, o sea, la distancia entre los hiperplanos, es el tamaño del máximo margen M.\\
+No se escribirá esta restricción explícitamente en la especificación del problema de maximización del margen ya que surgirá implícitamente en la siguiente derivación de una expresión para el margen $M$. Para ello, suponiendo que $\xvp$ es un vector de soporte de la clase $1$, y $\xv_0$ es el vector perteneciente al hiperplano ($h(\xv_0)=0$) más cercano a $\xvp$, tal que la línea que los une es perpendicular al hiperplano, o sea es paralela a $\wv$. 
 
-Entonces podemos escribir $\xvp = \xv_0 + \lambda \wv$, siendo $\lambda \wv$ el vector que une $\xvp$ y $\xv_0$. La distancia entre $\xvp$ y $\xv_0$, entre el hiperplano y el hiperplano de soporte, es $M=\norm{\lambda \wv} \, \lambda \in \reals$. Por ende:
+\tikzimage{margen}{scale=0.3}{Los vectores $\xvp$ y $\xv_0$, pertenecientes al hiperplano de soporte y al hiperplano de máximo margen, respectivamente. La distancia entre los vectores, o sea, la distancia entre los hiperplanos, es el tamaño del máximo margen $M=\lambda \wv$.}
 
-\begin{align}
+Se puede escribir $\xvp$ como $\xvp = \xv_0 + \lambda \wv$, siendo $\lambda \wv$ el vector que une $\xvp$ y $\xv_0$. La distancia entre $\xvp$ y $\xv_0$, entre el hiperplano y el hiperplano de soporte, es $M=\norm{\lambda \wv}, \, \lambda \in \reals$. Por ende:
+
+\ma{
 \wv \cdot \xvp + b &= 1 \\
 \wv \cdot (\xv_0 + \lambda \wv) + b &= 1 \\
 \wv \cdot \xv_0 + \wv \cdot \lambda \wv + b &= 1 \\
 \wv \cdot \xv_0 + b + \wv \cdot \lambda \wv  &= 1 \\
-\wv \cdot \lambda \wv  &= 1 \; (\xv_0 \, \text{pertenece al hiperplano}) \\
+\wv \cdot \lambda \wv  &= 1 \; (\xv_0 \quad \text{pertenece al hiperplano}) \\
 \lambda \norm{\wv}^2  &= 1  \\
 \lambda \norm{\wv}  &= \frac{1}{\norm{\wv}}  \\
 M &= \frac{1}{\norm{\wv}} 
-\end{align}
+}
 
 Finalmente el problema queda planteado como:
 
 
 \begin{equation*}
 \begin{aligned}
-& \minarg{\wv,b}
+& \maxarg{\wv,b}
 & &  \frac{1}{\norm{\wv}}\\
 & \text{sujeto a}
 & &  \hyiz, \; \rangeD.
@@ -74,7 +79,7 @@ Finalmente el problema queda planteado como:
 \end{equation*}
 
 
-Como maximizar $\frac{1}{\norm{\wv}}$ es equivalente a minimizar $\norm{\wv}^2 = \costew$ y es más simple, lo reescribimos como:
+Como maximizar $\frac{1}{\norm{\wv}}$ es equivalente a minimizar $\frac{\norm{\wv}^2}{2} = \costew$ y es más simple, se puede reformular el problema como:
 
 \begin{equation*}
 \begin{aligned}
@@ -85,9 +90,9 @@ Como maximizar $\frac{1}{\norm{\wv}}$ es equivalente a minimizar $\norm{\wv}^2 =
 \end{aligned}
 \end{equation*}
 
-Es importante notar que ahora pedimos que $h\hyio$  en lugar de $\hyiz$, ya que los $\xi$ más cercanos al hiperplano son los vectores de soporte, para los cuales definimos arriba que $\hyi =1$.
+Este es un problema de optimización cuadrática ($\costew$), con restricciones lineales y se puede resolver con algún método de optimización cuadrática y comenzar a utilizar SVM de esa manera. Pero este no es el modelo completo de SVM, ya que es difícil de optimizar y requiere que el problema sea linealmente separable.
 
-Este es un problema de optimización cuadrática ($\costew$), con restricciones lineales y podríamos resolverlo con algún método de optimización cuadrática y comenzar a utilizar SVM de esa manera. Pero este no es el modelo completo de SVM, ya que es difícil de optimizar y requiere que el problema sea linealmente separable.
+A continuación, se extenderá el modelo de SVM con la formulación de \textbf{Márgenes Suaves} para manejar problemas que no son linealmente separables y la presencia de ejemplares anómalos (comúnmente llamados \textbf{outliers}); se derivará la \textbf{formulación dual} que posibilita una solución más simple del problema de optimización y permite el \textbf{truco del kernel} para poder aplicar con poco costo computacional ciertos tipos de transformaciones a los ejemplares para separar mejor las clases. 
 
-A continuación, expandiremos el modelo de SVM con la formulación de \textbf{Márgenes Suaves} para manejar problemas que no son linealmente separables y la presencia de outliers; derivaremos la \textbf{formulación dual} que posibilita una solución más simple del problema de optimización y permite el \textbf{truco del kernel} para poder aplicar con poco coste computacional ciertos tipos de transformaciones a los ejemplares para separar mejor las clases, y finalmente desarrollaremos el algoritmo de optimización \textbf{Sequential Minimal Optimization} (SMO) de Platt \cite{platt1998} para resolver el problema de optimización y poder entrenar una SVM.
+Para el lector interesado el profundizar sobre el tema, en el apéndice \ref{apendice_smo} se describe el algoritmo de optimización \textbf{Sequential Minimal Optimization} (SMO) de Platt \cite{platt1998} para resolver el problema de optimización y poder entrenar una SVM.
  

@@ -1,0 +1,194 @@
+A continuación, se presentan los resultados de los experimentos con cada clasificador \footnote{Todos los datos recabados pueden encontrarse en el sitio de la base de datos LNHG, https://sites.google.com/site/lnhgdb/, en formato csv.}. 
+
+\image{esquema_experimentos}{0.5}{Esquema de los experimentos realizados}
+
+\newcommand{\cc}{$\ve{cc}$ }
+
+Se compara una medida relacionada al error, el \textbf{porcentaje de clasificación correcta} \cc de los métodos en la base de datos de gestos. El \cc se define como el porcentaje de ejemplares que se han clasificado correctamente, de modo que si $e$ es el error medido como el porcentaje de ejemplares clasificados incorrectamente, $cc=1-e$.
+
+Se utilizan los mismos parámetros de pre-procesamiento para todos los métodos y se muestra la variación del \cc en función del porcentaje de ejemplares de $D$ utilizados como conjunto de prueba del conjunto de prueba $p=|D_p| / |D|$ y sus parámetros\footnote{O sea, también se varía el tamaño del conjunto de entrenamiento, ya que $D= D_p \cup D_e$.}.
+
+En todos los experimentos la clase asignada fue aquella para la cual el clasificador dio el mejor puntaje, sin importar el valor absoluto de dichos puntajes. En otras palabras, dada una muestra, los métodos calculan los puntajes por clase $o_c$ de forma corriente, y luego la clase correspondiente se calcula como:
+\ma{
+clase=\maxarg{c} \; o_c
+}
+
+Se realizaron dos tipos de pruebas. Las primeras tienen el objetivo de medir el \cc con distintos valores para los parámetros de los algoritmos, el procesamiento de los ejemplares y el experimento. Para estas pruebas, se muestran gráficos del \cc  de cada clasificador en función de sus parámetros y el tamaño del vector de características, $n$. Además, se probó el comportamiento de cada clasificador variando el tamaño del conjunto de prueba, para verificar que el error con conjuntos de entrenamiento pequeños es comparable al obtenido con conjuntos grandes. 
+
+Las otras pruebas, las finales, se realizaron con los parámetros que mejores resultados arrojaron en las primeras y con un conjunto de entrenamiento pequeño; sólo se utilizaron 3 ejemplares de cada una de las 26 clases, es decir, $|D_e|= 3 \times 36 = 108 $. 
+
+En ambos casos, se utilizó el esquema de prueba de validación cruzada aleatoria estratificada, definida en el capítulo \ref{chap:aprendizaje}. Las primeras pruebas utilizaron 30 repeticiones por cada conjunto de parámetros probado. Las finales se realizaron con 500 repeticiones, para validar con mayor certeza los resultados.
+
+A continuación se muestran los resultados de las primeras pruebas para cada clasificador. Luego se presenta la comparación final en la tabla \ref{tabla_final}
+
+\subsection{SVM}
+
+\subsubsection{Kernel lineal}
+En el caso del kernel lineal, entrenado con $3$ ejemplares de cada clase, se muestra el \cc en función del parámetro de regularización $c$ y  el tamaño o la cantidad de partes del vector de características $n$:
+
+\tikzimage{svm_linear_lnhg_cn}{scale=0.7}{Curvas de variación del \cc en función de $n$ y $c$, con $p=0.85$.}
+
+Por otro lado, el modelo es bastante estable para todo valor de $c$, el parámetro de regularización. Además, los ejemplares son más separables si se incrementa el tamaño del vector característico de los ejemplares, $n$, lo cual confirma la habilidad de clasificar patrones con alta dimensionalidad del modelo SVM. 
+
+
+Además, se muestra el \cc en función del porcentaje de ejemplares destinados al conjunto de prueba, $p$.
+
+\tikzimage{svm_linear_lnhg_cc}{scale=0.7}{Curvas de variación del \cc en función de $p$ y $c$, con $n=128$}
+
+Puede observarse que el porcentaje de clasificación decae desde usar 90\% de datos para el entrenamiento (en este caso, 18 de 20 por clase),  hasta usar solo un 15\% de los datos para entrenar (3 de 20 por clase), pero solo ligeramente.
+
+
+\subsubsection{Kernel Gaussiano}
+
+Para el caso del kernel gaussiano, se varió además de $c$ y $n$, el parámetro de $\sd$ que controla la amplitud de la función gaussiana.
+
+
+\tikzimagetwo{svmg_cn}{scale=0.6}{Curvas de variación del \cc en función de $n$ y $c$.}{svmg_cs}{scale=0.6}{Curvas de variación del \cc en función de $c$ y $\sigma$, con $n=128$ y $p=0.85$.}
+
+Se observa que el parámetro de regularización $c=10$ da malos resultados, siendo sensible a valores bajos. Los mejores resultados se obtienen con un valor alto, $c=200$, aunque es bastante estable para $c=50,100$. Esta sensibilidad es más pronunciada cuando $n$ es grande, posiblemente debido a que un valor pequeño de regularización implica más libertad para el hiperplano, y más libertad implica más formas en que la determinación del hiperplano pueda \textit{salir mal}. A su vez, a medida que aumenta la dimensionalidad de los datos, la cantidad de hiperplanos posibles también aumenta y por ende la combinación de ambos fenómenos puede llevar a una performance tan baja ya que es muy posible encontrar un hiperplano en altas dimensiones que maximice el margen pero no refleje la distribución de los datos.
+
+Como antes, con los mejores valores, se evaluó la dependencia del error con el tamaño de $p$:
+
+\tikzimage{svmg_cc}{scale=0.7}{Curvas de variación del \cc en función de $p$ y $c$, con $n=128$ y $\sigma=32$.}
+
+La dependencia con la cantidad de datos es fuerte para $c=10$, pero para los otros valores de $c$, \cc es bastante estable. Se observa que en esos casos, \cc decrece lentamente, con una baja de menos de $10\%$ en el peor caso.
+
+\subsection{Feedforward}
+
+Se encontró que la red feedforward entrenada con el algoritmo backpropagation básico da resultados de poca calidad. La red no logra en general converger a un mínimo local aceptable aún con más de $10000$ iteraciones de actualización. Se estima que se debe a la dificultad del problema y su alta dimensionalidad, combinada con el algoritmo de entrenamiento simple que hace que dicho proceso se atasque muy fácilmente en mínimos locales de poca calidad.
+
+Por otro lado, el algoritmo resilient backpropagation ha dado resultados mucho más satisfactorios. En la figura \ref{fig:ff-lnhg-nc} se muestra el error del clasificador para distintos valores de $h$, la cantidad de neuronas ocultas, y $n$:
+
+\tikzimage[\label{fig:ff-lnhg-nc}]{ff-lnhg-nc}{scale=0.7}{Curvas de variación del \cc en función de $n$ y $h$, con $p=0.85$.}
+
+Se puede observar que, al contrario de lo que sucede con SVM, \cc decrece a medida que se aumenta el tamaño de gesto, probablemente por la dificultad de entrenar el clasificador en espacios dimensionales más altos.
+
+Por otro lado, aumentar el tamaño de $h$ contrarresta en parte este efecto, lo cual es de esperarse ya que se necesitan más neuronas para modelar espacios de dimensionalidad más grande.
+
+Con el mejor valor de $n$, 16, se muestran resultados para distintos tamaños del conjunto de prueba:
+
+\tikzimage{ff-lnhg-cc}{scale=0.7}{Curvas de variación del \cc en función de $p$ y $h$, con $n=16$. En este caso el parámetro $p$ no se evaluó con el valor $0.85$ debido a la dificultad de entrenar la red mencionada anteriormente.}
+
+Salvo para el caso $h=10$, el error de la red decae bastante lentamente a medida que decrece el tamaño del conjunto de entrenamiento. Si bien la red se beneficia de usar más neuronas cuando existen pocos ejemplares, esto probablemente sea porque en dichos casos se realiza un aprendizaje más de memorización debido a la dificultad de modelar cada clase con pocos ejemplares. 
+
+Dicho beneficio desaparece a medida que se achica el conjunto de prueba, debido a que con más ejemplares de entrenamiento se puede modelar la geometría de cada clase con pocas neuronas. No obstante, el clasificador muestra buenos resultados en todos los casos con $h>10$. 
+
+\subsection{Templates}
+El método de templates no tiene parámetros para elegir, de modo que se midió directamente su performance variando $n$ y $p$:
+
+\tikzimage{gmm_cc}{scale=0.7}{Curvas de variación del \cc en función de $n$ y $p$}
+
+El clasificador de templates muestra una efectividad clasificación aceptable con un conjunto de entrenamiento grande que decae grandemente con pequeños conjuntos de datos. Se entiende que dicha debilidad se debe al uso de modelos probabilísticos, ya que para una estimación efectiva de sus parámetros se requieren conjuntos de entrenamiento más grandes. 
+Además, da mejores resultados con $n$ grande si el conjunto de datos es grande, posiblemente debido a que puede modelar mejor el espacio altamente dimensional, mientras que para conjuntos de entrenamiento chicos, da mejores resultados con una dimensionalidad pequeña.
+
+\subsection{CNC}
+
+\subsubsection{CNC con normalización}
+Para el CNC, se probaron distintas variantes de $h$, las neuronas ocultas, y $r$, la cantidad de redes, en base al tamaño $n$:
+
+\tikzimagetwo{cnc_n_nr}{scale=0.7}{Curvas de variación del \cc en función de $r$ y $n$, con $h=30$ y $p=0.85$}
+{cnc_n_nh}{scale=0.7}{Curvas de variación del \cc en función de $h$ y $n$, con $r=10$ y $p=0.85$.}
+
+En la primera figura, el \cc se mantiene relativamente estable al pasar de $3$ redes, pero no hay una mejora significativa al aumentar $r$ más allá de ese valor.
+
+En la segunda figura, se observa que el clasificador es totalmente insensible al parámetro $h$, probablemente debido a que la cantidad de direcciones canónicas necesaria para codificar los gestos es pequeña. 
+
+Se puede observar también su dependencia con $p$, ya que :
+
+\tikzimage{cnc_n_cc}{scale=0.7}{Curvas de variación del \cc en función de $p$ y $r$, $h=30$, $n=16$.}
+
+Cuando $r=1$, \cc es significativamente menor, decayendo más rápidamente que en los otros casos, pero para el resto de valores de $r$ probados, \cc se mantiene bastante estable. Usando más de $3$ redes se obtienen mejoras pero no son significativas, aunque incrementan ligeramente a medida que se reduce el tamaño del conjunto de entrenamiento.
+
+\subsubsection{CNC sin normalización}
+
+Por otro lado, se obtuvieron resultados evitando el paso de preprocesamiento que normaliza la cantidad de elementos del vector de características a una constante $n$, ya que el CNC no lo requiere:
+
+
+\tikzimage{cnc_u_ph}{scale=0.7}{Curvas de variación del \cc en función de $h$ y $r$, $p=0.85$, sin normalizar.}
+
+Y nuevamente, la dependencia con $p$ utilizando la característica sin normalizar:
+
+\tikzimage{cnc_u_cc}{scale=0.7}{Curvas de variación del \cc en función de $p$ y $r$, $h=30$, sin normalizar.}
+
+Puede observarse que el CNC es robusto respecto del tamaño de entrenamiento, de forma similar al reconocedor con SVM para ambos tipos de kernel.  
+
+En estos experimentos, sin el re-muestreo, se obtuvo un resultado comparable al que utiliza el pre-procesamiento completo, aunque ligeramente más bajo.
+
+\subsection{Comparación}
+
+%En todos los experimentos anteriores se puede observar que, como es de esperarse, en todos los casos $cc$ se incrementa en función del tamaño del conjunto de entrenamiento. 
+
+En base a los experimentos anteriores, se determinaron los mejores valores para los parámetros de los algoritmos. En base a esos parámetros, se realizaron las pruebas finales cuyos resultados se presentan a continuación.
+
+Como se mencionó anteriormente, para las pruebas finales por cada algoritmo se realizaron 500 experimentos utilizando validación cruzada estratificada con re-muestreo aleatorio, con 3 muestras por clase para el conjunto de entrenamiento ($3*36=108$ en total) y 17 para el conjunto de prueba ($642$ en total). 
+
+En el caso de la red feedforward, 2 muestras de cada clase se utilizaron como conjunto de validación, dejando solo 15 para el conjunto de prueba, debido a que los algoritmos de entrenamiento backpropagation e iRprop+ utilizan un conjunto de validación para calcular el error que determina la condición de fin, por lo cual sería muy difícil entrenar dicha red con solo 3 muestras por clase.
+
+El clasificador CNC* es el mismo que el CNC pero sin normalizar, es decir, sin utilizar el proceso de re-muestreo en la etapa de preprocesamiento, debido a que no necesita un vector de entrada de longitud fija $n$, aunque en este caso los gestos no serían verdaderamente invariantes a la velocidad.
+
+El CNC y el CNC* tienen $r=10$ subclasificadores. Para los clasificadores FF con resilient backpropagation, CNC y CNC*, se muestran los resultados para redes con $h=100$, $h=50$ y $h=50$ neuronas ocultas respectivamente, que dieron los mejores resultados en los experimentos anteriores.
+
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|c|c|c|c|}
+\hline Clasificador & Parámetros & Entrenamiento & \cc ($\mu$) \\ 
+\hline SVM (Lineal) & $c=200$, $n=128$ & SMO &  88.24 \% (0.080) \\ 
+\hline SVM (Gaussiano) & $c=100$, $\sd=64$, $n=128$ & SMO & 88.56\%  (0.063)  \\ 
+\hline CNC & $h=50$, $r=10$ $n=32$ & CNC, $\alpha=0.01$ & 94.08\%  (0.088)\\ 
+\hline CNC* & $h=50$, $r=10$ & CNC, $\alpha=0.01$ & 88.71 \% (0.092) \\ 
+\hline FF & $h=100,n=16$ & iRprop+ &  81.40 \% (0.158) \\ 
+\hline Template & $n=16$ & - & 53.77\% (0.050) \\ 
+\hline 
+\end{tabular}
+\caption{Resultados de los experimentos de clasificación para la base de datos LNHG. La última columna muestra la media del porcentaje de ejemplares clasificados correctamente y la desviación estándar (en paréntesis) para cada clasificador.} 
+\label{tabla_final}
+\end{table}
+
+Se realizaron $ \binom{6}{2} = 15$ pruebas de hipótesis $t$-student de diferencia entre medias, una por cada combinación de dos clasificadores distintos, para evaluar la significancia estadística de estos resultados. En todos los casos, se encontró que los mismos son significativos a un p-nivel $p<0.01$.
+
+Los errores de reconocimiento del CNC* respecto al CNC son sólo ligeramente inferiores, lo cual muestra, en principio, que el método podría utilizarse sin el re-muestreo en los casos donde un desempeño reducido sea preferible a un coste computacional elevado de preprocesamiento.
+
+
+\section{Experimentos con base de datos Celebi2013}
+
+Para probar los clasificadores con esta base de datos, se consideró solamente la posición de una mano (la izquierda), y los gestos realizados con dicha mano, ya que de otra manera el mismo gesto realizado con la mano izquierda y la derecha sería casi indistinguible, quedando solo $4$ clases de gestos:
+
+\begin{itemize}
+\item Empuje hacia arriba con la mano izquierda
+
+\item Empuje hacia abajo con la mano izquierda
+
+\item Movimiento de la mano desde la parte izquierda del cuerpo hacia la derecha con la mano izquierda
+
+\item Saludo con la mano izquierda
+\end{itemize}
+
+
+Se realizaron todos los pasos de preprocesamiento y extracción de características descriptas anteriormente salvo el proceso de normalización que consiste en la rotación del usuario, ya que no había información de las posiciones de las otras partes del cuerpo para tal fin \footnote{Todos los datos recabados para los experimentos realizados en esta tesina con la base de datos Celebi también pueden encontrarse en el sitio de la base de datos LNHG, https://sites.google.com/site/lnhgdb/, en formato csv.}.
+
+Se empleó la misma metodología de validación cruzada con re-muestreo aleatorio y 500 iteraciones, y se siguieron los mismos pasos de evaluación de los parámetros del modelo. Los resultados finales se presentan en la siguiente tabla:
+
+\begin{table}[h]
+\centering
+\small
+\begin{tabular}{|c|c|c|c|}
+\hline Clasificador & Parámetros & Entrenamiento & \cc ($\mu$) \\ 
+\hline SVM (Lineal) & $c=100,n=16$ & SMO &  100 \% (0.002) \\ 
+\hline SVM (Gaussiano) & $n=16,\sd=64,c=100$ & SMO & 100\% (0.005)  \\ 
+\hline CNC & $h=70,r=10,n=16$ & CNC, $\alpha=0.5$ & 100\% (0.015) \\ 
+\hline CNC* & $h=70$, $p=5$ & CNC, $\alpha=0.5$ & 100\% (0.022)  \\ 
+\hline FF & $h=100,n=16$ & iRprop+ &  100 \%  (0.028) \\ 
+\hline Template & $n=16$ & - & 100\% (0.006) \\ 
+\hline Celebi2013 &  & DTW adaptativo & 97\% \\ 
+\hline 
+\end{tabular}
+\caption{Resultados de los experimentos de clasificación para la base de datos Celebi2013.} 
+\end{table}
+
+Nuevamente, se puede demostrar que estos resultados son significativos a un p-nivel $p<0.01$ mediante una prueba de hipótesis de diferencia entre medias con la distribución $t$-student.
+
+Hay que considerar que el método desarrollado por Celebi et al. \cite{celebi2013} utiliza información no solo de la posición de la mano, sino también de la posición del codo, brazo y hombro, lo cual pone a dicho método en una categoría ligeramente distinta de clasificador, ya que utiliza más información para clasificar. Además, el mismo utiliza los 8 gestos realizados por expertos para entrenar y los 20 gestos de peor calidad restantes  como conjunto de prueba, mientras que en los experimentos (cuyos resultados se muestran en la tabla anterior) realizados en esta tesina se utilizaron solo 3 gestos de entrenamiento, y seleccionados aleatoriamente. Por otro lado, el problema es más simple para nuestros clasificadores ya que deben lidiar con $4$ clases en lugar de $8$.
+
+En base a estas consideraciones, los resultados parecen ser relativamente comparables. Si bien esta situación no es ideal, es importante notar que no existen bases de datos de gestos con el formato de la LNHG (o sea, de gestos con una sola parte del cuerpo), lo cual dificulta el proceso de comparación. Por otro lado, dado el altísimo nivel de performance de clasificación, podemos asumir con confianza que la dificultad inherente del conjunto de datos no es tan alta como la de la base de datos LNHG.

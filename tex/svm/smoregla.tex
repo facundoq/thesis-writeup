@@ -1,0 +1,144 @@
+A continuación se deriva la expresión $G$ para llegar a la regla de actualización de SMO. Primero se derivará la igualdad $\au  + \ad s = \gamma$, con $\gamma$ y $s$ constantes. Esta igualdad servirá para expresar $G$ sólo en términos de $\ad$, quitando a la variable $\au$ de expresión a minimizar.
+
+Las condición de optimalidad $\derivative{\lag}{b}=0$ implica $\sum_i \ai y_i=0$. Como las únicas variables son $\au$ y $\ad$, es mejor escribir:
+
+\ma{
+0=\sumtn \ayi + \au y_1 + \ad y_2 \\
+\au y_1 + \ad y_2 = -\sumtn \ayi = \gamma'
+}
+
+Donde $\gamma'=- -\sumtn \ayi $ es constante y $n=|D|$. Se tomará como convención que $\au$ y $\ad$ son los valores \textit{nuevos} de las variables duales, y $\au^v$ y $\ad^v$ los \textit{viejos}; para los otros $\ai$ esta distinción no es necesaria ya que no se modifican.
+
+Definiendo $\gamma=y_1  \gamma'$ y $s=y_1 y_2$, se puede simplificar dicha ecuación:
+
+\ma{
+\au y_1 + \ad y_2 = \gamma' \\
+\au  + \ad y_2 y_1 = \gamma' y_1 \\
+\au  + \ad s = \gamma' y_1 \\
+\au  + \ad s = \gamma
+}
+
+De esta manera se obtiene la ecuación de una recta con ordenada $\gamma$ y pendiente $s=\pm 1$.  Como $\au  + \ad s = \gamma$, se puede expresar $\au$ en términos de $\ad$. A continuación, se simplificará la función $\lagd$ para expresarla en términos de $\au$. Partiendo de:
+
+\ma{\lagd= \sumi \ai - \oh \sumi \suml_j  (\ai y_i \aj y_j \kij )}
+
+Separando los términos que dependen de $\au$ y $\ad$ del resto de las variables duales:
+
+\ma{
+\lagd &=  - \oh (\sumi \suml_j  \ai y_i \aj y_j \kij)  + \sumi \ai \\
+&= \oh( - \au^2 \kuu y_1^2 - \ad^2 \kdd y_2^2 - 2 \au \ad \kud y_1 y_2 \\
+&- 2 \au y_1 \sumtnj \kuj y_j \aj - 2\ad y_2 \sumtnj \kdj y_j \aj \\ 
+&- \sumtn \sumtnj \ai \aj \kij y_i y_j)\\
+&+ \sumtn \ai + \au + \ad\\
+&= -\oh \au^2 \kuu -\oh \ad^2 \kdd - \au \ad \kud s \\
+&- \au y_1 \sumtnj K_{1,j} y_j \aj - \ad y_2 \sumtnj \kdj y_j \aj \\
+&- \oh \sumtn \sumtnj \ai \aj \kij y_i y_j\\
+&+ \sumtn \ai + \au + \ad
+}
+
+Reemplazando $(y_i)^2=1$ y $y_1 y_2 = s$,  y dado que el máximo de  $\lagd$ ahora no depende de los valores de  $\alpha_3,\cdots,\alpha_n$, se pueden quitar los términos constantes y optimizar:
+
+\ma{
+&= -\oh  \au^2  \kuu -\oh  \ad^2  \kdd -  \au \ad s \kud \\
+&- \au y_1 \sumtnj \kuj y_j \aj - \ad y_2 \sumtnj \kdj y_j \aj\\
+& + \au + \ad 
+}
+
+
+Ahora, reescribiendo con $\au=\gamma-s \ad$ para expresar $\lagd$ solamente en términos de la variable $\ad$:
+
+\ma{
+&=- \oh (\auaddef)^2  \kuu - \oh  \ad^2  \kdd -  (\auaddef) \ad  s \kud \\
+&- (\auaddef) y_1 \sumtnj \kuj y_j \aj - \ad y_2 \sumtnj \kdj y_j \aj \\
+& + (\auaddef) + \ad 
+ }
+
+Sabiendo que:
+
+\ma{
+s^2 &= 1\\
+(\auaddef)^2 &= \gamma^2 - 2 \gamma s \ad +\ad^2 \\
+s y_1 &= y_2
+}
+
+Y definiendo $v_i = \sumtnj	 \aj y_j \kij$, se obtiene:
+
+\ma{
+&= -\oh \gamma^2  \kuu +  \gamma s \ad \kuu - \oh \ad^2 \kuu \\
+&- \oh  \ad^2  \kdd - \ad  \gamma s \kud +\ad^2 \kud\\
+&- \gamma y_1 v_1  + \ad y_2 v_1 - \ad y_2 v_2\\
+&+ \gamma + \ad (1-s) 
+}
+
+Descartando términos constantes $- \gamma^2  \kuu $, $- \gamma y_1 v_1$ y $\gamma$:
+
+
+\ma{
+&= \gamma s \ad \kuu - \oh \ad^2 \kuu \\
+&- \oh \ad^2  \kdd - \gamma s \ad \kud + \ad^2 \kud\\
+&+ \ad y_2 v_1 - \ad y_2 v_2 \\
+&+ \ad (1-s) \\
+}
+
+
+
+Sacando factor común $\ad^2$ y $\ad$:
+\ma{
+&= \ad^2 (-\oh \kuu +\kud -\oh \kdd) \\
+&  +  \ad (\gamma s \kuu  - \gamma s \kud +  y_2 v_1 - y_2 v_2 +(1-s)) \\ 
+}
+
+Sea $\eta = -\kuu +  2 \kud - \kdd$, y agrupando $y_2$:
+
+\ma{
+&= \oh \ad^2 \eta  +  \ad (\gamma s \kuu  - \gamma s \kud +  y_2 (v_1 -v_2) +1-s) \\ 
+}
+
+Para simplificar el coeficiente de $\ad$, se puede utiliza el hecho de que $\gamma = \auv+ s \adv$:
+
+\ma{
+v_i &= \sumtnj \aj y_j \kij = (\sumtnj \aj y_j \tra(\xj)) \cdot \tra(\xi) \\
+&= (\sumj \aj y_j \tra(\xj) - \auv y_1 \tra(\xv_1) - \adv y_2 \tra(\xv_2) ) \cdot \tra(\xi) \\
+&= (\wv - \auv y_1 \tra(\xv_1) - \adv y_2 \tra(\xv_2) ) \cdot \tra(\xi) \\
+&= \wv \cdot \tra(\xi) - \auv y_1 \kui - \adv y_2 \kdi \\
+&= (\wv \cdot \tra(\xi) + b^v) - b^v - \auv y_1 \kui - \adv y_2 \kdi \\
+&= f_i^v - b^v - \auv y_1 \kui - \adv y_2 \kdi
+}
+
+Donde $f_i^v$ es la salida para $\xi$ bajo el $\wv^v$ correspondiente a los viejos parámetros. Entonces, el coeficiente de $\ad$ es:
+
+\ma{
+&\gamma s \kuu  - \gamma s \kud +  y_2 (v_1 v_2) +1-s \\
+&= (\auv+ s \adv) s \kuu  - (\auv+ s \adv) s \kud +  y_2 (v_1 - v_2) +1-s \\
+&= \auv s \kuu + \adv \kuu - \auv s \kud -  \adv \kud \\
+&+  y_2 (v_1 - v_2) +1-s \\
+&= \auv s \kuu + \adv \kuu - \auv s \kud -  \adv \kud \\
+&+ y_2 ( f_1^v - b^v - \auv y_1 \kuu - \adv y_2 \kud-
+f_2^v + b^v + \auv y_1 \kud + \adv y_2 \kdd) + 1 - s \\
+&=  \auv s \kuu + \adv \kuu - \auv s \kud -  \adv \kud \\
+&+ y_2 ( f_1^v - \auv y_1 \kuu - \adv y_2 \kud-
+f_2^v + \auv y_1 \kud + \adv y_2 \kdd) + 1 - s \\
+&=  \auv s \kuu + \adv \kuu - \auv s \kud -  \adv \kud \\
+&+ y_2 ( f_1^v - f_2^v) - \auv s \kuu - \adv \kud
+ + \auv s \kud + \adv  \kdd + 1 - s  \\
+&=  \auv s \kuu - \auv s \kud + \auv s \kud - \auv s \kuu\\
+&+ \adv \kuu  - \adv \kud - \adv \kud + \adv  \kdd\\
+&+ y_2 ( f_1^v - f_2^v) + 1 - s  \\
+&= \adv (\kuu -2 \kud + \kdd) \\
+&+ y_2 ( f_1^v - f_2^v) + 1 - s  \\
+&= y_2 ( f_1^v - f_2^v) + 1 - s  - \adv \eta \\
+&= y_2 ( f_1^v - f_2^v) + y_2 y_2 - y_1 y_2  - \adv \eta \\
+&=  y_2 ( f_1^v - f_2^v + y_2 - y_1)  - \adv \eta \\
+&=  y_2 ( (f_1^v - y_1 ) - (f_2^v - y_2))  - \adv \eta 
+}
+
+Siendo $E_i^v = f_i^v - y_i$ el error cometido por el clasificador con los valores viejos, el coeficiente de $\ad$ es entonces:
+\ma{
+&=y_2 ( E_1^v - E_2^v) - \adv \eta 
+}
+
+Entonces, la expresión a optimizar, $G$, queda como:
+
+\ma{
+G &= \oh \eta \ad^2 +  (y_2 ( E_1^v - E_2^v) - \adv \eta ) \ad 
+}

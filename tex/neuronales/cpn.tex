@@ -1,3 +1,168 @@
+Las redes neuronales competitivas (CPN) son típicamente utilizadas para realizar aprendizaje no supervisado. La no supervisión consiste en que la red descubra por sí sola características, regularidades, correlaciones o categorías en los datos de entrada, y se obtengan de forma codificada a la salida. Por ende, se puede decir que estas unidades y conexiones muestran cierto grado de auto-organización. \footnote{Esta introducción está fuertemente basada en la sección $6.1$ del libro \textit{Redes Neuronales Artificiales} de Galván et al. \cite{galvan2004}. }
+
+El aprendizaje no supervisado sólo consigue resultados útiles si en los datos de entrada existe cierto tipo de redundancia. Sin redundancia sería imposible encontrar patrones o características en los datos, lo cual se asemeja necesariamente a ruido aleatorio; en este sentido, la redundancia es fuente de conocimiento. Dicho de una manera más precisa, el contenido total de información del conjunto de datos de entrada es menor que el máximo que podría ser soportado por el mismo canal; esa diferencia es la redundancia.
+
+El tipo de patrón que una red con aprendizaje no supervisado puede aprender depende de su arquitectura. Se puede analizar  el funcionamiento de una red competitiva desde varias perspectivas, mutuamente relacionadas:
+
+\begin{itemize}
+
+\item \textbf{Familiaridad:} Mediante un único valor continuo se pondera el grado de similitud entre la entrada y un valor \textit{tipo} o media de una serie de valores presentados con anterioridad. La red, a su vez, puede ir aprendiendo que es un valor tipo.
+
+\item \textbf{Análisis de componentes principales:} La red detecta cuáles de las componentes del conjunto de entrada caracterizan en mayor grado al conjunto de datos de forma que las demás puedan eliminarse sin una significativa pérdida de información.
+
+\item \textbf{Agrupamiento:} A partir de un conjunto de entrada se desea conocer si hay un conjunto de datos que están bien representados por algún elemento  o elemento promedio de los ejemplares, y de qué manera se agrupan los datos a estos ejemplares representativos que ha encontrado la red. Esta sería una forma de clasificación sin conocimiento de las etiquetas de los datos.
+
+\item \textbf{Prototipado:} Igual que en el caso anterior, pero en vez de obtenerse como resultado a qué clase pertenece el dato de entrada, se obtiene un prototipo o ejemplar de la clase a la que pertenece dicho dato de entrada. 
+
+\item \textbf{Codificado:} Se obtiene, a la salida de la red, una versión codificada del dato de entrada, es decir, un dato de menor dimensión que mantenga el máximo de información que le sea posible. 
+\end{itemize}
+
+A veces los métodos de aprendizaje no supervisados pueden dar mejores resultados incluso en situaciones en que es posible aplicar métodos de aprendizaje supervisado. 
+
+Por ejemplo, el algoritmo backpropagation puede ser muy lento en ciertos casos, por ejemplo, si los patrones son de una dimensionalidad muy alta; una solución híbrida podría aplicar un método no supervisado para recodificar los ejemplares y luego alimentar estos ejemplares a una red feedforward entrenada con backpropagation u otra técnica.
+
+La arquitectura de las redes con aprendizaje no supervisado suele ser bastante simple. La complejidad de las mismas radica en sus leyes de aprendizaje. Muchas de ellas tienen una sola capa, y suelen tener muchas menos neuronas que la dimensionalidad de los datos de entrada.
+
+Además, suelen estar más cerca de las estructuras neurobiológicas que las puramente computacionales, ya que se basan en estudios cerebrales y tienden a imitar mejor sus características y comportamiento.
+
+Los modelos de ANN con entrenamiento no supervisado más comunes quizás sean los \textbf{Mapas auto organizativos} de Kohonen \cite{kohonen2001}, que no se tratarán, y las \textbf{redes competitivas} \cite{grossberg1987}. 
+
+\subsubsection{Modelo de interacción lateral}
+
+Una de las propiedades del cerebro que en general se pasa por alto en los modelos artificiales existentes es la significancia del \textbf{orden} de sus unidades de proceso. Este orden hace que unidades estructuralmente idénticas tengan una funcionalidad diferente debido a parámetros internos que evolucionan de forma variable según sea la distribución espacial de las neuronas.
+
+Esta propiedad \textit{topológica}  del cerebro parece ser de fundamental importancia para la representación de cierto tipo de información, en las imágenes visuales, en las abstracciones, etc. Estos mapas topológicos se encuentran presentes en la corteza cerebral y se encargan de diversas tareas de tipo sensorial y motor. 
+
+Cuando se piensa, y también en el procesado de la información del subconsciente, se realiza una compresión de la información formando representaciones reducidas con los aspectos más relevantes de la misma, sin que se produzca por ello ninguna pérdida importante de conocimiento acerca de las interrelaciones que se producen. El propósito de este procesado inteligente de la información parece ser la creación de imágenes del mundo observable, a varios niveles de abstracción.
+
+Así pues, uno de los rasgos esenciales de las redes neuronales es el de disponer de una mecanismo capaz de extraer de manera automática las características más relevantes de un conjunto de datos, en principio arbitrario, y de ámbito heterogéneo. Corresponde a un sistema de los denominados de \textit{clustering} capaz de adaptarse de forma automática a los estímulos recibidos y producir una clasificación en función de las características significativas, sin ningún mecanismo externo que determine el resultado.
+
+Existen varios modelos de redes neuronales artificiales que tratan de incorporar las propiedades anteriores. Estudios realizados sobre el neocórtex cerebral indican que está formado esencialmente por capas bidimensionales de neuronas interconectadas en cada capa por conexiones laterales.
+
+Cada neurona está conectada con otras de su entorno de manera que produce una excitación en las más próximas y una inhibición en las más alejadas. Tanto la excitación como la inhibición laterales son gradualmente más débiles a medida que se aumenta la distancia a la neurona en cuestión.
+
+Este mecanismo hace que cuando un estímulo produce una reacción en una neurona, las neuronas de su inmediato entorno se vean influenciadas por dicha reacción, de una manera positiva las más cercanas y negativa las más alejadas. 
+
+Entonces, el aprendizaje competitivo es un tipo de aprendizaje no supervisado que sirve de base para varios modelos de redes neuronales artificiales. El objetivo de este tipo de redes es buscar algún tipo de estructura en los datos de entrada. Se trata de que los datos parecidos sean clasificados como pertenecientes a la misma clase. En estos modelos suele haber una capa de clasificación compuesta por tantas neuronas como categorías pueda haber en los datos. Cada categoría está representada por un prototipo cuyas características son una especie de compendio de las características de los datos pertenecientes a esa misma categoría.  En la capa de clasificación, cada neurona corresponde, pues, a un prototipo. El sistema debe relacionar cada neurona (prototipo) con los datos de entrada que representa. En otros términos, debe agrupar los datos de entrada en categorías, por razones de similitud, y asignar a cada categoría un prototipo que más tarde será utilizado para clasificar datos nuevos y desconocidos.
+
+A continuación, se desarrollará el modelo más simple de redes competitivas, las redes competitivas \textbf{el ganador se lo lleva todo} o \textbf{winner-takes-all} en la cual se asume que las neuronas tienen una topología tal que la distancia entre cualquier par de neuronas es la misma \cite{rumelhart1985feature}.
+
+\subsection{Aprendizaje competitivo en redes ``El ganador se lo lleva todo''}
+
+La esencia de las redes CPN \textbf{winner-takes-all} es tener una capa de neuronas donde las mismas compiten por parecerse a los ejemplares de entrada, y de esa manera van aprendiendo a representar de forma sucinta la variedad del dominio $\ddp$ que modelan.
+
+La arquitectura de estas redes posee dos capas; la 1, de entrada y la 2 de salida.
+
+Cada neurona de la capa 1 está conectada con todas las neuronas de la capa 2. Cada neurona $j$ de la capa 2 contiene a su vez un vector de pesos $\wv_j \in \ddp$ para modelar las conexiones entre la capa 1 y la 2. Luego de entrenar la red, este vector representará un ejemplar prototipo del dominio a modelar. Este vector también se conoce como el \textbf{centroide} de la neurona.
+
+Hay dos perspectivas sobre estas redes: la dinámica, más biológicamente plausible, y la estática, más simple computacionalmente.
+
+\subsubsection*{Perspectiva dinámica}
+
+Desde la perspectiva dinámica, se puede considerar que la capa 2, además de recibir las entradas de la capa 1, implementa el modelo de interacción lateral incluyendo conexiones inhibitorias fijas entre todas las neuronas de su capa, excepto consigo misma donde la conexión es excitatoria. Dicho de otra forma, esta arquitectura es exactamente un sistema de interacción lateral en el que la función de interacción de cada neurona solo toma valores positivos para un radio de 0, es decir, para la propia neurona, y valores negativos constantes para el resto de las neuronas. 
+
+En este modelo, cada neurona se refuerza a sí misma, es decir, re-alimenta su valor de activación para compensar las inhibiciones que provienen del resto de las neuronas de su capa.
 
 
-\subsection{Vector Quantization}
+\image{cpn_arquitectura}{0.9}{Arquitectura de una red competitiva desde una perspectiva dinámica.}
+ 
+Cuando se recibe una entrada en la capa 1, esta se propaga hasta la capa 2. Una vez que las neuronas de la capa 2 han sido activadas por la capa 1, ésta deja de actuar y la señal es propagada de forma asíncrona a través de la capa 2, de manera que todas las neuronas tratarán de impedir que las demás tengan un valor de activación alto, gracias a las conexiones inhibitorias con todas sus vecinas; a la vez que intentarán tener ellas mismas un valor de activación alto, gracias a las conexiones reflexivas excitativas. En algún momento la dinámica de la red hará que una neurona quede con un valor de activación alto, mientras que el resto de las neuronas son inhibidas (tienen un valor de activación nulo o cero); se dice que la primer neurona es la \textbf{neurona ganadora}. En ese punto que la capa 2 se ha \textbf{estabilizado}.
+
+Se dice entonces que las neuronas de la capa 2 \textit{compiten} por la entrada, de ahí el nombre del método. Sólo una consigue ganar la competición; a esa se la etiqueta con el nombre de neurona ganadora. La neurona ganadora representa al prototipo más similar que se asigna al dato de entrada.
+
+El algoritmo que describe el funcionamiento de la red es el siguiente:
+
+\begin{enumerate}
+\item Se recibe el estímulo en la capa 1.
+\item Se propaga la señal hasta la capa 2 y se calcula el valor de excitación para cada neurona $j$ de esta capa, de acuerdo a los vectores de pesos internos $\wv_j$ .
+\item Se inhiben las conexiones entre la capas 1 y 2
+\item Se propaga la señal por la capa 2, calculándose los nuevos valores de excitación de las neuronas.
+Si la red se ha estabilizado y hay una sola neurona ganadora $c$, ir al paso 5. De lo contrario, volver a ejecutar el paso 4. 
+\item Calcular el nuevo valor para el vector $\wv_c$ de la neurona ganadora $c$ del paso 4.
+Re-establecer las conexiones entre las capas 1 y 2.
+\end{enumerate} 
+
+\subsubsection*{Perspectiva estática}
+
+Desde el punto de vista estático o computacional, se puede simplificar el modelo asumiendo que la neurona ganadora será precisamente la que al principio ha recibido la mayor excitación, ya que será la que habrá inhibido en mayor grado al resto y también se habrá reforzado a sí misma en mayor grado. Entonces, en la capa 2 no hay aprendizaje de los pesos de inhibición y excitación entre las neuronas, los mismos son fijos y todos tienen el mismo valor constante. De esta manera se evita modelar la dinámica explícitamente. 
+
+
+\image{cpn_arquitectura_sin_lateral}{0.2}{Arquitectura de una red competitiva con 4 neuronas de entrada y 2 de salida desde una perspectiva estática.}
+
+
+Generalizando, se puede considerar como parámetro de la red una medida de distancia entre ejemplares $d$, que utilizarán las neuronas para calcular la distancia entre su centroide y los ejemplares de acuerdo con alguna norma, con lo cual se puede deducir su similitud. Entonces, dado un ejemplar de entrada $\xv$, se calcula la neurona ganadora $c$ como:
+
+\ma{
+c &= \argmax_j g_j(\xv) \\
+g_j(\xv) &= \caseotherwise{1}{0}{ d(\xv,\wv_j) < d(\xv,\wv_i), \; \forall i\neq j}
+}
+
+La función $g_j$ entonces es 1 si el centroide de neurona $j$ es el de mayor similitud al ejemplar de entrada $\xv$ en relación al resto de los centroides. En otras palabras, si $g_j=1$ la neurona $j$ es la ganadora. Como funciones de distancia, puede utilizarse la euclídea $d(x,y)=\norm{x-y}_2$, la gaussiana $d(x,y)=1-e^{-(\norm{x-y}/\sigma)}$ con alguna norma $\norm{\cdot}$, o alguna otra dependiendo del dominio del problema.
+
+ 
+Para entrenar la red, se toma un ejemplar y se calcula la neurona ganadora. Para hacer que la siguiente vez el mismo ejemplar haga activarse aún más a su prototipo relacionado, se modifica el centroide $\wv$ para que sea más similar a $\xv$. Este aprendizaje sólo modifica las conexiones de la neurona ganadora y por eso recibe el nombre de  \textbf{winner takes all} (\textit{el que gana se lo lleva todo}). Esto hará que en el futuro cada neurona tenga aún mayor facilidad para reconocer el estímulo que aprendió, e incluso estímulos parecidos. Entonces el cambio en $\wv_j$ dado un ejemplar $\xv$ será:
+
+\ma{
+\Delta \wv_j(\xv)= \case{\alpha (\xv-\wv_j)}{0}{g_j=1}{g_j=0}
+}
+
+O de forma más succinta:
+
+\ma{
+\Delta \wv_j(\xv)= \alpha  g_j (\xv-\wv_j)
+}
+
+
+El aprendizaje puede realizarse durante una cantidad de iteraciones fijas, hasta que para todos los ejemplares haya una sola neurona de salida con un nivel de activación lo suficientemente grande. 
+
+El algoritmo de aprendizaje sería entonces:
+
+
+\begin{algorithm}[H]
+\KwData{ \\
+Un conjunto de ejemplares $\xi \in D$, $D \subset \reals^d $ \\
+Una cantidad de iteraciones $I$ \\
+Una tasa de aprendizaje $\alpha$ \\
+Una función de distancia $d$ \\
+Un tamaño de la capa de salida $h$ }
+\KwResult{Vectores de parametros $\wv_j$,  \range{j}{1}{h}}
+\For{$\range{j}{1}{h}$}{ 
+	$\wv_j=random(d)$\;
+}
+$k=0$ \;
+\While{$k < I$}{ 
+	 \For{$\xi \in D$}{
+	 			$c= \argmax_j g_j(\xi)$ \;
+	 			$\wv_c = \wv + \alpha ( -\wv_c + \xi)$ \;
+	 }
+	$k=k+1$\;
+}
+Retornar los $\wv_j$ \;
+\caption{Esquema del entrenamiento de una red neuronal competitiva \textit{winner-takes-all}.} 
+\end{algorithm}
+\vspace{10pt}
+
+
+Este es el modelo al que se hará referencia al describir el clasificador neuronal competitivo desarrollado en esta tesina y descripto en el capítulo \ref{chap:resultados}, y se denominará a este algorítmo como el típico para el entrenamiento de una CPN.
+
+\subsubsection*{Geometría del clasificador y consideraciones sobre la representación}
+
+En las redes CPN, cada prototipo o centroide $\wv$ tiene asignada cierta región del espacio en base a la función de similitud $s$:
+
+\tikzimagetwo{cluster3}{scale=0.4}{Un conjunto de ejemplares con tres grupos.}
+{cluster3_means_region}{scale=0.4}{Regiones de Voronoi del espacio asignadas a cada neurona por la red}
+
+En la figura b) se muestran las regiones de voronoi para una CPN de 3 neuronas de salida con una función de distancia euclídea. Cada conjunto de ejemplares agrupado se conoce como \textbf{cluster}; en la figura hay 3, y la red aprende el punto medio de cada una. Se puede considerar entonces que el algoritmo de entrenamiento genera un mapa del espacio $\ddp$, donde hay regiones significativas agrupadas.
+
+Si la salida de la capa 2 son los $g_j$, de la manera que $\ov= (g_1,\cdots,g_h)$, se puede ver esta salida como una codificación del ejemplar en donde se indica a qué clase pertenece mediante la neurona que es más parecida. El concepto de clase se crea en base a los patrones aprendidos y a su forma.
+
+Se puede argumentar que con esta simple información, que puede ser de una dimensionalidad mucho menor que la del ejemplar, se logra una representación más eficiente ya que se abstraen los detalles que provienen de variaciones  sin importancia en el muestreo de los ejemplares. 
+
+De esta manera se genera un espacio de características, en donde los ejemplares se representan por los vectores $\ov$. Se puede relajar dicha representación si los elementos del vector $\ov$ no son simplemente unos y ceros, sino alguna función continua y monótonamente creciente que indica la pertenencia del ejemplar a cada clase o \textit{cluster}.
+
+Si los vectores que representan los ejemplares están normalizados de manera que el mapa generado sea independiente de la norma de $\xv$, se puede encontrar otra representación geométrica del aprendizaje competitivo.  Como todos tienen norma $1$, los ejemplares pueden visualizarse como puntos en una hiperesfera de radio $1$. Si hay tres vectores de pesos $(\wv_1,\wv_2,\wv_3)$, mediante el proceso de aprendizaje estos también tendrán una tendencia a ser puntos en esta esfera de radio $1$.
+
+\image{esfera_cpn}{1}{a) Los ejemplares y los 3 vectores $\wv_j$ de las neuronas ocultas (X)  al comienzo del algoritmo, b) Luego de entrenada la red, las neuronas $\wv_j$ se posicionan en los centros de los grupos.}
+
+
+Por último, una de las aplicaciones más importantes del aprendizaje competitivo y sus variaciones es la \textbf{cuantización de vectores}. La idea de la cuantización de vectores es categorizar un conjunto de ejemplares de entrada en $M$ clases, y representar cada ejemplar mediante su clase. Es clave que en lugar de utilizar los componentes de un vector, generalmente de valores continuos, se puede guardar sólo el índice de la clase. Esto puede ser utilizado, por ejemplo, tanto para almacenar información de forma comprimida como para generar características $\tra$ a partir de los datos. 

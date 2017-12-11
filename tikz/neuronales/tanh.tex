@@ -1,0 +1,12 @@
+\input{../base}
+\tikzdrawing{
+
+\draw [<->] (-3,0) -- (3,0);
+\draw [<->] (0,-3) -- (0,3);
+\scalefont{0.25} 
+
+\squareaxis[axis lines=middle,ytick={-3,-2,-1,0,1,2,3},xtick={-3,-2,-1,0,1,2,3}]{
+\addplot[very thick, domain=-3:3, samples=200]{sinh(x)/cosh(x)};
+}{3}
+
+}

@@ -1,18 +1,215 @@
 % generales
 
+\definecolor{added}{RGB}{50,139,50}
+\definecolor{deleted}{RGB}{255,0,0}
+\definecolor{modified}{RGB}{240,200,0}
+
+ \newcommand{\backgroundcolor}[2]{
+ \begin{mdframed}[hidealllines=true,backgroundcolor=#1,innerleftmargin=3pt,innerrightmargin=3pt,leftmargin=-3pt,rightmargin=-3pt]
+ #2
+ \end{mdframed}
+ }
+
+\newcommand{\added}[2][]{\backgroundcolor{added}{ (agregado) #2}}
+\newcommand{\deleted}[1]{\backgroundcolor{deleted}{(borrado) #1}}
+\newcommand{\modified}[1]{\backgroundcolor{modified}{(modificado) #1}}
+
 \setcounter{secnumdepth}{5}
+\newcommand{\chapterimagetwo}[6]{
+\begin{figure}[H]
+   \centering
+   \begin{minipage}[b]{0.50\linewidth}
+   \centering
+   \includegraphics[scale=#3]{img/\chapterid/#1}
+   \caption{#2}
+   \label{fig:#2}
+   \end{minipage}
+   \hspace{0.5cm}
+   \begin{minipage}[b]{0.50\linewidth}
+   \centering
+   \includegraphics[scale=#6]{img/\chapterid/#4}
+   \caption{#5}
+   \label{fig:#4}
+   \end{minipage}
+\end{figure}
+}
+
+
+\newcommand{\imagetwo}[6]{
+\begin{figure}[H]
+   \centering
+   \begin{subfigure}[t]{0.45\textwidth}
+   \includegraphics[scale=#2]{img/\chapterid/#1}
+   \caption{#3}
+   \label{fig:#2}
+   \end{subfigure}
+   \hspace{0.5cm}
+   \begin{subfigure}[t]{0.45\textwidth}
+   \includegraphics[scale=#5]{img/\chapterid/#4}
+   \caption{#6}
+   \label{fig:#4}
+   \end{subfigure}
+\end{figure}
+}
+
+\newcommand{\imagetwogen}[6]{
+\begin{figure}[H]
+   \centering
+   \begin{subfigure}[t]{0.45\textwidth}
+   \includegraphics[scale=#2]{img/#1}
+   \caption{#3}
+   \label{fig:#2}
+   \end{subfigure}
+   \hspace{0.5cm}
+   \begin{subfigure}[t]{0.45\textwidth}
+   \includegraphics[scale=#5]{img/#4}
+   \caption{#6}
+   \label{fig:#4}
+   \end{subfigure}
+\end{figure}
+}
+
+\newcommand{\image}[4][]{
+\begin{figure}[H]
+   \centering
+   \includegraphics[scale=#3]{img/\chapterid/#2}
+   \caption{#4}
+   #1
+\end{figure}
+}
 
 %figures
+\newcommand{\imagegen}[4][]{
+\begin{figure}[H]
+   \centering
+   \includegraphics[scale=#3]{img/#2}
+   \caption{#4}
+   #1
+\end{figure}
+}
 
-\newcommand{\image}[3]{
+\newcommand{\tikzimage}[4][]{
+\begin{figure}[H]
+   \centering
+  \includegraphics[#3]{tikz/\chapterid/#2}
+   \caption{#4}
+   #1
+\end{figure}
+}
+
+\newcommand{\tikzimagetwo}[6]{
+\begin{figure}[H]
+   \centering
+   \begin{subfigure}[t]{0.45\linewidth}
+   \includegraphics[#2]{tikz/\chapterid/#1}
+   \caption{#3}
+   \label{fig:#1}
+   \end{subfigure}
+   \hspace{0.3cm}
+   \begin{subfigure}[t]{0.45\linewidth}
+   \includegraphics[#5]{tikz/\chapterid/#4}
+   \caption{#6}
+   \label{fig:#4}
+   \end{subfigure}
+\end{figure}
+}
+
+
+\newcommand{\tikzimagethree}[9]{
+\begin{figure}[H]
+   \centering
+   \begin{subfigure}[t]{0.28\textwidth}
+   \includegraphics[#2]{tikz/\chapterid/#1}
+   \caption{#3}
+   \label{fig:#1}
+   \end{subfigure}
+   \hspace{0.1cm}
+   \begin{subfigure}[t]{0.28\textwidth}
+   \includegraphics[#5]{tikz/\chapterid/#4}
+   \caption{#6}
+   \label{fig:#4}
+   \end{subfigure}
+  \hspace{0.1cm}
+  \begin{subfigure}[t]{0.28\textwidth}
+  \includegraphics[#8]{tikz/\chapterid/#7}
+  \caption{#9}
+  \label{fig:#7}
+  \end{subfigure}
+
+\end{figure}
+}
+
+\newcommand{\tikzimagethreecaption}[7]{
+\begin{figure}[H]
+   \centering
+   \begin{subfigure}[t]{0.28\textwidth}
+   \includegraphics[#2]{tikz/\chapterid/#1}
+   \label{fig:#2}
+   \end{subfigure}
+   \hspace{0.1cm}
+   \begin{subfigure}[t]{0.28\textwidth}
+   \includegraphics[#4]{tikz/\chapterid/#3}
+   \label{fig:#4}
+   \end{subfigure}
+  \hspace{0.1cm}
+  \begin{subfigure}[t]{0.28\textwidth}
+  \includegraphics[#6]{tikz/\chapterid/#5}
+  \label{fig:#7}
+  \end{subfigure}
+  
+  %\caption{Figure caption.}
+\end{figure}
+}
+
+\newcommand{\imageold}[3]{
 \begin{figure}[H]
    \centering
    \includegraphics[scale=#2]{img/#1}
    \caption{#3}
 \end{figure}
 }
-%definitions
 
+\newcommand{\tikzchapterfiguretwo}[5][]{
+\begin{figure}[H]
+   \centering
+   \begin{minipage}[b]{0.50\linewidth}
+   \centering
+   \input{tikz/\chapterid/#2}
+   \caption{#3}
+   \label{fig:#2}
+   \end{minipage}
+   \hspace{0.5cm}
+   \begin{minipage}[b]{0.50\linewidth}
+   \centering
+   \input{tikz/\chapterid/#4}
+   \caption{#5}
+   \label{fig:#4}
+   \end{minipage}
+   #1
+\end{figure}
+}
+
+
+\newcommand{\tikzchapterfigure}[3][]{
+\begin{figure}[H]
+   \centering
+   \input{tikz/\chapterid/#2}
+   \caption{#3}
+   #1
+\end{figure}
+}
+\newcommand{\tikzfigure}[3][]{
+\begin{figure}[H]
+   \centering
+   \input{tikz/#2}
+   \caption{#3}
+   #1
+\end{figure}
+}
+
+
+
+%definitions
 \newcommand{\caset}[6]{ 
 \begin{cases}
   #1 &\mbox{si} \; #2 \\  
@@ -43,6 +240,8 @@
 \newcommand{\argmin}{\operatornamewithlimits{argmin}}
 \newcommand{\argmax}{\operatornamewithlimits{argmax}}
 
+\newcommand{\tuple}[3]{ \{ \text{#1} \} \; #2 \; \{ \text{#3}\}}
+
 % Sets
 \newcommand{\normal}{\mathcal{N}}
 \newcommand{\reals}{\mathbb{R}}
@@ -68,6 +267,9 @@
 \newcommand{\inner}[2]{  \left\langle #1 , #2 \right\rangle }
 \newcommand{\innerg}{ \inner{\cdot}{\cdot} }
    
+%constants
+\newcommand{\oh}{\frac{1}{2}}
+
 
 %variables
 \newcommand{\ve}[1]{\boldsymbol{#1}}
@@ -76,13 +278,9 @@
 \newcommand{\tra}{\phi}
 
 %environments
-\newcommand{\mathverbatim}[1]{
-\begin{verbatim}[commandchars=\\\{\}, codes={\catcode‘$=3\catcode‘^=7}]
- #1
- \end{verbatim} 
-}
 \newcommand{\ma}[1]{\begin{align*} #1 \end{align*}}
 \newcommand{\optma}[1]{\begin{equation*} \begin{aligned} #1 \end{aligned} \end{equation*}}
+\newcommand{\ec}[1]{ \begin{equation*} #1 \end{equation*} }
 
 %tesina generales
 \newcommand{\texinput}[1]{\input {tex/#1}}
@@ -104,16 +302,20 @@
 
 %Aprendizaje
 
-\newcommand{\dprob}{\mathop{\mathcal{D}}}
-\newcommand{\yi}{\mathbf{y_i}}
-\renewcommand{\xi}{\mathbf{x_i}}
-\newcommand{\xv}{\mathbf{x}}
-\newcommand{\yv}{\mathbf{y}}
-\newcommand{\wv}{\mathbf{w}}
-\newcommand{\vv}{\mathbf{v}}
-\newcommand{\zv}{\mathbf{0}}
+\newcommand{\dprob}{\ve{\mathcal{D}}}
+\newcommand{\yi}{\ve{y_i}}
+\renewcommand{\xi}{\ve{x_i}}
+\newcommand{\xv}{\ve{x}}
+\newcommand{\yv}{\ve{y}}
+\newcommand{\wv}{\ve{w}}
+\newcommand{\vv}{\ve{v}}
+\newcommand{\zv}{\ve{0}}
+\newcommand{\rv}{\ve{r}}
+\newcommand{\df}{\ve{d}}
 \newcommand{\loss}{\ell}
+\newcommand{\lossz}{\loss_0}
 \newcommand{\rl}{\rho_{\loss}}
+\newcommand{\rlz}{\rho_{\lossz}}
 
 \newcommand{\cv}{\textit{CV}}
 \newcommand{\ddp}{\mathcal{P}}
@@ -126,17 +328,54 @@
 \newcommand{\sd}{\sigma}
 
 \newcommand{\ee}{\rho}
-\newcommand{\kvc}{VC con $k$ repeticiones}
+\newcommand{\kvc}{VC con $k$ repeticiones }
 
 
 %SVM
 
-\newcommand{\oh}{\frac{1}{2}}
+\newcommand{\hipf}[1]{ \wv \cdot #1 + b}
+\newcommand{\hipfi}{ \hipf{\xi}}
+\newcommand{\hipe}[1]{ \hipf{#1} = 0 }
+\newcommand{\hipei}{ \hipe{\xi} }
+\newcommand{\rangeD}{\range{i}{1}{|D|}}
+
+\newcommand{\maxmin}[2]{\underset{#1}{\text{#2}}}
+\newcommand{\maxarg}[1]{\maxmin{#1}{Max} }
+\newcommand{\minarg}[1]{\maxmin{#1}{Min} }
+
+\newcommand{\hyi}{h(\xi) y_i }
+\newcommand{\hyiz}{\hyi >0}
+\newcommand{\hyio}{\hyi \geq 1}
+
+\newcommand{\riz}{r_i \geq 0}
+\newcommand{\siz}{\si \geq 0}
+\newcommand{\uiz}{\ui \geq 0}
+\newcommand{\aiz}{\ai \geq 0}
+\newcommand{\aizc}{0 \leq \ai \leq c}
+
+\newcommand{\au}{\alpha_1}
+\newcommand{\ad}{\alpha_2}
+
+\newcommand{\costes}{c \sum\limits_i \si}
+\newcommand{\costeu}{\sum\limits_i \si \ui}
+\newcommand{\costea}{\sum\limits_i \ai r_i }
+\newcommand{\costew}{\frac{1}{2} \wv \cdot \wv}
+
+\newcommand{\ayi}{\ai y_i }
+\newcommand{\ayx}{\ai y_i \xi}
+\newcommand{\ayxj}{\aj y_j \xj}
+\newcommand{\sumayx}{\sum\limits_i \ai y_i \xi}
+\newcommand{\sumay}{\sum\limits_i \ai y_i}
+\newcommand{\lagai}{ \sumi \ai - \oh \sumi \suml_j  (\ayx \cdot \aj y_j \xj )  }
+\newcommand{\lagd}{\lag_D}
+
+\newcommand{\txi}{\tra(\xi)}
 
 \newcommand{\xj}{\mathbf{x_j}}
 
 \newcommand{\kn}[2]{\kappa_{#1,#2}}
 \newcommand{\kij}{\kn{i}{j}}
+\newcommand{\kji}{\kn{j}{i}}
 \newcommand{\kud}{\kn{1}{2}}
 \newcommand{\kuu}{\kn{1}{1}}
 \newcommand{\kdd}{\kn{2}{2}}
@@ -155,6 +394,7 @@
 
 \newcommand{\updateneta}{
 restrict_{L,H}(\adv+ \Delta \ad)}
+
 
 \newcommand{\av}{\ve{\alpha}}
 \newcommand{\ai}{\alpha_i}
@@ -184,10 +424,11 @@ restrict_{L,H}(\adv+ \Delta \ad)}
 
 
 %GMM
-\newcommand{\gu}{\mathbf{\mu}_{j,c,k}}
-\newcommand{\gc}{\mathbf{\Sigma}_{j,c,k}}
-\newcommand{\sck}{\ve{s}_{ck}}
-\newcommand{\scj}[1]{\ve{s}_{c#1}[j]}
+\newcommand{\sv}{\ve{s}}
+\newcommand{\gu}{\ve{\mu}_{j,c,k}}
+\newcommand{\gc}{\ve{\Sigma}_{j,c,k}}
+\newcommand{\sck}{\ve{x}_{ck}}
+\newcommand{\scj}[1]{\ve{x}_{c#1}[j]}
 \newcommand{\stcj}{S_{j,c}}
 \newcommand{\xvp}{\xv^{+}}
 \newcommand{\xvm}{\xv^{-}}

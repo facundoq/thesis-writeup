@@ -1,0 +1,27 @@
+\input{../base}
+\tikzdrawing{
+\tikzset{mark size=3}
+\tikzset{mark options={ line width=0.2pt}}
+\scalefont{0.001}
+
+
+\node [below] at (0,-2.2) {$x_1$};
+\node [left] at (-2.2,0) {$x_2$};
+
+\draw [fill=black!2] (1,1) circle [radius=0.97];
+\draw [fill=black!2] (-1,-1) circle [radius=0.97];
+
+
+\squareaxis{
+\addplot[only marks,thick,mark=oplus,mark options={}] coordinates {(-1, -1.5) (-1,-0.5)(-1.5, -1) (-0.5, -1) };
+%\addlegendentry{ Clase $+$};
+
+\addplot[only marks,thick,mark=halfcircle,mark options={}] coordinates {(1, 1.5) (1,0.5)  (1.5, 1) (0.5, 1)};
+%\addlegendentry{ Clase $-$}
+
+}{2}[legend style={at={(0.03,0.5)}}
+%legend pos= south east
+]
+
+
+}

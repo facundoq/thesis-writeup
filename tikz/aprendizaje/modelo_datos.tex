@@ -1,0 +1,21 @@
+\input{../base}
+\tikzdrawing{
+\tikzset{mark size=5  }
+\tikzset{mark options={solid, fill=gray, line width=0.2pt}}
+\scalefont{0.001}
+
+
+\draw [ ultra thick,fill=cyan] (-2,0) circle [radius=1];
+\draw [ ultra thick,fill=teal] (2,0) circle [radius=1];
+\node [font=\Large] at (-2,0) {Datos};
+\node [font=\Large] at (2,0) {Modelo};
+
+\draw [->, thick] (-0.8,0.2) -- (0.8,0.2);
+\draw [<-, thick] (-0.8,-0.2) -- (0.8,-0.2);
+\node [font=\small] at (0,0.5) {Generar};
+\node [font=\small] at (0,-0.5) {Validar con};
+
+
+
+
+}

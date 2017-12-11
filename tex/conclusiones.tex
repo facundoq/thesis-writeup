@@ -1,0 +1,28 @@
+
+El reconocimiento de gestos es un área de investigación de sumo interés en la actualidad, debido a la gran cantidad de nuevos sensores y dispositivos móviles, que trae nuevas posibilidades y desafíos a la investigación en interacción hombre-máquina y el aprendizaje automático. El aprendizaje automático aplicado al reconocimiento de gestos proporciona un enfoque flexible y dinámico para la generación de vocabularios de gestos de interacción por parte de cualquier tipo de usuario. Estos métodos pueden aplicarse para generar modelos de reconocimiento que sirvan para desarrollar programas donde el usuario interactúa con un computador mediante gestos.
+
+En esta tesina, el autor ha presentado un nuevo método de reconocimiento de gestos invariante a la velocidad, la escala, la traslación y parcialmente invariante a la rotación. El método obtiene buenos resultados con un entrenamiento que utiliza pocas muestras, una característica necesaria para el reconocimiento de gestos dependiente del usuario, en donde el mismo tiene que generar los patrones de entrenamiento. 
+
+Se ha generado una base de datos de gestos de ejemplo para probar los métodos. Se introdujo también un modelo teórico de gestos, junto con una característica que hace más fácil su reconocimiento bajo las invariancias mencionadas. 
+
+Se han adaptado los modelos de SVM, redes neuronales feedforward y de templates al problema en base al modelo de gestos introducido, y se ha medido su performance. 
+
+Se ha propuesto el nuevo modelo de clasificación CNC, que utiliza una representación tipo bag-of-words para las direcciones de los gestos, y que, adicionalmente, es invariante al punto de comienzo del gesto.
+ 
+En los experimentos, los modelos probados funcionan bien en general, y el CNC y SVM obtienen los mejores porcentajes de reconocimiento. Adicionalmente, el CNC tiene la ventaja de ser fácil para implementar, entrenar, poseer la invariancia antes mencionada, y su algoritmo de aprendizaje requiere pocas iteraciones para converger.
+
+
+El CNC deriva su buen desempeño de la codificación de los gestos que realiza en la segunda capa, especialmente junto al esquema de bagging. El mismo tiene como efecto que cada ejemplar se guarde con una codificación distinta según el agrupamiento que realiza cada red. Esto le añade más robustez al proceso de estimación de la región, ya que la misma resultará ser un promedio de las regiones de voronoi estimadas por cada red. Sin este esquema, se observa que la performance se reduce significativamente, y solo se necesitan 3 redes para aumentarla a un nivel aceptable.
+
+
+La estructura de la tercera capa resulta beneficiosa para el caso en donde se tienen pocos ejemplares. Una hipótesis para explicar este resultado es que al tener tan pocas muestras, es difícil para el clasificador estimar la región de Voronoi a la cual pertenecen los ejemplares de cada clase. Al basar la clasificación directamente en los ejemplares de entrenamiento, si bien no se aproxima de forma completa la región del espacio que representa cada gesto, se están estimando varios subconjuntos de dicha región. Por este motivo, si bien el clasificador es más conservador, ya que no considera relevante que un ejemplar sea un poco parecido a varios ejemplares de entrenamiento. Por ende, para aplicaciones donde el conjunto de entrenamiento es reducido, el CNC es útil donde otros enfoques como el probabilístico del modelo de templates no tienen tanto éxito. Esta funcionalidad es de gran importancia para los sistemas de reconocimiento dependientes del usuario, debido a que hacen factible que el mismo genere vocabularios con muchas clases de gestos, debiendo grabar una cantidad mínima de ejemplares de cada clase.
+
+En trabajos futuros, el autor espera poder determinar la performance de los métodos en distintas bases de datos para determinar el alcance de su aplicabilidad. También propone mejorar y extender la base de datos actual con más ejemplos de gestos 3D para las clases existentes y nuevas clases, a fin de proveer un punto de referencia fuerte para nuevas comparaciones y análisis de performance.
+ 
+%Además, se espera poder experimentar con otras características de gestos como los coeficientes de la transformada discreta de Fourier \cite{harding2004recognizing} o los momentos de Hu \cite{yun2009automatic}. Del mismo modo, será deseable comparar con otros clasificadores como los Modelos Ocultos de Markov (HMM), Campos Aleatorios Condicionales y Redes Neuronales Profundas . 
+
+Respecto al clasificador CNC, interesa determinar específicamente como interactúan las distintas partes del mismo para convertirlo en un modelo efectivo de reconocimiento de gestos. En particular, dada su estructura de tres capas, se podría probar la segunda capa, generadora de nuevas características, en conjunto con otro clasificador como SVM, posiblemente modificando o hasta quitando el esquema de bagging. A su vez, se puede emplear la tercera capa junto a dicho esquema, con la característica original normalizada, sin la segunda capa.
+
+%Finalmente, será necesario experimentar con los clasificadores en un contexto de tiempo real para probar su habilidad de reconocer gestos en secuencias de posiciones de la mano no segmentadas.
+
+Los resultados de esta investigación han sido presentados por el autor en el \textit{Workshop de Agentes y Sistemas Inteligentes} (WASI) del \textit{XIX Congreso Argentino de Ciencias de la Computación} (CACIC), realizado en el mes de octubre de 2013 en la Universidad CAECE de Mar del Plata, y publicados bajo el título \textit{A novel Neural Classifier for Gesture Recognition With Small Training Sets}\cite{quiroga2013}.

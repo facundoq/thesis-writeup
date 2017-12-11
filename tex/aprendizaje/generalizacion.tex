@@ -1,18 +1,9 @@
 
-Un clasificador se genera en base a un conjunto de datos de \textit{entrenamiento}. Una vez generado el clasificador, nos interesa conocer su desempeño, no en el conjunto de datos de entrenamiento, sino en su dominio $\ddp$. El desempeño de un clasificador en ejemplares del problema no vistos en la etapa de entrenamiento se denomina como la \textbf{capacidad de generalización} del clasificador. 
+Un clasificador se genera en base a un conjunto de datos de \textit{entrenamiento}. Una vez generado el clasificador,  interesa conocer su desempeño, no en el conjunto de datos de entrenamiento, sino en su dominio $\ddp$. El desempeño de un clasificador en ejemplares del problema no vistos en la etapa de entrenamiento se denomina como la \textbf{capacidad de generalización} del clasificador. 
 
-Para conocer esta capacidad de generalización, aplicamos métodos estadísticos para estimar el error del clasificador en la población de posibles ejemplares $\ddp$. Dado que es imposible probar todos los elementos de $\ddp$, utilizamos algún conjunto de datos $D \subset \ddp$ para estimar el error.
+Para conocer esta capacidad de generalización, se aplican métodos estadísticos para estimar el error del clasificador en la población de posibles ejemplares $\ddp$. Dado que es imposible probar todos los elementos de $\ddp$, se utiliza algún conjunto de datos $D \subset \ddp$ para estimar el error.
 
-Hay distintos estimadores de error, y algunos son específicos al tipo de clasificador a utilizar. El más simple y genérico es el porcentaje de ejemplares clasificados incorrectamente dado por:
-
-\begin{align}
-\rl(D,f) &= \frac{\sum\limits_{\xi \in D} \loss(\xi,f) }{|D|} \\
-\loss(\xi	,f) &= 1-\delta(\yi,f(\xi))
-\end{align}
-
-con el delta de Kronecker $\delta(a,b)= \caseotherwise{1}{0}{a=b}$. 
-
-Este es un estimador del valor que realmente nos interesa, o sea el error esperado de $f$ en $\ddp$:
+Hay distintos estimadores de error, y algunos son específicos al tipo de clasificador a utilizar. El más simple y genérico es el porcentaje de ejemplares clasificados incorrectamente $\rlz(D,f)$, previamente definida para el algoritmo del perceptrón. Esta expresión del error depende del conjunto de datos $D$, y es un estimador del valor que realmente interesa, el error esperado de $f$ en $\ddp$:
 
 \begin{equation}
   \rl(\ddp,f)= E_{\xv} [ \loss(\xv,f) ]
@@ -22,29 +13,30 @@ Entonces, como primera aproximación, un experimento podría obtener el conjunto
 
 \subsubsection{Validación con retención}
 
-El problema con esta estrategia es que los algoritmos de entrenamiento en general están basados, en forma implícita o explícita, en la idea de encontrar un $f$ que justamente minimice una medida de error como $\rl(D,f)$. Entonces, si utilizamos el mismo conjunto de datos para entrenar un clasificador y estimar su error obtendremos una estimación que subestima el error real de $f$ en $\ddp$. Es como generar un modelo a partir de ciertos datos, y luego validar dicho modelo con esos mismos datos; claramente, si el modelo está bien generado, es improbable que tenga un alto grado de error en los datos de entrenamiento.
+El problema con esta estrategia es que los algoritmos de entrenamiento en general están basados, en forma implícita o explícita, en la idea de encontrar un $f$ que justamente minimice una medida de error como $\rl(D,f)$. Entonces, si se utiliza el mismo conjunto de datos para entrenar un clasificador y estimar su error se obtendrá una estimación que subestima el error real de $f$ en $\ddp$. Es como generar un modelo a partir de ciertos datos, y luego validar dicho modelo con esos mismos datos; claramente, si el modelo está bien generado, es improbable que tenga un alto grado de error en los datos de entrenamiento.
 
--\\gráfico datos $\rightarrow$  modelo $\rightarrow$ datos\\
+\tikzimage{modelo_datos}{scale=1}{ El argumento circular de generar un modelo a partir de un conjunto de datos y validarlo con el mismo conjunto de datos.}
 
-En un caso extremo, podemos definir:
+En un caso extremo, si $y(\xv)$ es la etiqueta correcta para $\xv$, se puede definir un clasificador $f_D$ tal que:
 \begin{equation}
-  f_D(x)=\caseotherwise{\yv}{\text{clase aleatoria \footnote{Para que $f_D$ sea realmente una función, asumimos que dichas etiquetas aleatorias se asignan en la definición de la función y no en su evaluación} }}{\xv \in D}
+  f_D(x)=\caseotherwise{y(\xv)}{\text{clase aleatoria }}{\xv \in D}
 \end{equation}
 
-Dicha función tiene un error de clasificación $\rl(D,f_D)=0$ en el conjunto $D$, pero clasifica de forma aleatoria cualquier otro conjunto de ejemplares. Mientras que este es un caso claramente trivial, sirve para ilustrar la importancia de no hacer estimaciones de error con los mismos datos con los cuales fue entrenado un clasificador. De todas formas, en la práctica no es inusual obtener funciones $f$ que no tengan errores de clasificación en el mismo conjunto en que fueron entrenados, pero que varían ampliamente en su capacidad de clasificar otros ejemplares de $\ddp$. 
+Dicha función $f_D$\footnote{Para que $f_D$ sea realmente una función, se asume que dichas etiquetas de clase aleatorias se asignan en la definición de la función y no en su evaluación}  tiene un error de clasificación $\rl(D,f_D)=0$ en el conjunto $D$, pero clasifica de forma aleatoria cualquier otro conjunto de ejemplares. Mientras que este es un caso claramente trivial, sirve para ilustrar la importancia de no hacer estimaciones de error con los mismos datos con los cuales fue entrenado un clasificador. De todas formas, en la práctica es usual obtener funciones $f$ que no tengan errores de clasificación en el mismo conjunto en que fueron entrenados, pero que varían ampliamente en su capacidad de clasificar otros ejemplares de $\ddp$. 
 
-Para solucionar esto necesitamos entonces probar a $f$ con ejemplares distintos a los utilizados para entrenar. La idea más simple es tomar a $D$ y en lugar de utilizar \textit{todos} los ejemplares para entrenar, dividimos el conjunto en dos: $\cde$, el conjunto de entrenamiento, y $\cdp$ el conjunto de prueba que reservamos luego hacer las pruebas de generalización, calculando $\rl(\cdp,f)$, donde $f=g(\cde)$. Este método se denomina \textbf{holdout validation} (validación con retención). 
+Para solucionar este problema, es necesario entonces probar a $f$ con ejemplares distintos a los utilizados para entrenar. La idea más simple es tomar a $D$ y en lugar de utilizar \textit{todos} los ejemplares para entrenar, dividir el conjunto en dos: $\cde$, el conjunto de entrenamiento, y $\cdp$ el conjunto de prueba que se reserva para hacer las pruebas de generalización, calculando $\rl(\cdp,f)$, donde $f=g(\cde)$. Este método se denomina \textbf{holdout validation} (validación con retención). 
 
-Pensamos entonces en $\cdp$ como una muestra de $\ddp$ \textit{limpia}, es decir, independiente de $\cde$ y representativa de $\ddp$, que nos permite estimar el error esperado del clasificador entrenado $f$ en $\ddp$, $E_{\xv}(\loss(x,f))$.
+\image{holdout_validation}{0.5}{Esquema del proceso de validación con retención. El conjunto de ejemplares $D$ se divide en dos, el de entrenamiento $D_e$ y el de prueba $D_p$. Mediante la función $g$ y $D_e$, se entrena el modelo $f$. Luego, se obtiene una medida del error de $f$ en $\ddp$ utilizando el conjunto $D_p$.}
 
-Entonces, dada una medida de error $\rl$, podemos definir formalmente el concepto de un modelo bien entrenado y de generalización. 
+Se puede considerar entonces a $\cdp$ como una muestra de $\ddp$ \textit{limpia}, es decir, independiente de $\cde$ y representativa de $\ddp$, que permite estimar el error esperado del clasificador entrenado $f$ en $\ddp$, $E_{\xv}(\loss(x,f))$.
+
+Entonces, dada una medida de error $\rl$, se define formalmente el concepto de un modelo bien entrenado y de generalización. 
+
 \begin{itemize}
 \item Un modelo $f$ bien entrenado es aquel para el cual $\rl(D_e,f) \simeq 0$.
-\item Un modelo $f$ que generaliza es aquel para el cual  $\rl(D_e,f) \simeq \rl(\ddp,f)$. En la práctica el segundo término es imposible de conocer, y por eso estimamos esta definición como $\rl(D_e,f) \simeq \rl(D_p,f)$.
+\item Un modelo $f$ que generaliza es aquel para el cual  $\rl(D_e,f) \simeq \rl(\ddp,f)$. En la práctica el segundo término es imposible de conocer, y por eso se estima como $\rl(D_e,f) \simeq \rl(D_p,f)$.
 \end{itemize}
 
-Vemos que ambas condiciones son necesarias para un clasificador efectivo. Nuestro ejemplo de la función $f_D$ es un caso en el cual el modelo está bien entrenado, ya que $\rl(D_e,f_D)=0$, pero claramente $\rl(\ddp,f)$ resulta altísimo. 
+Nuestro ejemplo de la función $f_D$ es un caso en el cual el modelo estaría bien entrenado, ya que $\rl(D_e,f_D)=0$, pero claramente $\rl(\ddp,f_D)$ resulta altísimo. Por ende, ambas condiciones son necesarias para un clasificador efectivo.
 
-
-
-A continuación, exploramos el concepto de \textbf{validación cruzada} como una manera de estimar más fielmente $\rl(\ddp,f)$.
+%En el apéndice \ref{apendice_validacion}, se explora el concepto de \textbf{validación cruzada} como una manera de estimar más fielmente el error $\rl(\ddp,f)$.

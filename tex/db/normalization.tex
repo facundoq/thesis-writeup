@@ -1,32 +1,88 @@
 
+En la etapa de preprocesamiento, las primeras y últimas tres posiciones de cada muestra se descartan porque generalmente contienen información indeseada introducida por una segmentación incorrecta del gesto y se descartan también los frames en donde el SDK no ha detectado todas las articulaciones relevantes. Luego los ejemplares se rotan, suavizan, y re-muestrean.
 
-En la etapa de preprocesamiento, las primeras y últimas tres posiciones de cada muestra se descartan porque generalmente contienen información indeseada introducida por una segmentación incorrecta del gesto y se descartaron los frames en donde el SDK no ha detectado todas las articulaciones relevantes. Luego los ejemplares fueron rotados, suavizados, y resampleados.
+
+\image{normalization}{0.7}{Suavizado y re-muestreo de un ejemplar previamente rotado.}
+
 
 \subsection{Rotación}
 
-La rotación del usuario respecto a la cámara introduce diferencias en las posiciones de los ejemplares de gestos irrelevantes para el modelo de gestos pero que dificultan significativamente su reconocimiento. Para evitar dichas dificultades, rotamos el usuario a una dirección canónica en donde la dirección a donde apunta es paralela (y opuesta) a la dirección en donde apunta la cámara. Esta rotación es solamente del plano $xz$, o sea, con el eje $y$ como eje de la rotación, debido a que los otros tipos de rotaciones (con el usuario inclinado hacia los costados o hacia adelante/atrás) son poco comunes.
+La rotación del usuario respecto a la cámara introduce cambios significativos en las posiciones de los puntos que determinan el gesto. Esto, si bien no modifica el proceso de captación, dificultan la etapa reconocimiento. Para evitar este inconveniente, se rota el usuario a una dirección canónica en donde la dirección a donde apunta es paralela (y opuesta) a la dirección en donde apunta la cámara. Esta rotación es solamente del plano $xz$, o sea, con el eje $y$ como eje de la rotación, debido a que los otros tipos de rotaciones (con el usuario inclinado hacia los costados o hacia adelante/atrás) son poco comunes.
 
-\image{db/rotation}{0.5}{Se rota al usuario para que la dirección a la que apunta sea la opuesta a la dirección normal a la cámara, en el plano $xz$}
+\image{rotation}{0.3}{Se rota al usuario para que la dirección a la que apunta sea la opuesta a la dirección normal a la cámara, en el plano $xz$}
 
-A estos efectos, estableciendo la posición del centro de los hombros como origen de coordenadas, se calculan los vectores que conectan el centro de los hombros con los hombros, y se promedian en un vector $\ve{h}$ para aproximar el grado de rotación del usuario. Luego, se calcula la matriz de rotación $\ve{R}$ para llevar a dicho vector $\ve{h}$ al vector $(1,0,0)$, que representaría la rotación canónica. Finalmente, se aplica la matriz de rotación $\ve{R}$ a todos los puntos del ejemplar, obteniendo una posición canónica para los mismos.
+A estos efectos, estableciendo la posición del centro de los hombros como origen de coordenadas, se calculan los vectores que conectan el centro de los hombros con los hombros, y se promedian en un vector $\ve{h}$ para aproximar el grado de rotación del usuario. Luego, se calcula la matriz de rotación $\ve{R}$ para llevar a dicho vector $\ve{h}$ al vector $(1,0,0)$, que representaría la rotación canónica del usuario. Finalmente, se aplica la matriz de rotación $\ve{R}$ a todas las posiciones del ejemplar, obteniendo una posición canónica para los mismos.
 
 \subsection{Suavizado}
-Las muestras fueron suavizadas individuamente utilizando la técnica de la média móvil con una ventana de tamaño $w$ para quitar la información de alta frecuencia de la señal, ya que las características elegidas están basadas en la dirección entre posiciones consecutivas y pequeñas fluctuaciones en la dirección dan una información muy local como para caracterizar la forma global del gesto.
+Las muestras fueron se suavizan individualmente utilizando la técnica de la media móvil aritmética con una ventana de tamaño $w$ para quitar la información de alta frecuencia de la señal, ya que las características elegidas están basadas en la dirección entre posiciones consecutivas y pequeñas fluctuaciones en la dirección dan una información muy local como para caracterizar la forma global del gesto.
 
-\image{db/smoothing}{0.5}{Proyección en el plano $xy$ de un ejemplar del gesto $1$, antes y después de suavizar con $w=5$}
+El tamaño $w$ se mide como la distancia desde el punto a suavizar a los extremos de la ventana, de manera que en realidad se utilizan $2*w+1$ puntos en la ventana. Por ejemplo, si $w=3$, entonces se utiliza una ventana de $2*3+1=7$ puntos para suavizar, centrada en el cuarto punto.
 
-
+\image{smoothing}{0.15}{Proyección en el plano $xy$ de un ejemplar del gesto $3$, con distintos niveles de suavizado}
 
 \subsection{Re-muestreo}
 
+Como se explicó anteriormente, los ejemplares correspondientes a los gestos capturados por el Kinect pueden tener distinta longitud. Si bien no es un inconveniente para el método propuesto en esta tesina, la mayoría de los métodos con los que se compara su performance requieren que todos los ejemplares posean la misma longitud, es decir $n=n_i, \quad \range{i}{1}{|S|}$. No solo eso, sino que debería mantenerse una cierta correspondencia semántica entre cada posición del gesto, de manera que, por ejemplo, las primeras posiciones representen la primera parte del gesto, y así sucesivamente; es decir, que no haya saltos en la representación del gesto respecto a las posiciones, que el muestreo sea uniforme. Además, es deseable obtener características invariantes a la velocidad. 
 
-La naturaleza de las arquitecturas de las redes neuronales feedforward, SVM y el método de templates requiere que el número de posiciones de cada ejemplar $n_i$ sea el mismo para todas las muestras, es decir $n=n_i, \quad \range{i}{1}{|S|}$. No solo eso, sino que 	debería mantenerse una cierta correspondencia semántica entre cada posición del gesto, de manera que, por ejemplo, las primeras posiciones representen la primer parte del gesto, y así sucesivamente; es decir, que no haya saltos en la representación del gesto respecto a las posiciones, que el muestreo sea uniforme. Además, es deseable obtener características inavariantes a la velocidad. 
+Para lograr ambas cosas, cada muestra debe ser convertida en secuencia de longitud constante $n$ utilizando interpolación cúbica con una parametrización de longitud de arco. 
 
-Para lograr ambas cosas, cada muestra se vuelve a muestrear a una secuencia de longitud constante $n$ utilizando interpolación cúbica con una parametrización de longitud de arco. 
+La parametrización de longitud de arco de cada muestra $\sv_i$ de longitud original $n_i$ da la posición de la mano $\sv_i[j]$ en el espacio 3D en función de la longitud de arco recorrida desde la primera posición del gesto, $\sv_i[1]$ hasta la posición $\sv_i[j]$. Entonces, por cada posición $\sv_i[j]$  se calcula la longitud de arco desde la primera posición, $l_j$:
+ 
+\ma{l_j=\sum_{k=2}^j || \sv_i[k] - \sv_i[k-1] ||}
 
-La parametrización de longitud de arco de cada muestra $\ve{s}$ de longitud original $q$ nos da la posición de la mano $\ve{p}$ en el espacio 3D en función de la longitud de arco recorrida desde la primer posición del gesto, $\ve{p_0}$ hasta la posición $\ve{p}$. Entonces, por cada posición $\ve{s}[j]$  calculamos la longitud de arco desde la primer posición  $l_j=\sum_{k=2}^j || \ve{s}[j] - \ve{s}[j-1] || $, donde $||\cdot||$ es la norma Euclidea. El re-muestreo se realiza en $n$ puntos de control distribuidos de manera uniforme a través de la longitud de arco total $L=l_{q}$, dada por  $k_j=\frac{j-1}{n-1}*L, \qquad  j=1 \dots n$. Obtenemos entonces un vector de puntos $\ve{r}$ de longitud $n$ tal que $\ve{r}[j] = cubic(k_j,near_4(k_j))  \qquad  j=1 \dots n$ donde $cubic(x,(x_1, x_2, x_3, x_4))$ realiza una interpolación cúbica en el punto de control dado por la distancia $x$, utilizando las distancias $(x_1, x_2, x_3, x_4)$  cuyas posiciones se conocen y $near_4(x)$ retorna las 4 posiciones más cercanas a $x$ (es decir, $min_4=( |l_1-x|, \dots ,|l_q-x|)$) tal que $x_1 \leq x_2 \leq x \leq x_3 \leq x_4$.
+donde $||\cdot||$ es la norma Euclídea. El re-muestreo se realiza en $n$ longitudes de control distribuidos de manera uniforme a través de la longitud de arco total $L=l_{q}$, dada por: 
+
+\ma{k_j=\frac{j-1}{n-1}*L, \qquad  j=1 \dots n}
+
+Por ejemplo, si se tiene un gesto con longitud de arco $L=20$ y hay 5 longitudes de control, las mismas serán $k_1=0$, $k_2=5$, $k_3=10$, $k_4=15$, $k_5=20$. El proceso de re-muestreo estima las posiciones correspondientes a estas longitudes de control. Es importante notar que al estar utilizando la parametrización por longitud de arco del gesto, estas longitudes de control $k_j$ son las longitudes de arco desde el comienzo del gesto hasta el punto.
 
 
-\image{db/resampling}{0.5}{Proyección en el plano $xy$ de un ejemplar del gesto $1$, antes y después de resamplear con $n=10,30$. La mayor densidad de posiciones muestreadas, representadas con puntos, en la parte superior en relación con la parte inferior del original fue causada por una diferencia en la velocidad utilizada para realizar el gesto. Dicha diferencia fue compensada, con distintos grados de detalle, al resamplear.}
+Mediante el proceso de re-muestro, se obtiene un vector de posiciones estimadas $\rv_i$ de longitud $n$, donde cada elemento del vector $\rv_i[j]$ se estima mediante interpolación cúbica, y está dado por la fórmula: 
 
-Este proceso da como resultado, para cada ejemplar $\xi$, un vector $\ve{r}_i$ de longitud $n$ donde se mantienen las posiciones de principio y fin del gesto, y hay un muestreo uniforme a través de la longitud de arco del gesto real que realizó el usuario.
+\ma{
+\rv_i[j] = \caset
+{ \sv_i[1]}{j=1}
+{ \sv_i[n_i]}{j=n}
+{cubic(k_j,near_4(k_j))}{j=2 \dots n-1}
+}
+
+Esta fórmula, para $j=1$ y $j=n$, indica que la primera y la última posición del gesto, respectivamente, se mantienen tal cual estaban en el ejemplar original.
+
+Para $j=2 \dots n-1$, indica que $\rv_i[j]$ es la posición que se obtiene mediante interpolación cúbica en la longitud de control $k_j$, utilizando las 4 posiciones cuyas longitudes se conocen y son las más cercanas a $k_j$. Entonces, la función $near_4(k_j)$ retorna las longitudes asociadas a las 4 posiciones conocidas más cercanas a $k_j$, en orden. 
+
+La función $cubic(k_j,(d_1, d_2, d_3, d_4))$ realiza una interpolación cúbica en la longitud de control $k_j$, utilizando las distancias $(d_1, d_2, d_3, d_4)$  cuyas posiciones $(\yv_1,\yv_2,\yv_3,\yv_4)$ se conocen.
+
+La interpolación cúbica se realiza estimando los coeficientes de un polinomio $p$ de grado 3, en base a las 4 longitudes (y posiciones conocidas asociadas)  más cercanas a $k_j$. Luego, simplemente se evalúa $p$ en el punto $k_j$, para obtener $\rv_i[j]$.
+
+Los coeficientes del polinomio $b_i$ se estiman mediante la fórmula:
+
+\ma{
+b_i= \prod_{j=1,j \neq i}^{4} \frac{d-d_j}{d_i-d_j}
+}
+
+Estos coeficientes sirven para formar el denominado polinomio de Lagrange:
+\ma{
+p(d) = \sum_{i=1}^{4} \yv_i b_i 
+}
+
+El polinomio de Lagrange tiene la particularidad de que para los pares $(d_k,y_k)$ utilizados para construirlo $p(d_k)=\yv_k$, debido a que si $d=d_k$, se tiene $b_k=1$ y $b_i=0, \; i\neq k$. 
+
+Para ver por qué esto es así, es útil considerar el valor de la productoria $b_i$. Si $d=d_k$, cuando el índice de la sumatoria es $k$, $b_k=1$, ya que:
+
+\ma{
+b_k= \prod_{j=1,j \neq k}^{4} \frac{d_k-d_j}{d_k-d_j} = \prod_{j=1,j \neq k}^{4} 1 = 1
+}
+
+Por otro lado, si $d=d_k$, cuando el índice de la sumatoria es $i \neq k$, $b_i=0$, ya que algún $j$ tomará el valor $k$ y como $d_k-d_j=0$, por ende:
+
+\ma{
+b_i= \prod_{j=1,j \neq i}^{4} \frac{d_k-d_j}{d_i-d_j}= 0, \; i \neq k
+}
+
+Entonces, al evaluar $p(d_k)$, el término $b_k=1$, y el resto de los términos $b_i$ son 0, por ende de la sumatoria solamente sobrevive el término $k$ y entonces $p(d_k)=\yv_k$.
+
+La interpolación sólo es buena para las longitudes de control cercanas a las utilizadas para estimar los coeficientes del polinomio. Por ese motivo es que se calcula un polinomio distinto para cada longitud de control $k_j$ para el cual se quiere estimar la posición correspondiente, utilizando las posiciones de las longitudes más cercanas conocidas.
+
+\image{resampling}{0.7}{Proyección en el plano $xy$ de un ejemplar del gesto $1$, antes y después del re-muestreo con $n=10,30$. La mayor densidad de posiciones muestreadas, representadas con puntos, en la parte superior en relación con la parte inferior del original fue causada por una diferencia en la velocidad utilizada para realizar el gesto. Dicha diferencia fue compensada, con distintos grados de detalle de acuerdo al valor de $n$.}
+
+Este proceso da como resultado, para cada ejemplar $\sv_i$, un vector $\rv_i$ de longitud $n$ donde se mantienen las posiciones de principio y fin del gesto, y hay un muestreo uniforme a través de la longitud de arco del gesto real que realizó el usuario.

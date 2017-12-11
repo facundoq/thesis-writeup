@@ -1,11 +1,15 @@
+
+
 \epigraph{``Gestures are an elaborate and secret code that is written nowhere, known to none, and understood by all."}{Edward Sapir}
 
-Realizar un gesto es utilizar las distintas partes del cuerpo con el propósito de comunicar información. Mientras que es fácil entender que es un gesto intuitivamente, existen diversos tipos y en general cada tipo involucra un modelado y proceso de reconocimiento con características particulares. A continuación, describimos ciertas clasificaciones y propiedades de los gestos con el objetivo de generar criterio para elegir un modelo específico a reconocer.
+
+\section{Introducción}
+
+Realizar un gesto es utilizar las distintas partes del cuerpo con el propósito de comunicar información. Mientras que es fácil entender que es un gesto intuitivamente, existen diversos tipos y en general cada tipo involucra un modelado y proceso de reconocimiento con características particulares. A continuación, se describen ciertas clasificaciones y propiedades de los gestos con el objetivo de generar criterio para elegir un modelo específico a reconocer.
 
 El estudio de los gestos tiene una larga historia interdisciplinaria que involucra las disciplinas de la psicología, antropología, linguística, neurociencia, comunicación, actuación, danza, expresión corporal y ciencias de la computación. En la investigación de los gestos, tradicionalmente parte de las ciencias sociales, en general se considera solamente el movimiento de las manos y los brazos en el concepto de gesto y se reserva la palabra kinésica para referirse a la comunicación mediante lenguaje corporal, que involucraría los gestos, el movimiento, la postura, los movimientos de cabeza, la mirada, las expresiones faciales, etc. En la jerga informática, dichas definiciones se mezclan, y se habla de gestos refiriéndose a ambos conceptos.
 
-Existe un gran corpus de investigación sobre la relación entre los gestos y el habla, el pensamiento y los gestos, y la clasificación de gestos. Si bien no existe una taxonomía definitiva para clasificar distintos tipos de gestos, existen ciertos criterios tanto matemáticos como linguísticos para distinguirlos, y algunas clasificaciones establecidas.
-
+Existe un gran corpus de investigación sobre la relación entre los gestos y el habla, el pensamiento y los gestos, y la clasificación de gestos \cite{capone2004gesture,hostetter2008visible,goldin2010action,iverson1999hand,mcneill92}. Si bien no existe una taxonomía definitiva para clasificar distintos tipos de gestos, existen ciertos criterios tanto matemáticos como linguísticos para distinguirlos, y algunas clasificaciones establecidas.
 
 \section{Clasificaciones}
 \texinput{gestos/clasificacion}
@@ -13,3 +17,30 @@ Existe un gran corpus de investigación sobre la relación entre los gestos y el
 
 \section{Modelado y propiedades de los gestos dinámicos}
 \texinput{gestos/modelo}
+
+\section{Resumen}
+En este capítulo se explora el concepto de gesto desde una perspectiva comunicacional y psicológica como también desde la interacción hombre-máquina y el reconocimiento automático. 
+
+Desde el primer punto de vista, se introduce la clasificación de gestos de McNeill, identificándolos como \textbf{icónicos}, \textbf{metafóricos}, \textbf{ilustrativos} y \textbf{deícticos}. Dicha consideración resulta de utilidad para decidir sobre un modelo de gestos a reconocer.
+
+%Desde el primer punto de vista, se introduce la clasificación de gestos de McNeill, generada a partir de experimentos en donde la gente explicaba historias mediante gestos. McNeill identifica gestos \textbf{icónicos}, \textbf{metafóricos}, \textbf{ilustrativos} y \textbf{deícticos}. Los icónicos  son ``gestos de lo concreto'', representan algún tipo de objeto y dan información acerca de su tamaño, forma, orientación, relaciones espaciales, etc; los metafóricos son pictóricos como los icónicos, pero de una forma abstracta. Los ilustrativos son gestos que acompañan a la comunicación verbal para matizar o recalcar lo que se dice, y los deícticos se utilizan para seleccionar o señalar objetos.
+
+Luego, dentro del ámbito del HCI, se puede considerar una clasificación de gestos dependiendo de si son estáticos o dinámicos, con una o varias partes del cuerpo, en 2D o 3D, faciales o corporales, multimodales o unimodales y dependientes o independientes del usuario.
+
+%\begin{itemize}
+%\item \textbf{Estáticos} como en una postura o configuración particular del cuerpo, o \textbf{dinámicos}, como en una secuencia de movimientos
+%\item  Con \textbf{una} o \textbf{varias partes} del cuerpo
+%\item En \textbf{2D} (por ejemplo, utilizando el mouse) o \textbf{3D}, utilizando algoritmos de visión por computadora y cámaras de video para reconocer el cuerpo y sus partes.
+%\item \textbf{Faciales} o \textbf{corporales}.
+%\item \textbf{Multimodales}, si se utiliza información de varias fuentes como audio, video, etc o \textbf{unimodales} si se utiliza una sola fuente.
+%\item \textbf{Dependientes} o \textbf{independientes del usuario}, si cada usuario puede grabar sus propios gestos y los utiliza el sólo, o si hay un vocabulario de gestos predefinido que todos los usuarios utilizan. 
+%\end{itemize}
+
+En esta tesina el foco está puesto en gestos corporales 3D, dinámicos y unimodales, dependientes del usuario, y realizados con una sola parte del cuerpo. En términos de la clasificación de McNeill, el modelo de reconocimiento de esta tesina se presta a ser utilizado para identificar gestos deícticos o icónicos.
+
+Habiendo definido de forma general el tipo de gesto a reconocer, se especifica explícitamente desarrollando un modelo matemático de los gestos, en donde los mismos están formados por una trayectoria $c$ en un espacio 3D, y se definen los conceptos de invariancia a la rotación, traslación, escala, velocidad, punto de comienzo y dirección. En base a estos conceptos se deriva la característica para clasificar gestos del capítulo \ref{chap:db}.
+
+Finalmente, se define también formalmente el concepto de equivalencia $\equiv_m$ entre gestos, de utilidad para basar las comparaciones entre gestos en los modelos de clasificación.
+ 
+%Dos gestos $c$ y $c'$ son equivalentes de acuerdo a $\equiv_m$ si el primero es un gesto muy similar al segundo luego de realizar la rotación, traslación en el espacio y escalado que mejor alinee uno con otro, sin importar si se realiza a otra velocidad.
+

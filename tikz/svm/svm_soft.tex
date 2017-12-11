@@ -1,0 +1,17 @@
+\input{../base}
+\tikzdrawing{
+\draw [line width=2,->] (-1/2,0) -- (-1/4-3,2);
+
+\standardaxis{\datosdosclases
+\addplot[color=black,solid,only marks,mark=oplus,fill=white] coordinates {(1.5, -2)};
+
+\addplot[color=black,solid,only marks,thick,mark=halfcircle,fill=white] coordinates {(1.5, 2) (5,2)};
+
+\addplot[very thick, domain=-10:10, samples=200]{1.5*x+0.7};
+
+
+}[legend style={font=\Large}]
+
+
+
+}

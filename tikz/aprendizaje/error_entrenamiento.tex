@@ -1,0 +1,30 @@
+\documentclass{scrartcl}
+\usepackage{pgfplots}
+\usepackage{xcolor}
+
+\usepackage[active,pdftex,tightpage]{preview}
+\PreviewEnvironment[{[]}]{tikzpicture}
+\PreviewEnvironment[{[]}]{tikzplotresult}
+\pgfplotsset{compat=1.9}
+
+\begin{document}
+
+\pgfplotsset{ticks=none}
+
+\begin{tikzpicture}
+\draw [red,fill=red!20, thick] (1.23,0.49) circle [radius=0.2];
+\draw [red,fill=red, thick] (1.23,0.49) circle [radius=0.05];
+
+
+\draw [blue,fill=blue!20, thick] (3,0.5) circle [radius=0.2];
+\draw [blue,fill=blue, thick] (3,0.5) circle [radius=0.05];
+
+\begin{axis}[xlabel=$\mathbf{W}$,ylabel=$E$]
+
+\addplot[domain=-700:500, samples=200,ultra thick,color= blue]{0.000005*x*(x+300)*x+sin(x)-x*cos(x)};
+%\addplot[thick,color=black,mark=square, mark size=4,mark options={solid, fill=gray, line width=1pt}] coordinates { (-544,-485) };
+\end{axis} 
+\end{tikzpicture}
+
+\end{document}
+

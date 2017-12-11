@@ -1,0 +1,30 @@
+  \input{../base}
+\tikzdrawing{
+
+
+%\draw  [ultra thick, fill={rgb:black,1;white,150}] (0,0) to (-10,-10) to (-10,10) to (10,10) to (0,0);
+%\draw  [ultra thick, fill={rgb:black,1;white,50}] (0,0) to (-10,-10) to (10,-10) to (10,10) to (0,0);
+
+\draw [line width=2] (-9.1,-10) -- (10,9.1);
+\draw [line width=1] (-5.65,-10) -- (10,5.65);
+\draw [line width=1] (-10,-7.4) -- (7.4,10);
+
+\draw [line width=2,->] (1,0) -- (-0.5,1.5);
+
+\draw [line width=3,|-|] (-2.95,-4) -- (-1.33,-5.56);
+\node [right] at (-2.4,-4.3) {$margen$};
+
+\node [right] at (0,1.3) {$\wv$};
+\node [above,rotate=45] at (6,5) {$h$};
+\node [above,rotate=45] at (3.5,6) {$h^{+}$};
+\node [above,rotate=45] at (7,2.6) {$h^{-}$};
+
+\standardaxis{
+\addgaussianscatter[50]{o}{-5}{2}
+\addgaussianscatter[50]{triangle}{5}{-2}
+
+
+%\addplot[domain=-10:10, samples=100]{1};
+
+}[legend style={font=\Large}]
+}

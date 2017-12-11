@@ -1,0 +1,53 @@
+\documentclass{standalone}
+\usepackage{ pgfplots}
+\pgfplotsset{compat=1.9}
+
+\pgfplotsset{
+    standard/.style={
+        axis x line=middle,
+        axis y line=middle,
+        enlarge x limits=0.15,
+        enlarge y limits=0.15,
+        every axis x label/.style={at={(current axis.right of origin)},anchor=north west},
+        every axis y label/.style={at={(current axis.above origin)},anchor=north east}
+    }
+}
+
+\pgfplotsset{
+   selecting/.style 2 args={
+        x filter/.code={
+            \edef\tempa{\thisrow{#1}}
+            \edef\tempb{#2}
+            \ifx\tempa\tempb
+            \else
+                \def\pgfmathresult{inf}
+            \fi
+        }
+    }
+}
+
+
+
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[legend pos=south east,ylabel=cc,xlabel=h,ymin=50,xmin=0,ymax=100,xmax=110,xtick=data]
+
+\addplot+[selecting={n}{16}] table[x index=1, y index=0,col sep=comma] {datos/ff-lnhg-cn.csv};
+\addlegendentry{$n=16$  };  
+
+
+\addplot+[selecting={n}{32}] table[x index=1, y index=0,col sep=comma] {datos/ff-lnhg-cn.csv};
+\addlegendentry{$n=32$  };  
+
+
+\addplot+[selecting={n}{64}] table[x index=1, y index=0,col sep=comma] {datos/ff-lnhg-cn.csv};
+\addlegendentry{$n=64$  };  
+
+
+\addplot+[selecting={n}{128}] table[x index=1, y index=0,col sep=comma] {datos/ff-lnhg-cn.csv};
+\addlegendentry{$n=128$  };  
+
+\end{axis}
+\end{tikzpicture}
+\end{document}

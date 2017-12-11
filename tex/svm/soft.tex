@@ -1,44 +1,61 @@
-Este modelo asume que las clases son linealmente separables, lo cual no suele cumplirse, y además es muy sensible a la presencia de outliers debido a que probablemente se conviertan en vectores de soporte si se encuentran entre las dos clases pero no son representativos de ninguna.
+El modelo anterior asume que las clases son linealmente separables, lo cual no suele cumplirse, y además es muy sensible a la presencia de ejemplares anómalos debido a que probablemente se conviertan en vectores de soporte si se encuentran entre las dos clases pero no son representativos de ninguna.
 
--\
-a) Gráfico de Un problema no linealmente separable  b) Gráfico con dos clases y un outlier entre medio que comprime para un lado el margen de decisión\\
-a) Un problema no linealmente separable b) Un outlier se convierte en vector de soporte y distorsiona el hiperplano de máximo margen \textit{intuitivo}.\\
+
+\tikzimagetwo{../aprendizaje/clases_no_linealmente_separables}{scale=0.25}{Un problema no linealmente separable}
+{../aprendizaje/outlier_no_razonable}{scale=0.25}{ Un outlier se convierte en vector de soporte y distorsiona el hiperplano de máximo margen \textit{intuitivo}.}
 
 Una manera de lidiar con esto es mediante la extensión \textbf{Soft Margin} (de Márgenes Suaves) de SVM. Dicha extensión consiste en hacer posible que algunos de los ejemplares de entrenamiento no cumplan con la restricción $h(\xi) y_i \geq 1$ dándoles un poco de ayuda mediante una variable de holgura $\si \geq 0$, tal que:
 
-\begin{equation}
-\hyi + \si \geq 1, \, \si \in \reals
-\end{equation}
+\ma{
+\hyi + \si \geq 1,\; \si \in \reals
+}
 
 
-La variable $\si$ ``ayuda'' a $h(\xi) yi$ a llegar a 1 cuando este no puede debido a elección de $\wv$ y b. Ahora, si dejamos así el problema, los $\si$ pueden tomar valores arbitrarios de manera que las restricciones se cumplirían trivialmente haciendo suficientemente grandes los $\si$. De hecho, podríamos definir $\wv = \zv$, ya que de los $\si$ adecuados permitirán que se cumplan las restricciones. Para evitar esto, penalizaremos en nuestra función a optimizar cada unidad de $\si$ que se utiliza con un coste $c$, dando lugar a la formulación \footnote{Elegimos usar el mismo coste $c$ para todas las restricciones; si tenemos información a priori del dominio del problema podemos elegir un coste distinto para cada ejemplar, por ejemplo, o para cada clase, como se suele hacer cuando las mismas están desbalanceadas  }:
+La variable $\si$ ``ayuda'' a $h(\xi) yi$ a llegar a 1 cuando este no puede debido a elección de $\wv$ y b. El problema quedaría entonces como:
 
 
 \begin{equation*}
 \begin{aligned}
-& \minarg{\wv,b,\si}
-& &  \lagp(\wv,b,\si)= \costew + \costes \\
+& \minarg{\wv,b,\sv}
+& &  \lagp(\wv,b,\sv)= \costew\\
 & \text{sujeto a}
-& &  \hyi + \si &\geq 1, \; i = 1, \ldots, |D| \\ 
-& & \si &\geq 0.
+& &  \hyi + \si \geq 1, \; & \rangeD\\ 
+& & & \si \geq 0, \; & \rangeD
 \end{aligned}
 \end{equation*}
 
-Ahora tenemos dos conjuntos de restricciones: las originales y las de no-negatividad de las variables de holgura.
 
-Dado un $\wv$ y un $b$, necesitamos que $\hyio$. Si esto es cierto, podemos tener $\si=0$ y no pagar ningún coste, ya que la restricción se cumple sola. Si no es cierto, tenemos 2 opciones, en términos de la función a optimizar:  cambiar $\wv$, lo cual puede hacer que otras restricciones no se cumplan y además puede incrementar el coste si se achica nuestro margen, o ayudar a $\hyi$ con $\si$ para que llegue a 1, y pagar el precio $c$. El vector $\xi$ quedaría mal clasificado, en este último caso, pero en términos de la función a optimizar eso puede ser mejor que pagar al costo de achicar el margen. 
-
-Entonces, el proceso de optimización, además de poder cumplir las restricciones si el problema no es linealmente separable, buscará un balance entre una separación perfecta ($\si=0$) y el tamaño del margen ($M$), de acuerdo al parámetro de coste $c$. En el caso en que $c \rightarrow \infty$, penalizamos fuertemente la ayuda de $\si$, volviendo al modelo original de márgenes \textit{duros}. Si $c \rightarrow 0$, permitimos que $\wv$ y $b$ tomen cualquier valor, porque cualquier error de clasificación puede arreglarse con los $\si$ adecuados ya que son ``baratos''.
-
--\
-Gráfico anterior con dos clases y algunos outliers, pero ahora con el hiperplano intuitivo, y se muestra que para los outliers $\si>0$.\\
-Con una elección adecuada de $c$, el problema de optimización converge al hiperplano natural para separar las dos clases, ignorando los outliers.
+Ahora, si se deja así el problema, los $\si$ pueden tomar valores arbitrarios de manera que las restricciones se cumplirían trivialmente haciendo suficientemente grandes los $\si$. De hecho, se podría definir $\wv = \zv$, ya que de los $\si$ adecuados permitirán que se cumplan las restricciones. Para evitar esto, se penaliza en la función a optimizar cada unidad de $\si$ que se utiliza con un costo $c$, dando lugar a la formulación \footnote{Se eligió usar el mismo coste $c$ para todas las restricciones; si existe información a priori del dominio del problema se puede elegir un coste distinto para cada ejemplar, por ejemplo, o para cada clase, como se suele hacer cuando las mismas están desbalanceadas}:
 
 
-Entonces, el valor de $c$ controla el nivel de regularización de la solución, ya que ayuda a evitar que $\wv$ y $b$ se ajusten exactamente a los datos. Valores altos de $c$ inhiben la regularización, valores muy bajos tienen el efecto contrario al deseado, permitiendo cualquier solución. Por ende, es importante determinar $c$ cuidadosamente con el objetivo de lograr una solución balanceada.
+\begin{equation*}
+\begin{aligned}
+& \minarg{\wv,b,\sv}
+& &  \lagp(\wv,b,\sv)= \costew + \costes \\
+& \text{sujeto a}
+& &  \hyi + \si \geq 1, \; & \rangeD\\ 
+& & & \si \geq 0, \; & \rangeD
+\end{aligned}
+\end{equation*}
 
--\ 
-4 gráficos del ejemplo anterior, con c=0.1, c=1, c=10, c=100\\
-Hiperplanos determinados por el problema de optimización con $c=\{ 0.1,1,10,100\}$
+donde $\sv$ es el vector de variables $\si$.
 
-Por último, hay que destacar que la función a optimizar $\lagp$ es convexa, lo cual puede verse fácilmente ya que es una suma y multiplicación de funciones convexas, y su dominio es un politopo convexo ya que es la intersección de hiperplanos \cite{boyd2004}. Esto significa que el hessiano es positivo definido, $H(\lagp) \succeq 0$, y que la función tiene un solo mínimo en todo su dominio. Esta simpleza de la función a optimizar contribuye a la elegancia del modelo, ya que hace más ameno el proceso de optimización.
+Ahora se tienen dos conjuntos de restricciones: las originales y las de no-negatividad de las variables de holgura.
+
+Dado un $\wv$ y un $b$, es necesario que $\hyio$. Si esto es cierto, se puede tener $\si=0$ y no pagar ningún coste, ya que la restricción se cumple sola. Si no es cierto, existen 2 opciones, en términos de la función a optimizar:  cambiar $\wv$, lo cual puede hacer que otras restricciones no se cumplan y además puede incrementar el coste si se achica el margen, o ayudar a $\hyi$ con $\si$ para que llegue a 1, y pagar el precio $c$. El vector $\xi$ quedaría mal clasificado, en este último caso, pero en términos de la función a optimizar eso puede ser mejor que pagar el costo de achicar el margen. 
+
+Entonces, el proceso de optimización, además de poder cumplir las restricciones si el problema no es linealmente separable, buscará un balance entre una separación perfecta ($\si=0$) y el tamaño del margen ($M \gg 0$), de acuerdo al parámetro de coste $c$. En el caso en que $c \rightarrow \infty$, se penaliza fuertemente la ayuda de $\si$, volviendo al modelo original de márgenes \textit{duros}. Si $c \rightarrow 0$, se permite que $\wv$ y $b$ tomen cualquier valor, porque cualquier error de clasificación puede arreglarse con los $\si$ adecuados ya que son ``baratos''. En el caso extremo, $c=0$, una solución óptima podría ser, por ejemplo, $\wv=0$, $b=0$ y $\si=1$, lo cual es claramente indeseable.
+
+
+\tikzimage{outlier_soft}{scale=0.25}{Con una elección adecuada de $c$, el problema de optimización converge al hiperplano natural para separar las dos clases, ignorando los outliers.}
+
+
+El valor de $c$ controla el nivel de regularización de la solución, ya que ayuda a evitar que $\wv$ y $b$ se ajusten exactamente a los datos. Valores altos de $c$ inhiben la regularización, valores muy bajos tienen el efecto contrario al deseado, permitiendo cualquier solución. Por ende, es importante determinar $c$ cuidadosamente con el objetivo de lograr una solución balanceada.
+
+
+\tikzimagethree{soft_c1}{scale=0.15}{Hiperplano determinado con $c=0.1$. }
+{soft_c10}{scale=0.15}{Hiperplano determinado con $c=10$. }
+{soft_c1000}{scale=0.15}{Hiperplano determinado con $c=1000$. }
+
+
+Por último, la función a optimizar $\lagp$ es convexa, lo cual puede verse fácilmente ya que es una suma y multiplicación de funciones convexas, y su dominio es un politopo convexo ya que es la intersección de hiperplanos \cite{boyd2004}. Esto significa que el hessiano es positivo definido, $H(\lagp) \succeq 0$, y que la función tiene un solo mínimo en todo su dominio. Esta simpleza de la función a optimizar contribuye a la elegancia del modelo, ya que hace más ameno el proceso de optimización.

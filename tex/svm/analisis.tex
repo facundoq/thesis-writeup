@@ -1,22 +1,31 @@
-Cuando consideramos un ejemplar utilizado para encontrar un hiperplano $(\wv,b)$ en el proceso de optimización y analizamos su posición en el espacio, debe ocurrir alguno de estos tres casos:
+Cuando se considera un ejemplar utilizado para encontrar un hiperplano $(\wv,b)$ en el proceso de optimización y se analiza su posición en el espacio, debe ocurrir alguno de estos tres casos:
 
-\begin{itemize}
+\begin{enumerate}
 \item $\hyi =1$: El ejemplar está bien clasificado y es un vector de soporte 
 \item $\hyi >1$: El ejemplar está bien clasificado y no es un vector de soporte 
 \item $\hyi <1$: El ejemplar está mal clasificado
-\end{itemize}
+\end{enumerate}
 
--\\
-3 gráficos, con los tres casos\\
-Los tres casos posibles en la posición de un ejemplar $\xvp$ luego de encontrar el hiperplano de máximo margen.
 
-Podemos determinar parcialmente estos casos en base a los valores de $\ai$ y las relaciones:
+\tikzimage{kkt_casos}{scale=0.3}{Los tres casos posibles en la posición de un ejemplar $\xv$ luego de encontrar el hiperplano de máximo margen en base al valor de $\hyi$.}
 
-\begin{align*}
-\aizc & \ai+\ui=c & \ai \ri = 0 & \ui \si =0 
-\end{align*}
+Se pueden determinar parcialmente estos casos en base a los valores de $\ai$ y las relaciones:
 
-Dividiremos en tres casos, $\ai =0$ , $0 <\ai < c$ y $\ai = c$
+\begin{equation*}
+\aizc \\
+\ai+\ui=c  \\
+\ai \ri = 0  \\
+\ui \si =0 
+\end{equation*}
+
+Se pueden dividir también los valores de $\ai$ en tres casos
+\begin{equation*}
+\ai =0 \\
+0 <\ai < c \\ 
+\ai = c
+\end{equation*}
+
+Y relacionando los tres casos de los valores de las variables $\ai$ con las posiciones de los ejemplares:
 
 \ma{
 \ai &< c \tn \ui > 0 \tn \si =0 \tn 
@@ -27,7 +36,7 @@ Dividiremos en tres casos, $\ai =0$ , $0 <\ai < c$ y $\ai = c$
 \ai &= c \tn \ui =0 \tn \siz \nd \ri =0 \tn \text{Caso 1 o 3}
 }
 
-Entonces, sabemos que:
+Pasando en limpio, se sabe que:
 
 \begin{itemize}
 \item $\ai =0$ $\tn$ $\xi$ está bien clasificado o es un vector de soporte.
@@ -35,5 +44,5 @@ Entonces, sabemos que:
 \item $\ai = c$ $\tn$ $\xi$ está mal clasificado o es un vector de soporte.
 \end{itemize}
  
-Entonces, con seguridad, si $0 <\aj < c$, podemos utilizar el hecho de que $h(\xj) y_j =1 $ para determinar el valor de $b$. 
+Entonces, si $0 <\aj < c$, se puede utilizar el hecho de que $h(\xj) y_j =1 $ para determinar el valor de $b$. 
 

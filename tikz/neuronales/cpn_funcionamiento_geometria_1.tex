@@ -1,0 +1,31 @@
+\input{../base}
+\tikzdrawing{
+
+
+
+\newcommand{\clase}[2]{\draw [ultra thick, fill={rgb:black,1;white,20}] (#1,#2) circle [radius=2.8];
+}
+
+%\clase{-3}{-3}
+%\clase{3}{-3}
+%\clase{0}{3}
+
+\draw [line width=2] (-6,1) -- (-0.5,-0.5);
+\draw [line width=2] (6,1) -- (-0.5,-0.5);
+\draw [line width=2] (0.5,-6) -- (-0.5,-0.5);
+
+\node at (0,5) {Neurona 1};
+\node at (-3.5,-5) {Neurona 2};
+\node at (3,-5) {Neurona 3};
+\pgfplotsset{ticks=none}
+
+\squareaxis{
+\addplot [mark=o,mark size=12pt]  coordinates {(0,3)};
+\addplot [mark=o,mark size=12pt]  coordinates {(3,-3)};
+\addplot [mark=o,mark size=12pt]  coordinates {(-3.5,-3)};
+
+}{6}
+
+
+}
+}

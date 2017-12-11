@@ -1,44 +1,46 @@
-Todo problema de optimización tiene un problema dual asociado. El problema dual es distinto al problema original o primal, pero están relacionados por las \textbf{condiciones de optimalidad de Karush-Kuhn-Tucker}, que llamaremos simplemente las \textbf{KKT} (ver \ref{sec:kkt}). 
 
-El problema dual se obtiene a partir del primal introduciendo variables duales $\ai$ por cada restricción del problema primal. Si las restricciones son desigualdades, como en nuestro, caso, las variables duales también estarán restrictas como $\ai \geq 0$. Las restricciones se incorporan o codifican en la función de coste, de manera que cuando más se optimizan los términos relacionados a las restricciones en la función, más se cumplen las restricciones. Luego, se eliminan las variables primales (y con ello las restricciones del primal), obteniendo la formulación dual en términos de solamente las variables duales $\ai$. 
+A continuación, se deriva un modelo alternativo del problema de optimización utilizando la forma dual del mismo. Dicha forma permite, en el caso de SVM, realizar la optimización con mayor eficiencia. De esta forma, dado el problema original, se puede plantear el dual, resolverlo, y luego obtener la solución del problema primal en base al dual.
 
-En el caso de nuestro problema, como la función a optimizar es convexa y las restricciones son afines (y representan un conjunto convexo), cumple las condiciones de dualidad fuerte, lo cual mediante las KKT implica que el valor del mínimo del primal es igual al máximo del dual. Esta relación es muy importante, ya que implica que de cierta manera, minimizar el primal es equivalente a maximizar el dual. 
+Todo problema de optimización tiene un problema dual asociado. El problema dual es distinto al problema original o primal, pero están relacionados por las \textbf{condiciones de optimalidad de Karush-Kuhn-Tucker}, que se llamarán simplemente las \textbf{KKT} (ver el apéndice sobre KKT en la sección \ref{sec:kkt} al final del capítulo para una breve referencia sobre el tema.). 
 
-Si encontramos una relación entre las variables del primal y las del dual que nos permitan calcular las primeras a partir de las segundas, podemos plantear y resolver el dual, y finalmente obtener dos valores de las variables del primal. Esta será nuestra estrategia para obtener el dual del problema del máximo margen. 
+El problema dual se obtiene a partir del primal introduciendo variables duales $\ai$ por cada restricción del problema primal. Si las restricciones son desigualdades, como en el caso de SVM, las variables duales también estarán restrictas como $\ai \geq 0$. Las restricciones se incorporan o codifican en la función de coste, de manera que cuando más se optimizan los términos relacionados a las restricciones en la función, más se cumplen las restricciones. Luego, se eliminan las variables primales (y con ello las restricciones del primal), obteniendo la formulación dual en términos de solamente las variables duales $\ai$. 
 
-Primero, debemos llevar las restricciones a la forma $ r \geq 0$. Las de $\si \geq 0 $ ya se encuentren en ese estado; las otras las escribimos como $r_i \geq 0$ donde $r_i = \hyi +\si - 1$. 
+En SVM, como la función a optimizar es convexa y las restricciones son afines (y representan un conjunto convexo), cumple las condiciones de dualidad fuerte, lo cual mediante las KKT implica que el valor del mínimo del primal es igual al máximo del dual. Esta relación es muy importante, ya que implica que de cierta manera, minimizar el primal es equivalente a maximizar el dual. Entonces, si se encuentra una relación entre las variables del primal y las del dual que permitan calcular las primeras a partir de las segundas, se puede plantear y resolver el dual, y luego obtener los valores de las variables del primal. 
 
-Luego introducimos variables duales $\ai$, $\rangeD$, una por cada restricción $r_i \geq 0$ y otro conjunto de variables duales $\ui$, $\rangeD$, una por cada restricción $\si \geq 0$, para plantear el comúnmente llamado \textbf{lagrangiano} $\lag$:
+Para ello, primero se deben llevar las restricciones a la forma $ r \geq 0$. Las de $\si \geq 0 $ ya se encuentren con esa forma; las otras se pueden escribir como $r_i \geq 0$ donde $r_i = \hyi +\si - 1$. 
+
+Luego se introducen variables duales $\ai$, $\rangeD$, una por cada restricción $r_i \geq 0$ y otro conjunto de variables duales $\ui$, $\rangeD$, una por cada restricción $\si \geq 0$, para plantear el comúnmente llamado \textbf{lagrangiano} $\lag$:
 
 
 \begin{equation*}
-\lag(\wv,b,\si,\ai,\ui) = \costew + \costes - \costea - \costeu 
+\lag(\wv,b,\sv,\av,\uv) = \costew + \costes - \costea - \costeu 
 \end{equation*}
 
-y nuestro objetivo queda como \footnote{Por claridad, obviamos el rango de la variable $i$ ($\rangeD$) en las siguientes derivaciones}:
+donde $\av$ el vector de variables $\ai$ y $\uv$ el vector de variables $\ui$.
+
+El problema queda entonces como \footnote{Por simplicidad, se obvia el rango de la variable $i$ ($\rangeD$) en las siguientes derivaciones}:
 
 \begin{equation*}
 \begin{aligned}
-&    \minarg{\wv,b,\si}
-& \{  \maxarg{\ai,\ui}
-&   \lag(\wv,b,\si,\ai,\ui) \} \\
+&    \minarg{\wv,b,\sv}  \quad
+ \{   \maxarg{\av,\uv} \quad  \lag(\wv,b,\sv,\av,\uv)  \} \\
 & \text{sujeto a}
-& &  \riz, &\; \siz \\ 
-& & & \ai \geq 0, &\; \ui \geq 0 
+&\riz, &\; \siz \\ 
+& &  \ai \geq 0, &\; \ui \geq 0 
 \end{aligned}
 \end{equation*}
 
 
-El lagrangiano captura el efecto de las restricciones pero en forma de coste, obteniendo un problema equivalente al anterior. Podemos ver esto intuitivamente, ya que las restricciones piden $\riz$ y $\siz$. Si $\riz$, entonces $- \costea$ es negativo, lo cual ayuda a minimizar nuestra función de coste. Por lo tanto, para minimizar $\lag$  desde el punto de vista de los nuevos términos en la función de coste, sería ideal que:
+El lagrangiano captura el efecto de las restricciones pero en forma de coste, obteniendo un problema equivalente al anterior. La intuición principal detrás de esto radica en qué sucede cuando se cumplen las restricciones $\riz$ y $\siz$. Si $\riz$, entonces $- \costea$ es negativo, lo cual ayuda a minimizar la función de coste. Por lo tanto, para minimizar $\lag$  desde el punto de vista de los nuevos términos en la función de coste, sería ideal que:
 
 \ma{
 \ri \gg 0,  \quad \ai \gg 0
 }
 
 
-El mismo argumento vale para $\siz$, $\uiz$ y el término $- \costes$. Por otro lado, si $\riz$ y $\siz$ (lo cual es algo que necesitamos en la solución), los términos agregados a la función de coste nunca pueden perjudicarla; a lo sumo, no la ayudarán si $\ai=$ o $\ui =0$. Entonces, estos dos términos nunca aumentan la función de coste si nos mantenemos dentro de las restricciones. Si nos vamos de las restricciones, el coste de la función aumenta, lo cual tendrá el efecto de llevar el proceso de optimización mediante la función de coste a cumplir las restricciones. En este balance hay que tener en cuenta que $\wv$ y $\si$ tienen que ser bajos debido a los otros dos términos de la función de coste. Entonces, en el mejor caso $\si = 0$, y $\hyi \geq 1$, con un $\wv$ bajo. 
+El mismo argumento vale para $\siz$, $\uiz$ y el término $- \costes$. Por otro lado, si $\riz$ y $\siz$ (lo cual es algo que se necesita en la solución), los términos agregados a la función de coste nunca pueden perjudicarla; a lo sumo, no la ayudarán si $\ai=$ o $\ui =0$. Entonces, estos dos términos nunca aumentan la función de coste si las variables se mantienen dentro de las restricciones. Si no cumplen las restricciones, el coste de la función aumenta, lo cual tendrá el efecto de llevar el proceso de optimización mediante la función de coste a cumplir las mismas. En este balance hay que tener en cuenta que $\wv$ y $\si$ tienen que ser bajos debido a los otros dos términos de la función de coste. En el mejor caso $\si = 0$, y $\hyi \geq 1$, con un $\wv$ bajo. 
 
-Podemos formalizar estos argumentos intuitivos mediante las KKT (ver sección \ref{sec:kkt} para un resumen), que además usamos para eliminar las variables primales y obtener el problema dual, que en este caso dicen:
+Se pueden formalizar estos argumentos intuitivos mediante las KKT (ver el apéndice de la sección \ref{sec:kkt} para un resumen), que además serán utilizadas para eliminar las variables primales y obtener el problema dual. Las KKT dicen que en el óptimo primal y dual $(\wv^*,b^*,\si^*)$ y $(\ai^*,\ui^*)$ se cumplen estas propiedades:
 
 
 \begin{itemize}
@@ -65,12 +67,13 @@ Podemos formalizar estos argumentos intuitivos mediante las KKT (ver sección \r
 
 \end{itemize}
 
-Las KKT dicen que en el óptimo primal y dual ($(\wv^*,b^*,\si^*$ y $(\ai^*,\ui^*)$) se cumplen estas propiedades. Para justificar nuestra noción intuitiva de que los términos agregados no cambian fundamentalmente el problema, nos apoyamos en la propiedad de holgura complementaria; si $\ai r_i=0$ entonces $\costea =0$ en el óptimo, y lo mismo con $\ui \si = 0$ y $\costeu =0$.
+Para justificar formalmente la noción intuitiva de que los términos agregados no cambian fundamentalmente el problema, se utiliza ahora también la propiedad de holgura complementaria; si $\ai r_i=0$ entonces $\costea =0$ en el óptimo, y lo mismo con $\ui \si = 0$ y $\costeu =0$.
 
-Habiendo justificado la equivalencia de los problemas, utilizaremos la propiedad de estacionalidad de la solución para eliminar las variables duales. Desarrollando las derivadas parciales:
+Habiendo justificado la equivalencia de los problemas, se utilizará la propiedad de estacionalidad de la solución para encontrar una relación entre las variables duales y primales y eliminar las variables primales del problema, llegando a la formulación dual. Desarrollando las derivadas parciales:
+
 \begin{itemize}
 \item \ma{
-\derivative{\lag}{\wv} &= \derivative{\, \costew}{\wv} - \derivative{\, \costea}{\wv}  = 2\wv - \sumayx = 0    \nonumber \\ \tn \wv &= \frac{1}{2} \sumayx
+\derivative{\lag}{\wv} &= \derivative{\, \costew}{\wv} - \derivative{\, \costea}{\wv}  = \wv - \sumayx = 0    \nonumber \\ \tn \wv &=  \sumayx
 }
 \item \ma{ 
 &\derivative{\lag}{b} = \derivative{\costea}{b} = \sumay = 0  \\
@@ -123,7 +126,7 @@ Dado que $\sumi \yi \ai =0$, entonces $\sumi  \yi \ai b =0$. Entonces
 = \sumi(\wv \cdot \xi) \yi \ai + \sumi \si \ai - \sumi \ai
 }
 
-Reemplazando $\costea$ en $lag$:
+Reemplazando $\costea$ en $\lag$:
 
 \ma{
   \lag 
@@ -134,26 +137,25 @@ Reemplazando $\costea$ en $lag$:
 &= \costew  - \wv \cdot \sumayx + \sumi \ai
 }
 
-Como $\wv = \frac{1}{2} \sumayx \tn 2\wv= \sumayx$:
+Como $\wv = \sumayx \tn \wv= \sumayx$:
 
 \ma{
   \lag 
 &= \costew  - \wv \cdot \sumayx + \sumi \ai \\
-&= \costew  - \wv \cdot 2\wv + \sumi \ai \\
-&= \costew  - 2 \costew + \sumi \ai \\
+&= \costew  - \wv \cdot \wv + \sumi \ai \\
 &=  - \costew   + \sumi \ai
 }
 
-Para finalmente librarse de la variable $w$, utilizamos nuevamente la igualdad anterior y llegamos a :
+Para finalmente librarse de la variable $\wv$, se utilizará nuevamente la igualdad anterior, llegando a :
 
 \ma{
 \lag 
 &=  - \costew   + \sumi \ai \\
-&=  - (\sumi \ayx ) \cdot (\suml_j \aj y_j \xj )  + \sumi \ai \\
+&=  - \oh (\sumi \ayx ) \cdot (\suml_j \aj y_j \xj )  + \sumi \ai \\
 &=  \lagai
 }
 
-Llamaremos a esta forma de la función a optimizar $\lag_D$, por Lagrangiano del Dual. De esta manera, $\lag$ no depende de $\wv$, $b$ o $\si$, y por ende las restricciones $\riz$ y $\siz$ pierden efecto, obteniendo el problema equivalente:
+Se llamará a esta forma de la función a optimizar $\lag_D$, por Lagrangiano del Dual. De esta manera, $\lag$ no depende de $\wv$, $b$ o $\si$, y por ende las restricciones $\riz$ y $\siz$ pierden efecto, obteniendo el problema equivalente:
 
 
 \begin{equation*}
@@ -177,15 +179,13 @@ Las restricciones $\aiz$, $\uiz$ y $ c = \ai+\ui $ pueden simplificarse a simple
 \end{equation}
 
 
-De nuevo, podemos resolver el problema dual con algún algoritmo genérico de optimización cuadrática (la función es cuadrática por $\ai \aj$), calcular:
+De nuevo, se puede resolver el problema dual con algún algoritmo genérico de optimización cuadrática (la función es cuadrática por $\ai \aj$), y averiguar el valor de $b$ y $\wv$ como:
 
-\ma{ \wv &= \frac{1}{2} \sumayx\\
+\ma{ \wv &=  \sumayx\\
 b &= 1 -(\wv \cdot \xv_0) \yi
 }
 
-para un vector de soporte $\xv_0$ (ya que sabemos que $\wv \cdot \xv_0 +b =1)$. 
+para un vector de soporte $\xv_0$ (ya que para los mismos se sabe que $\wv \cdot \xv_0 +b =1)$. 
 
-Para eso debemos poder determinar en base a los $\ai$ qué ejemplares $\xi$ son vectores de soporte. Además, resulta interesante analizar los valores de $\ai$ ya que nos darán indicios de si un ejemplar $\xi$ está bien clasificado o no, sin necesidad de calcular $\wv$, $b$ y luego la función de clasificación. Esta ventaja es necesaria para la eficiencia de ciertos algoritmos iterativos de optimización como SMO. 
+Para eso se debe poder determinar en base a los $\ai$ qué ejemplares $\xi$ son vectores de soporte. Además, resulta interesante analizar los valores de $\ai$ ya que darán indicios de si un ejemplar $\xi$ está bien clasificado o no, sin necesidad de calcular $\wv$, $b$ y luego la función de clasificación, como se discute en la siguiente sección. Esta ventaja es necesaria para la eficiencia de ciertos algoritmos iterativos de optimización como SMO, descripto en el apéndice \ref{apendice_smo}. 
 
-
-Es importante notar que si resolvemos el problema dual con un kernel no lineal que aproveche el truco del kernel, es generalmente preferible no calcular $\wv$ explícitamente, ya que de esa manera al clasificar un nuevo ejemplar con la función $f(\xv)=\wv \cdot \tra(\xv) +b$, debemos calcular también a $\tra(\xv)$ explícitamente. En ese caso, es mejor guardar los valores de los vectores de soporte, así como de las variables duales y el bias $b$, y calcular $f$ como $f(\xv)=   \sumi \ai \yi \kn{\xi}{\xv} +b$.

@@ -1,36 +1,46 @@
-En el modelo de clasificación descripto en las secciones anteriores, realizamos ciertas simplificaciones que no suelen ser ciertas en la práctica. Las mismas constan de asumir que las clases $y$ son equiprobables, que los ejemplares $\xv$ también lo son, y que a cada ejemplar corresponde una clase única. Los problemas a resolver suelen tener cierto error inherente, en el sentido de que podemos tener ejemplares abitrariamente parecidos $\xv_0 \simeq \xv_1$ con  $y_0 \neq y_1$. Es decir, no siempre existe un clasificador que distinga perfectamente los ejemplares de todas las clases.
+En el modelo de clasificación descripto en las secciones anteriores, se realizaron ciertas simplificaciones que no suelen ser ciertas en la práctica. Las mismas constan de asumir que: 
 
-Estas tres consideraciones resultan una simplificación efectiva en ciertos casos, pero pueden traer problemas a la hora de generar un clasificador efectivo cuando las hipótesis no se cumplen:
+\begin{itemize}
+\item Las clases $y$ son equiprobables.
+\item Los ejemplares $\xv$ también lo son.
+\item A cada ejemplar corresponde una clase única.
+\end{itemize}
+
+En la práctica, casi siempre hay cierto conjunto de patrones y clases más probables que otras. Además, los problemas a resolver suelen tener cierto error inherente, en el sentido de que existen ejemplares arbitrariamente parecidos $\xv_0 \simeq \xv_1$ con  $y_0 \neq y_1$. Es decir, no siempre existe un clasificador que distinga perfectamente los ejemplares de todas las clases.
+
+Entonces, estas tres consideraciones resultan una simplificación efectiva en ciertos casos, pero pueden traer problemas a la hora de generar un clasificador efectivo cuando las hipótesis no se cumplen. A continuación se describen tres situaciones donde se viola cada asunción: 
  
 \newcommand{\XV}{\mathbf{X}}	
 \newcommand{\DP}{P}	
 \begin{itemize}
 
-\item Ciertas clases pueden ser más ocurrentes que otras. En muchos problemas reales esto no es cierto; por ejemplo, si tenemos que clasificar muestras de sangre para decidir si tienen o no cierta enfermedad, como la de Huntington, la clase $0$, correspondiente a los sanos, en general será mucho más grande que la clase $1$, correspondiente a los enfermos. Supongamos que dichas proporciones son 99.9\% y 0.1\%, respectivamente. Si un clasificador se entrena "a ciegas", el algoritmo de aprendizaje podría determinar que con clasificar todas las muestras como sanas tendría sólo un 0.1\% de error, y entrenar un modelo que haga justamente eso. Este modelo claramente no es útil, pero así pareciera en términos del error obtenido. 
+\item Ciertas clases pueden ser más ocurrentes que otras. Por ejemplo, si hay que clasificar muestras de sangre para decidir si tienen o no cierta enfermedad, como la de Huntington, la clase $0$, correspondiente a los sanos, en general será mucho más grande que la clase $1$, correspondiente a los enfermos. Suponiendo que dichas proporciones son 99.9\% y 0.1\%, respectivamente, si un clasificador se entrena \textit{a ciegas}, el algoritmo de aprendizaje podría determinar que con clasificar todas las muestras como sanas tendría sólo un 0.1\% de error, y entrenar un modelo que haga justamente eso. Este modelo claramente no es útil, pero así pareciera en términos del error obtenido. 
 
-\item De la misma forma, ciertos ejemplares $\xv$ pueden ocurrir con más frecuencia que otros; en este caso, si uno de los indicadores de la enfermedad es la aparición de una proteina de baja ocurrencia en la población, tendremos menos ocurrencias de ejemplares que codifiquen dicha proteína, lo cual no implica que dicho patrón sea un outlier o sea menos importante. Por otro lado, puede ocurrir que algún ejemplar del conjunto de entrenamiento sea un outlier y no sea importante
+\item De la misma forma, ciertos ejemplares $\xv$ pueden ocurrir con más frecuencia que otros; en este caso, si uno de los indicadores de la enfermedad es la aparición de una proteína de baja ocurrencia en la población, existirán menos ocurrencias de ejemplares que codifiquen dicha proteína, lo cual no implica que dicho patrón sea un outlier o sea menos importante. Por otro lado, puede ocurrir que algún ejemplar del conjunto de entrenamiento sea un outlier y no sea importante, pero se lo considere con el mismo \textit{peso} que los otros patrones.
  
-\item Además, asumimos que un ejemplar $\xv$ solo puede tener una clase $y$ asociada, es decir, no puede haber ambigüedades respecto de la clase de un ejemplar.  Siguiendo el mismo ejemplo, en general las características del análisis de la sangre codificadas en $\xv$ no tienen información completa sobre todas las causas y los indicadores de la enfermedad. Entonces, es muy posible tener dos ejemplares, $\xv_0$ y $\xv_1$ tales que $\xv_0=\xv_1$ pero $y_0 \neq y_1$. Es decir, al tener información incompleta, podemos tener "colisiones" en la asignación de etiquetas "verdaderas" a los ejemplares.
+\item Además, se asumió que un ejemplar $\xv$ solo puede tener una clase $y$ asociada, es decir, no puede haber ambigüedades respecto de la clase de un ejemplar.  Siguiendo el mismo ejemplo, en general las características del análisis de la sangre codificadas en $\xv$ no tienen información completa sobre todas las causas y los indicadores de la enfermedad. Entonces, es muy posible tener dos ejemplares, $\xv_0$ y $\xv_1$ tales que $\xv_0=\xv_1$ pero $y_0 \neq y_1$. Es decir, al tener información incompleta, se pueden tener inconsistencias en la asignación de etiquetas \textit{verdaderas} a los ejemplares.
 
 \end{itemize}
 
-- Un gráfico para cada ejemplo. En el primero, tenemos muchos puntos de lado - y pocos del lado +. En el segundo tenemos lo mismo, pero además hay un cúmulo grande de +, separados del anterior. En el tercero, tenemos + y - juntos
-Ejemplos de conjuntos de entrenamiento para los tres casos. En el primero, la cantidad de ejemplos $\xvm$ es mucho mayor que los $\xvp$. En el segundo, hay una distribución de los $\xvp$ bastante asimétrica. En el tercero, tenemos ambigüedad en la asignación de clases para algunos $\xv$.
-
-En base a los items anteriores, podemos extender el modelo original agregando una estructura probabilística en nuestro dominio $\ddp$ y en el espacio de clases $C$, de modo que ciertos ejemplares y clases sean más probables que otros, y además, haya una distribución conjunta de ejemplares y clases. 
-
-Entonces, consideramos una distribución de probabilidad $P(Y)$ de las clases posibles de los patrones, $C$. Además, asumimos una distribución $\DP(\XV)$ (generalmente desconocida) de los ejemplares sobre el conjunto $\ddp$. Esto nos da entonces una probabilidad condicional $P(Y | \XV )$ que queremos averiguar; es decir, dado un ejemplar, queremos saber la probabilidad de que pertenezca a cierta clase. De esta forma, tenemos en cuenta las tres simplificaciones mencionadas anteriormente.
-
-Podemos ver estas definiciones en términos de un proceso generativo de ejemplares y su afiliación a ciertas clases. Para obtener un nuevo ejemplar y su clase, se selecciona de forma aleatoria un ejemplar $\xv \in \ddp$ de acuerdo a $P(\XV)$. Luego, se le asigna una etiqueta $y$ de acuerdo a $P( Y | \xv )$.
-
-El objetivo de un clasificador es encontrar $P( Y | \XV)$ a partir de los ejemplos de entrenamiento. Estos ejemplos dan información sobre $P(Y, \XV)$; en base a eso, el algoritmo de aprendizaje estima $P( Y | \XV)$. 
-
-Podemos pensar entonces en la función $f$ del clasificador como un funcional de la conjunción funciones $f_c, \range{i}{1}{C}$, donde $\fdef{f_c}{\ddp}{[0..1]}$. Cada función $f_c$ estima $P(c| \xv)$, es decir, la probabilidad de que el ejemplar $\xv$ pertenezca a la clase $c$. La composición se da mediante la función $f(\xv) =  \argmax_c \{ f_c(\xv) \} $, es decir, $f$ selecciona la clase $k$ tal que $f_k(\xv) \geq f_c(\xv), \range{i}{1}{C}$. Un clasificador ideal estimaría perfectamente $P(Y|\XV)$, de modo que $f_c=P(c|\xv)$.
-
-Hay que considerar otra simplificación que hemos hecho, que consta de una distinción sutil pero importante. Hasta ahora consideramos que todos los ejemplares $\xi$ han sido etiquetados correctamente con la clase $y_i$ correspondiente, pero volviendo al ejemplo anterior, ciertos pacientes pueden haber sido diagnósticados incorrectamente. Entonces, si $y_i$ es simplemente la clase con la que fue etiquetado el ejemplar $\xi$, la misma no siempre representa la clase del ejemplar, y deberíamos considerar las probabilidades sobre un $y_i^v$ que es la clase verdadera del mismo, de modo que nuestro objetivo es entonces estimar $P(Y^v | \XV)$. 
+\tikzimagethree{probabilistico_desbalance}{scale=0.15  }{Desbalance en la distribución de ejemplares por clase}
+{probabilistico_no_uniforme}{scale=0.15}{Distribución de los ejemplares no uniforme.}
+{probabilistico_mezclado}{scale=0.15}{Ambigüedad en la asignación de clases para algunos ejemplares.}
 
 
-Esta es la base de lo que se conoce como \textbf{Statistical Learning Theory}  (Teoría estádistica del aprendizaje) \cite{vapnik1998,mostafa2012}, la teoría subyacente en del modelo de \textbf{Support Vector Machine} (Máquina de Vectores de Soporte), un tipo de clasificador que desarrollaremos en la siguientes secciones.
+En base a estas consideraciones, se puede extender el modelo original agregando una estructura probabilística en el dominio $\ddp$ y en el espacio de clases $C$, de modo que ciertos ejemplares y clases sean más probables que otros, y además, haya una distribución conjunta de ejemplares y clases. 
+
+Entonces, se considera una distribución de probabilidad $P(Y)$ de las clases posibles de los patrones, $C$. Además, se asume una distribución $\DP(\XV)$ (generalmente desconocida) de los ejemplares sobre el conjunto $\ddp$. Esto da entonces una probabilidad condicional $P(Y | \XV )$ que se desea averiguar; es decir, dado un ejemplar, se desea saber la probabilidad de que pertenezca a cierta clase. De esta forma, se tienen en cuenta las tres simplificaciones mencionadas anteriormente.
+
+Estas definiciones pueden verse en términos de un proceso generativo de ejemplares y su afiliación a ciertas clases. Para obtener un nuevo ejemplar y su clase, se selecciona de forma aleatoria un ejemplar $\xv \in \ddp$ de acuerdo a $P(\XV)$. Luego, se le asigna una etiqueta $y$ de acuerdo a $P( Y | \xv )$.
+
+Desde esta perspectiva, se puede plantear el objetivo de un clasificador como encontrar $P( Y | \XV)$ a partir de los ejemplos de entrenamiento. Los mismos dan información sobre $P(Y, \XV)$; en base a eso, el algoritmo de aprendizaje estima $P( Y | \XV)$. 
+
+Se puede pensar entonces en la función $f$ del clasificador como un funcional de la conjunción de funciones $f_c, \range{i}{1}{C}$, donde $\fdef{f_c}{\ddp}{[0..1]}$. Cada función $f_c$ estima $P(c| \xv)$, es decir, la probabilidad de que el ejemplar $\xv$ pertenezca a la clase $c$. El funcional más simple es la función $f(\xv) =  \argmax_c \{ f_c(\xv) \} $, es decir, $f$ selecciona la clase $k$ tal que $f_k(\xv) \geq f_c(\xv), \; \range{i}{1}{C}$. Un clasificador ideal estimaría perfectamente $P(Y|\XV)$, de modo que $f_c=P(c|\xv)$.
+
+Hay que considerar otra simplificación realizada, que consta de una distinción sutil pero importante. Hasta ahora se asumió que todos los ejemplares $\xi$ han sido etiquetados correctamente con la clase $y_i$ correspondiente, pero volviendo al ejemplo anterior, ciertos pacientes pueden haber sido diagnosticados incorrectamente. Entonces, si $y_i$ es simplemente la clase con la que fue etiquetado el ejemplar $\xi$, la misma no siempre representa la clase del ejemplar, y se deberían considerar las probabilidades sobre un $y_i^v$ que es la clase verdadera del mismo, de modo que el objetivo es entonces estimar $P(Y^v | \XV)$. 
+
+
+Esta es la base de lo que se conoce como \textbf{Statistical Learning Theory}  (Teoría estadística del aprendizaje) \cite{vapnik1998,mostafa2012}, la teoría subyacente en el modelo de \textbf{Support Vector Machine} (Máquina de Vectores de Soporte), un tipo de clasificador que se desarrollará en el capítulo \ref{chap:svm}.
 
 
 
@@ -40,6 +50,9 @@ Esta es la base de lo que se conoce como \textbf{Statistical Learning Theory}  (
 \newcommand{\RPC}{\reals_p^{|C|}}
 \newcommand{\RP}{\reals_p=[0..1]}
 
-Podemos extender el modelo aún más si consideramos el problema de que un ejemplar pertenezca realmente a \textit{varias} clases. Por ejemplo, si estamos clasificando objetos detectados en imágenes para asignarle categorías, una mesa de madera podría entrar en las categorías \textit{mesa}, de acuerdo a sus propiedades geométricas, y \textit{objetos de madera}, en base a su textura. En el modelo de clasificación descripto en las secciones anteriores, asumimos que hay una \textit{única} clase "verdadera" $y_i$ para asignar a cada patrón del dominio del problema, con cierta ambigüedad. Ahora podríamos asumir que a cada $\xv$ corresponde un vector de puntajes por clase $\yv \in \RPC$, con $\RP$ y $\reals_p subset \reals$. Cada puntaje entonces determina el grado de pertenencia de un ejemplar a cada clase. Esto implica entrenar una función de clasificación $\fdef{f}{\ddp}{\RPC} $, similar a la conjunción de las funciones $f_c$ descriptas anteriormente, pero sin tomar el máximo, de modo que $f(\xv)=(f_1(\xv),\cdots,f_C(\xv))$.
+Se puede extender el modelo nuevamente considerando el problema de que un ejemplar pertenezca realmente a \textit{varias} clases. Por ejemplo, si se busca clasificar objetos detectados en imágenes para asignarles categorías, una mesa de madera podría entrar en las categorías \textit{mesa}, de acuerdo a sus propiedades geométricas, y \textit{objetos de madera}, en base a su textura. En el modelo de clasificación descripto en las secciones anteriores, se asume que hay una \textit{única} clase "verdadera" $y_i$ para asignar a cada patrón del dominio del problema, con cierta ambigüedad. Ahora se podría asumir que a cada $\xv$ corresponde un vector de puntajes por clase $\yv \in \RPC$, con $\RP$ y $\reals_p \subset \reals$. Cada puntaje entonces determina el grado de pertenencia de un ejemplar a cada clase. Esto implica entrenar una función de clasificación $\fdef{f}{\ddp}{\RPC} $, similar a la conjunción de las funciones $f_c$ descriptas anteriormente, pero sin tomar el máximo, de modo que $f(\xv)=(f_1(\xv),\cdots,f_C(\xv))$.
 
 Este modelo es una generalización del previo donde si antes $y_i=c$, ahora $\yi= (0,..,1,..,0)$, donde el $1$ está en la posición $c$. 
+
+Aún cuando el problema no sea de clasificación multiclase, este modelo puede ser útil ya que permite cuantificar el grado de ambigüedad en la clase asignada a un ejemplar.
+

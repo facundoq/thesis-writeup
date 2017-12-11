@@ -1,0 +1,12 @@
+\input{../base}
+\tikzdrawing{
+\draw [line width=2] (-4,-10) -- (10,10);
+\draw [line width=2] (-10,10) -- (3,-10);
+
+\standardaxis{
+\addgaussianscatter{o}{0}{7}
+\addgaussianscatter{triangle}{-5}{-5}
+\addgaussianscatter{diamond}{5}{-5}
+\addgaussianscatter{star}{0}{1l}
+}
+}

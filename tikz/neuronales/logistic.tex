@@ -1,0 +1,9 @@
+\input{../base}
+\tikzdrawing{
+
+\scalefont{0.25} 
+
+\rectangularaxis[axis lines=middle, ytick={-5,-4,-3,-2,-1,0,1,2,3,4,5},xtick={-5,-4,-3,-2,-1,0,1,2,3,4,5}]{
+\addplot[very thick, domain=-5:5, samples=200]{1/(1+e^(-x))};
+}{5}{2}
+}

@@ -2,107 +2,88 @@
 
 El modelo feedforward (FF) extiende el perceptrón introduciendo el concepto de capas de neuronas (de entrada, ocultas y de salida), funciones de cada neurona no-lineales, y la utilización de varias neuronas de salida para codificar el resultado de la red. Es uno de los modelos más populares de red neuronal, uno de los que popularizó la técnica.
 
-imágen: red feedforward con varias capas y funciones no lineales
-caption: Una red feedforward con cinco capas: la primera, de entrada, luego tres capas ocultas, y finalmente una capa de salida, con varias neuronas de salida. Las funciones de las neuronas pueden ser no-lineales.
+\tikzimage{feedforward}{scale=0.5}{Una red feedforward con tres capas: la primera, de entrada, luego un capa oculta, y finalmente una capa de salida, con varias neuronas de salida. Las funciones de las neuronas pueden ser no-lineales.} 
 
-Desarrollaremos el modelo feedforward en tres pasos, introduciendo tres problemas que motivan cambios en la formulación del perceptrón para llegar al modelo deseado.
+Se mostrará el modelo feedforward en tres pasos, introduciendo tres problemas que motivan cambios en la formulación del perceptrón para llegar al modelo deseado.
 
 \subsection{Varias clases}
 
-Supongamos que buscamos clasificar $C$ clases de ejemplares. Podemos representar la existencia de varias clases utilizando $C$ neuronas de salida como las del perceptrón, una por cada clase. Habrá entonces $C$ hiperplanos de separación que entrenar, cada uno con sus parámetros. 
-
-Imagen:
-Caption: Una red neuronal con 2 neuronas de entrada y 3 de salida. 
+Supónganse que se busca clasificar $C$ clases de ejemplares. Se puede representar la existencia de varias clases utilizando $C$ neuronas de salida como las del perceptrón, una por cada clase. Habrá entonces $C$ hiperplanos de separación que entrenar, cada uno con sus parámetros. 
 
 
-Imagen: Ejemplares de tres clases distintas. Cada grupo de ejemplares está separado del resto por un hiperplano.
-Caption: Ejemplares de tres clases distintas. Cada grupo de ejemplares está separado del resto por un hiperplano.
+\tikzimagetwo{ff_2entradas_2salidas}{scale=0.7}{Una red neuronal con 2 neuronas de entrada y 3 de salida.}{clases3_hiperplanos3}{scale=0.22}{Ejemplares de tres clases distintas. Cada grupo de ejemplares está separado del resto por un hiperplano.}
 
-Interpretamos la salida de esta red como un vector $\ov$, donde $o_i$ es el resultado calculado para la neurona de salida $i$. En este caso, un vector de la clase $c$ está bien clasificado si $o_c=1$ y $o_j=-1, j \neq c$. Podemos entrenar esta red aplicando el algoritmo del perceptrón a cada neurona por separado. Podemos ver la topología de la red como dos capas de neuronas, las de entrada y las de salida. A continuación, generalizamos dicha noción.
+Se interpreta la salida de esta red como un vector $\ov$, donde $o_c$ es el resultado calculado para la neurona de salida $c$. En este caso, un vector de la clase $c$ está bien clasificado si $o_c=1$ y $o_j=-1, j \neq c$. Se puede entrenar esta red aplicando el algoritmo del perceptrón a cada neurona $c$ por separado. 
+
+
+Se puede ver la topología de la red como dos capas de neuronas, las de entrada y las de salida. A continuación, se generaliza la noción de capas en las redes considerando el problema de la clasificación de los ejemplares de una clase $c$ contra los del resto de las clases.
 
 \subsection{Capas ocultas}
 
-Supongamos que buscamos clasificar ejemplares de las 3 clases de la figura X. Se ve claramente que no existe un hiperplano que pueda separar la clase 2 del resto de las clases. 
+Supóngase que se busca clasificar ejemplares de las 3 clases:  
 
-Imagen: Ejemplares de tres clases distintas, la 2da entre las otras dos. La clase 2 no puede separarse del resto con un solo hiperplano.
-Caption: Ejemplares de tres clases distintas. La clase 2 no puede separarse del resto con un solo hiperplano.
+\tikzimage{clases3_no_separables}{scale=0.3}{Ejemplares de tres clases distintas. La clase 2 no puede separarse del resto con un solo hiperplano.
+}
+
+Se ve claramente que no existe un hiperplano que pueda separar la clase 2 (triángulo) del resto de las clases. 
+
+El perceptrón multiclase no puede solucionar este problema, pero quizás realizando una transformación del espacio de ejemplares se pueda volver a un problema tratable. Es fácil observar que se puede separar a la clase 2 del resto utilizando \textit{dos} hiperplanos, entre la clase 1 y la 2, y la 2 y la 3.
 
 
-El perceptrón multiclase no puede solucionar este problema, pero quizás realizando una transformación del espacio de ejemplares se pueda volver a un problema tratable. Es fácil observar que podemos separar a la clase 2 del resto utilizando \textit{dos} hiperplanos, entre la clase 1 y la 2, y la 2 y la 3.
+\tikzimage{clases3_no_separables_hiperplanos}{scale=0.3}{Ejemplares de tres clases distintas; los hiperplanos separan a la clase 2 del resto.
+}
 
-Imagen: Ejemplares de tres clases distintas, la 2da entre las otras dos. Dos hiperplanos separan a las clases 1 y 2 y 2 y 3 figura Y
+El resultado es entonces un dominio $\ddp$ particionado por regiones de voronoi ligeramente más complejas que con el simple perceptrón, y por ende más potentes para su clasificación.
 
-Caption: Ejemplares de tres clases distintas; los hiperplanos separan a la clase 2 del resto.
+Se puede implementar este concepto introduciendo una nueva capa de neuronas \textit{ocultas} entre la capa de entrada y la de salida. El propósito de esta capa es transformar los ejemplares a una representación más simple para clasificar, manteniendo el mismo tipo y cantidad de neuronas en la capa de salida que antes. 
 
-Podemos implementar este concepto introduciendo una nueva capa de neuronas \textit{ocultas} entre la capa de entrada y la de salida. El propósito de esta capa es transformar los ejemplares a una representación más simple para clasificar, manteniendo el mismo tipo y cantidad de neuronas en la capa de salida que antes. 
+\tikzimage{ff_2entradas_2ocultas_3salidas}{scale=0.7}{Un perceptrón multiclase con una capa oculta de dos neuronas.}
 
-Imagen: La misma imagen de antes con 2 entradas y 3 salidas pero además con una oculta de dos neuronas
-caption: Un perceptrón multiclase con una capa oculta de dos neuronas. 
-
-En el ejemplo, podemos utilizar una capa oculta con dos neuronas que representen los hiperplanos de la figura Y.
+En el ejemplo, se puede utilizar una capa oculta con dos neuronas que representen los hiperplanos de la figura Y.
 
 De esta forma, asumiendo que los vectores normales a los hiperplanos están orientados hacia la derecha, los ejemplares de la clase 1 se convierten en un vector $(x,y)$, donde $(x,y)=(-1,-1)$; para los de la clase 2, $(x,y)=(1,-1)$; y para los de la clase 3, $(x,y)=(1,1)$. 
 
 
-Imagen: plano centrado en 0,0; los ejemplares de cada clase en su cuadrante cerca del origen (no separables)
-caption: Transformación de las neuronas de entrada a las neuronas ocultas. Se muestran los ejemplares originales en el rango de la transformación.
-
-%Si los vectores $\wv_j$ de la capa oculta se eligen con norma $\norm{\wv_j}$ suficientemente grande, la trasformación pondrá a los ejemplares  bastante alejados del origen. 
-
-%Imagen: plano centrado en 0,0; los ejemplares de cada clase en su cuadrante lejos del origen (separables)
-%caption: Transformación de las neuronas de entrada a las neuronas ocultas, con un $\norm{\wv_j}$ lo suficientemente grande.
+\tikzimage{2ocultas_3clases_transformacion}{scale=1}{Transformación de las neuronas de entrada a las neuronas ocultas.}
 
 De esta forma, la transformación pone a los ejemplares de cada clase de forma tal que puedan ser clasificados con una capa de salida como la de antes.
 
-En la práctica, por practicidad se suele asignar a todas las neuronas de una misma capa la misma función, aunque con distintos parámetros. Se pueden utilizar varias capas ocultas, una a continuación de la otra, para lograr una transformación más compleja. 
+En la práctica, por simplicidad se suele asignar a todas las neuronas de una misma capa la misma función, aunque con distintos parámetros. Se pueden utilizar varias capas ocultas, una a continuación de la otra, para lograr una transformación más compleja. 
 
-El entrenamiento de una red con estas características requiere minimizar respecto a los parámetros de las funciones de las neuronas ocultas y las neuronas de salida al mismo tiempo, con lo cual el algoritmo clásico de entrenamiento del perceptrón no puede aplicarse. Para esta red, utilizaremos el algoritmo backpropagation, a describirse luego. Antes, introduciremos la necesidad de emplear funciones no lineales en las neuronas para resolver problemas más complejos.
+El entrenamiento de una red con estas características requiere minimizar respecto a los parámetros de las funciones de las neuronas ocultas y las neuronas de salida al mismo tiempo, con lo cual el algoritmo clásico de entrenamiento del perceptrón no puede aplicarse. Para entrenar esta red, se puede utilizar el algoritmo backpropagation, a describirse luego. Antes, se introducirá la necesidad de emplear funciones no lineales en las neuronas para resolver problemas más complejos.
 
 \subsection{Funciones no lineales}
 
-Hasta ahora hemos utilizado funciones lineales para definir superficies de separación que nos permiten clasificar los ejemplares. 
+Hasta ahora se han utilizado funciones lineales para definir superficies de separación que permiten clasificar los ejemplares. 
 
-Reconsideremos ahora la estructura de las funciones de las neuronas. A las funciones $f_i$ se las suele definir como la composición de una \textbf{función de combinación} $\fdef{h_i}{\reals^{n_i}}{\reals}$ y una \textbf{función de activación o transferencia} $\fdef{\theta_i}{\reals}{\reals}$. La primera combina de alguna manera los estímulos entrantes a un solo número; la segunda aplica una transformación a ese número. 
+A las funciones $o_i$ de las neuronas se las suele definir como la composición de una \textbf{función de combinación} $\fdef{h_i}{\reals^{n_i}}{\reals}$ y una \textbf{función de activación o transferencia} $\fdef{\theta_i}{\reals}{\reals}$. La primera combina de alguna manera los estímulos entrantes a un solo número; la segunda aplica una transformación a ese número. 
 
-En nuestro ejemplo del perceptrón, la función de combinación es $h$ y la de activación $\theta$. La función de combinación separa el espacio en dos hiperplanos; la de activación asigna la etiqueta $1$ a los ejemplares que quedan a un lado del hiperplano y $-1$ a los otros. 
+En el ejemplo del perceptrón, la función de combinación es $h$ y la de activación $\theta$. La función de combinación separa el espacio en dos hiperplanos; la de activación asigna la etiqueta $1$ a los ejemplares que quedan a un lado del hiperplano y $-1$ a los otros. 
 
-Supongamos que tenemos un problema de dos clases, en donde las mismas no pueden separarse de ninguna manera por un clasificador lineal, ni siquiera uno de dos capas. 
+Supóngase un problema de dos clases, en donde las mismas no pueden separarse fácilmente por un clasificador lineal, ni siquiera uno de dos capas. 
 
-Imagen: dos clases, una metida en la otra tipo ojo
-caption: Dos clases que no son linealmente separables
+\tikzimage{ff_no_lineal_clases2_ojo}{scale=0.3}{Dos clases que no son linealmente separables}
 
-Debemos buscar una superficie de separación de las clases que sea no lineal, y eso implica introducir funciones no lineales en las neuronas.
+Se debe buscar una superficie de separación de las clases que sea no lineal, y eso implica introducir funciones no lineales en las neuronas.
 
-Dado que la clase 1 es un círculo limitado por la clase 2, podemos definir una función:
+Dado que la clase 1 es un círculo limitado por la clase 2, se puede definir una función:
 \ma{ 
-f(\xv)= \theta_t(c(\xv)) \\
+o(\xv)= \theta_t(c(\xv)) \\
 c(\xv)= \norm{\xv-\ve{c}}-r
 }
 
-que representa la pertenencia de un ejemplar a un círculo con centro $\ve{c}$ y radio $r$. Optimizando el error respecto a estos parámetros, de manera que el círculo esté centrado en el centro de masa de la clase 1 y tenga un radio igual a la dispersión de los ejemplares de esa clase, obtendremos un clasificador cuya salida es 1 para los ejemplares dentro del círculo y 2 para los otros.  
+que representa la pertenencia de un ejemplar a un círculo con centro $\ve{c}$ y radio $r$. Optimizando el error respecto a estos parámetros, de manera que el círculo esté centrado en el centro de masa de la clase 1 y tenga un radio igual a la dispersión de los ejemplares de esa clase, se obtendrá un clasificador cuya salida es 1 para los ejemplares dentro del círculo y 0 para los otros.  
 
-Imagen: dos clases, una metida en la otra tipo ojo
-caption: Un separador basado en hiperesferas puede separar las dos clases.
 
-De esta manera, cambiando la función de combinación a una que mide la distancia de los ejemplares al borde del círculo, obtuvimos una transformación a un espacio donde los ejemplares son separables.
+\tikzimage{ff_no_lineal_clases2_ojo_clase}{scale=0.3}{Un separador basado en hiperesferas puede separar las dos clases.}
 
-Por otro lado, podemos tener también un cambio en la función de activación. Si tenemos un problema que no es linealmente separable, donde la separación de las clases está dada por una superficie parecida a un hiperplano, pero ligeramente no lineal, se puede doblar el hiperplano utilizando una función de activación no lineal. 
+De esta manera, cambiando la función de combinación a una que mide la distancia de los ejemplares al borde del círculo, se obtuvo una transformación a un espacio donde los ejemplares son separables.
 
-Imagen: dos clases, tipo ying yang, un hiperplano ($(\wv \cdot \xv )^3$ ) doblado las separaría.
-caption: Ejemplares de dos clases que no son linealmente separables.
-
-Aplicamos entonces la función de combinación lineal junto con una función de activación no lineal $\theta_3(x)=x^3$, de manera que $f(\xv)=(\wv \cdot \xv )^3$. Optimizando el error respecto a los parámetros de $\wv$, se puede obtener una superficie de separación adecuada.
-
-Imagen: dos clases, tipo ying yang, un hiperplano ($(\wv \cdot \xv )^3$ ) doblado las separa.
-caption: Ejemplares de dos clases que no son linealmente separables.
-
-REVISAR TODO ESTO; ME PARECE QUE LE ESTOY PIFIANDO CON LOS DIBUJOS
-
-Es importante notar que en el caso de utilizar una red con una capa oculta, la función total que la red computa es \textit{no lineal}, ya que es la composición de varias funciones lineales. Agregando capas ocultas se puede complejizar la transformación de los ejemplares, haciendo aún más no lineal el comportamiento de la red. 
+Es importante notar que en el caso de utilizar una red con una capa oculta y funciones lineales, la función total que la red computa es \textit{no lineal}, ya que es la composición de varias funciones lineales. Agregando capas ocultas se puede complejizar la transformación de los ejemplares, haciendo aún más no lineal el comportamiento de la red. 
 
 \subsubsection{Funciones de activación usuales}
 
-La capacidad de una red está definida en gran parte por sus funciones. En la práctica la función de combinación suele ser la lineal, ya que los hiperplanos son buenos como "primeros" separadores, debido a que particionan el espacio \textit{grosso modo}. En el caso más simple, se puede utilizar la función de activación $\theta_t$, que nos da un hiperplano lineal de separación. Si bien esta función es útil, tiene la desventaja de que es muy simple y no es diferenciable en el origen, requisito necesario para utilizar la mayoría de los algoritmos de entrenamiento, como backpropagation.
+La capacidad de una red está definida en gran parte por sus funciones. En la práctica la función de combinación suele ser la lineal, ya que los hiperplanos son buenos como separadores de primera línea, debido a que particionan el espacio \textit{grosso modo}. En el caso más simple, se puede utilizar la función de activación $\theta_t$, que modela un hiperplano lineal de separación. Si bien esta función es útil, tiene la desventaja de que es muy simple y no es diferenciable en el origen, requisito necesario para utilizar la mayoría de los algoritmos de entrenamiento, como backpropagation.
 
 Dentro de las funciones no lineales, las funciones polinómicas como $x^p$ son útiles en ciertos casos, pero tienen dos problemas principales:
 
@@ -117,18 +98,17 @@ Entonces, en la práctica se suelen utilizar funciones no lineales de activació
 \newcommand{\tanhdef}{\frac{sinh(x)}{cosh(x)}}
 
 \ma{
-S(x) = \logistic \\
-tanh(x)= \tanhdef
+S(x) &= \logistic & tanh(x)&= \tanhdef
 }
 
-Imagen: logística  y tanh al lado
-caption: La función logística $S(x) = \logistic$ y la tangente hiperbólica $tanh(x)= \tanhdef $ 
+\tikzimagetwo{logistic}{scale=0.4}{La función logística $S(x) = \logistic$.}{tanh}{scale=0.4}{La tangente hiperbólica $tanh(x)= \tanhdef$. 
+}
 
 Las funciones $S$ y $tanh$ tienen asíntotas horizontales en $0$ y $1$, y $-1$ y $1$, respectivamente. Las dos funciones están relacionadas por $ tanh(x)= 2 S(2x) -1$; entonces, $tanh$ es una versión escalada de $S$, o viceversa. 
 
-La diferencia fundamental entre las dos es que $tanh$ suele funcionar mejor en las capas ocultas, ya que su imagen es $(-1,1)$, con lo cual tiene la ventaja de cruzar el $0$ y ser simétrica respecto al eje $x$, lo cual puede acelerar el aprendizaje ya que evita que se saturen rapidamente los valores por ser todos positivos, como en el caso de la función logística. En otras palabras, las salidas de las neuronas suman y restan, con lo cual una red aleatoria tenderá más a tener salidas centradas en 0, mientras que una red aleatoria con funciones logísticas tiende a saturarse en 1.
+La diferencia fundamental entre las dos es que $tanh$ suele funcionar mejor en las capas ocultas, ya que su imagen es $(-1,1)$, con lo cual tiene la ventaja de cruzar el $0$ y ser simétrica respecto al eje $x$, lo cual puede acelerar el aprendizaje ya que evita que se saturen rápidamente los valores por ser todos positivos, como en el caso de la función logística. En otras palabras, las salidas de las neuronas suman y restan, con lo cual una red aleatoria tenderá más a tener salidas centradas en 0, mientras que una red aleatoria con funciones logísticas tiende a saturarse en 1.
 
-La logística tiene una imagen que puede ser interpretada como una confianza, haciéndola útil para la capa de salida. Utilizamos el término confianza y no probabilidad, ya que nada asegura que el valor de las neuronas de salida represente una distribución de probabilidad.
+La logística tiene una imagen que puede ser interpretada como una confianza, haciéndola útil para la capa de salida. Se utiliza el término confianza y no probabilidad, ya que nada asegura que el valor de las neuronas de salida represente una distribución de probabilidad.
 
 Para ello, a veces se agrega una capa de salida con funciones llamadas \textbf{softmax} que normalizan el valor de las neuronas de salida de manera que su suma sea 1 y puedan funcionar mejor como estimaciones de probabilidad. Si hay $L$ neuronas con funciones en la capa de salida original, con valor $o_i$, se agregan $L$ neuronas softmax con valor:
 
@@ -146,36 +126,36 @@ La elección de las funciones a utilizar depende fuertemente del dominio del pro
 
 \subsubsection{El modelo feedforward}
 
-Combinando estas tres ideas, podemos definir el modelo feedforward como una red acíclica con $L$ capas, donde la primera es una capa de entrada, las $L-2$ siguientes son capas ocultas, y la última capa es de salida. Las neuronas de la capa $k$ solo se conectan con las de la capa $k+1$, exceptuando las de la capa de salida que no tienen conexiones salientes. Cada capa puede tener un número distinto de neuronas $n_i$. 
+Combinando estas tres ideas, se puede definir el modelo feedforward como una red acíclica con $L+1$ capas, donde la capa $0$, la primera, es una capa de entrada, las siguientes son capas ocultas ($1,\dots,L-1$), y la última, la $L$, es la capa de salida. Las neuronas de la capa $j$ solo se conectan con las de la capa $j+1$, exceptuando las de la capa de salida que no tienen conexiones salientes. Cada capa puede tener un número distinto de neuronas $n_j$. 
 
-Las funciones de cada neurona son una composición de una función de combinación $\fdef{c_i}{\reals^n}{\reals}$ y una función de activación $\fdef{\theta_i}{\reals}{\reals}$, de naturaleza lineal o no lineal. Cada función tiene parámetros que en el proceso de entrenamiento deben se modifican con el objetivo de  minimizar el error en la red. 
+Las funciones de cada neurona son una composición de una función de combinación $\fdef{c_i}{\reals^n}{\reals}$ y una función de activación $\fdef{\theta_i}{\reals}{\reals}$, de naturaleza lineal o no lineal. Cada función tiene parámetros que en el proceso de entrenamiento deben modificarse con el objetivo de minimizar el error en la red. 
 
-Imagen: red neuronal feedforward
-caption:Red neuronal feedforward con 3 capas.
-
-En el modelo feedforward, generalmente se realizan otras dos simplificaciones respecto del modelo general de redes neuronales.
+En el modelo feedforward, generalmente se realizan otras dos simplificaciones respecto del modelo general de redes neuronales:
 
 \begin{itemize}
-\item Utilizaremos la misma familia de funciones en todas las neuronas de una misma capa, aunque cada neurona tendrá sus propios parámetros para su función. 
+\item Se utilizará la misma familia de funciones en todas las neuronas de una misma capa, aunque cada neurona tendrá sus propios parámetros para su función. 
 
 \item La función de combinación será lineal, es decir $c(\xv)= \wv \cdot \xv$.
 \end{itemize}
 
 
-Nos referiremos a la salida de la neurona $i$ de la capa $j$ como $o_i^j$. 
+\tikzimage{feedforward_combinacion_activacion}{scale=0.5}{Una red feedforward con 3 capas.}
 
-La capa de entrada será la $0$, con $n_0=d$ neuronas, y entonces los valores salida de dicha capa son $\ovz=(so_1^0,\dots,o_0^d)$. Las neuronas de la capa de entrada no tienen ninguna función (o utilizan la función identidad), y entonces al ser estimulada con un ejemplar $\xv$, los valores de sus neuronas son $\ovz=\xv$.
 
-Tendremos una función de activación $\theta^j$ para las neuronas de las otras capas ($j>0$). Además, para la neurona $i$ de la capa $j$, tendremos un vector de coeficientes del hiperplano de la función de combinación $\wvij \in \reals^{n_{j-1}}$. Entonces, para cada capa $j>0$ tenemos una matriz de coeficientes $\Wj \in \reals^{n_j \times n_{j-1}}$ que \textit{pesan} las salidas de las neuronas de la capa $j-1$.
+Se hará referencia a la salida de la neurona $i$ de la capa $j$ como $o_i^j$. 
+La capa de entrada será la $0$, con $n_0=d$ neuronas, y entonces los valores salida de dicha capa son $\ovz=(o_1^0,\dots,o_d^0)$. Las neuronas de la capa de entrada no tienen ninguna función (o utilizan la función identidad), y entonces al ser estimulada con un ejemplar $\xv$, los valores de sus neuronas son $\ovz=\xv$.
 
-De esta manera, la salida de la neurona $i$ de la capa $j$, $\oij$, puede expresarse como:
+Existe una función de activación $\theta^j$ para las neuronas de las otras capas ($j>0$). Además, para la neurona $i$ de la capa $j>0$, hay un vector de coeficientes del hiperplano de la función de combinación, $\wvij \in \reals^{n_{j-1}}$. Entonces, para cada capa $j>0$ existe una matriz de coeficientes $\Wj \in \reals^{n_j \times n_{j-1}}$, compuesta por filas $\wv_1^j,\dots,\wv_{n_j}^j$  los cuales \textit{pesan} las salidas de las neuronas de la capa $j-1$. Dicho de otra manera, $\wv_i^j$ tiene los pesos de los arcos que llegan a la neurona $i$ de la capa $j$.
+
+De esta manera, si $\wvij(k)$ es el componente $k$ del vector de pesos $\wvij$, la salida de la neurona $i$ de la capa $j$, $\oij$, puede expresarse como:
 
 \ma{
 \oij &= \actj(\netij) \\
 \netij &= \sum_{k=1}^{n_{j-1}} o_k^{j-1} \wvij(k) =  \ovjmu \cdot \wvij 
 }
 
-En esta expresión, $\netij$ se conoce como la entrada neta a la neurona, asumiendo que el escalado de las salidas de las neuronas de la capa anterior por los pesos $\wvij$ se hace antes de que el estímulo llegue a la neurona, en la sinapsis. 
+En esta expresión, $\netij$ se conoce como la entrada neta a la neurona $i$ de la capa $j$, asumiendo que el escalado de las salidas de las neuronas de la capa anterior por los pesos $\wvij$ se hace antes de que el estímulo llegue a la neurona, en la sinapsis. 
+
 
 En una red de dos capas, una de entrada y una de salida, para la neurona de salida $i$ (capa $1$), la expresión es:
 
@@ -195,20 +175,19 @@ o_i^2 &= \theta_2(net_i^2) \\
 &= \theta_2(  [\theta_1(\xv \cdot \wv_1^1),\dots,\theta_1(\xv \cdot \wv_{n_1}^{1})] \cdot \wv_i^2) \\
 }
 
-Este modelo tiene, a priori, tantos parámetros como pesos $\wvijk{k}$. Puede que tenga más parámetros, por algunas de las funciones $\theta_j$. El objetivo de un algoritmo de entrenamiento será optimizar el error de la red respecto a estos parámetros.
+\tikzimage{feedforward_tres_capas_full}{scale=0.5}{Una red feedforward con 3 capas, donde ahora se muestra la estructura recurrente de los cálculos de cada $\oij$.}
 
-Habiendo descripto el modelo, tratamos ahora el algoritmo backpropagation para entrenar la red, y luego una de sus mejoras, el resilient backpropagation.
+
+Este modelo tiene, a priori, tantos parámetros como pesos $\wvijk{k}$ haya. Puede que tenga más parámetros, por algunas de las funciones $\theta_j$. El objetivo de un algoritmo de entrenamiento será optimizar el error de la red respecto a estos parámetros.
+
+Habiendo descripto el modelo, se explica ahora el algoritmo backpropagation para entrenar la red, y luego una de sus mejoras, el resilient backpropagation.
 
 \subsection{Algoritmo de entrenamiento Backpropagation}
 
 
-La idea esencial del backpropagation es recorrer el espacio de parámetros de la red utilizando el gradiente del error como indicador de la dirección a tomar para minimizarlo, una técnica conocida como \textbf{descenso de gradiente}.
+La idea esencial del backpropagation es recorrer el espacio de parámetros de la red utilizando el opuesto del gradiente del error como indicador de la dirección a tomar para minimizarlo, una técnica conocida como \textbf{descenso de gradiente}.
 
-
-
-\subsubsection{Error cuadrático de una red neuronal}
-
-Dada una red neuronal con $k+1$ capas  y un ejemplar $\xi$, la salida de la red es $\ov^k(\xi)$. Si la clase asociada al ejemplar es $\yi$, donde ahora $\yi=(y_1,\dots,y_C)$ es un vector que señala la pertenencia del ejemplar a cada clase, podemos definir el error cuadrático la red sobre un conjunto de datos $D$ como\footnote{Incluimos la constante $\frac{1}{2}$ para simplificar la derivada de $E(\xv)$.}:
+Dada una red neuronal con $L+1$ capas  y un ejemplar $\xi$, la salida de la red es $\ov^L(\xi)$. Si la clase asociada al ejemplar es $\yi$, donde ahora $\yi=(y_1,\dots,y_C)$ es un vector que señala la pertenencia del ejemplar a cada clase, se puede definir el error cuadrático la red sobre un conjunto de datos $D$ como\footnote{Se incluye la constante $\frac{1}{2}$ para simplificar la derivada de $E(\xv)$.}:
 
 \ma{
 E&=\sum_{\xi \in D} E(\xi) \\
@@ -216,513 +195,61 @@ E(\xv) &= \sum_{l=1}^C (o^k_l - y_l)^2
 }
 
 
-Donde en la expresión $E_{\xv}$ asumimos que $o^k_l$ es la salida de la neurona $l$ de la capa de salida para el ejemplar $\xi$ e $y_l$ es la salida esperada de la neurona $l$ \footnote{Si bien es poco claro que $E(\xv)$ depende de un ejemplar en particular viendo solamente su definición, hacemos esta simplificación ya que de lo contrario la notación debe incluir la capa y número de la neurona de cuyo valor se está hablando, y además el ejemplar que produjo el estímulo inicial para generar dicho valor.}. 
+Donde en la expresión $E_{\xv}$ se asume que $o^L_l$ es la salida de la neurona $l$ de la capa de salida para el ejemplar $\xi$ e $y_l$ es la salida esperada de la neurona $l$ \footnote{Si bien es poco claro que $E(\xv)$ depende de un ejemplar en particular viendo solamente su definición, se realiza esta simplificación ya que de lo contrario la notación debe incluir la capa y número de la neurona de cuyo valor se está hablando, y además el ejemplar que produjo el estímulo inicial para generar dicho valor.}. 
 
-Entonces, dada una topología y una función de activación para cada capa, si los parámetros son $\av$, nuestro objetivo es:
-
+Entonces, dada una topología y una función de activación para cada capa, si los parámetros son $\av$, el objetivo del entrenamiento es:
 
 \optma{&  \minarg{\av}
 \quad  E(\av)= \sum_{\xi \in D} E_{\xi} 
 }
 
-En nuestro caso, si utilizamos funciones de activación sin parámetros, y tenemos una red de $k+1$ capas, nuestros parámetros estarán dados por las matrices de 
-pesos de cada capa $\av=\{\W^1,\dots,\W^k\}$, y el problema definitivo es:
+En este caso, si se utilizan funciones de activación sin parámetros en una red de $L+1$ capas, los parámetros estarán dados por las matrices de pesos de cada capa $\av=\{\W^1,\dots,\W^L\}$, y el problema definitivo es:
 
 
-\optma{&  \minarg{ \{ \W^1,\dots,\W^k \} }
-& & E(\W^1,\dots,\W^k)=\sum_{\xi \in D} E_{\xi}
+\optma{&  \minarg{ \{ \W^1,\dots,\W^L \} }
+& & E(\W^1,\dots,\W^L)=\sum_{\xi \in D} E_{\xi}
 }
-
 
 La dirección en el espacio de parámetros en la cual $E$ se incrementa está dada por:
 
 \ma{
-\derivative{E}{\W^1}, \dots, \derivative{E}{\W^k}
+\derivative{E}{\W^1}, \dots, \derivative{E}{\W^L}
 }
 
-Por ende, el opuesto de esta dirección indica la dirección en la cual $E$ decrece, y siguendo esta dirección podemos minimizarla. Esto nos induce a una regla de actualización para mejorar la solución actual del tipo:
+Por ende, el opuesto de esta dirección indica la dirección en la cual $E$ decrece, y siguiendo esta dirección se puede minimizarla. Esto induce a una regla de actualización para mejorar la solución actual del tipo:
 
 \ma{
-\W^j \ass \W^1 -  \alpha \derivative{E}{\W^k}
+\W^j \ass \W^j -  \alpha \derivative{E}{\W^j}
 }
 
-Donde $\alpha$ es una tasa de aprendizaje que podemos utilizar para regular la magnitud de los cambios. Esta regla nos permite movernos de a pasos en el espacio de parámetros en la dirección en que el error decrece. 
+Donde $\alpha$ es una tasa de aprendizaje que se puede utilizar para regular la magnitud de los cambios. Esta regla permite que el vector $\W^j$ se mueva en el espacio de parámetros en la dirección en que el error decrece. 
 
-
-Dado que el desarrollo de las $\derivative{E}{\W^j}$ suele traer confusión debido a la repetida aplicación de la regla de la cadena para volver para atrás por las capas de la red, llegaremos a una fórmula general en tres pasos: primero, con un simple ejemplo de una red de dos capas con neuronas lineales; luego con una red de tres capas, de gran uso en la práctica, y luego de forma genérica para una red de $k+1$ capas.
-
-\subsubsection{Backpropagation con una red de dos capas y neuronas lineales} 
-
-
-\paragraph{Derivación de $\derivative{E}{\W^j}$:}
-Como ejemplo, supongamos una red con dos capas, una de entrada y una de salida, con dos neuronas de entrada y una de salida cuya función de activación es la identidad $\theta(x)=x$. Asumimos también un conjunto de datos $D$ con un solo ejemplar, $\xv=(1,3)$ y salida esperada $0,1$. Entonces, la función error está definida en base a los dos pesos de la red, $\wv_1^1(1),\wv_1^1(2)$ que llamaremos $w_1$ y $w_2$ por simplicidad. La función de error para esta red es:
-
-\ma{
-E(w_1,w_2) &= (x_1 w_1-\yv_1)^2 + (x_2 w_2-\yv_2)^2  \\
-E(w_1,w_2) &= (1 w_1-0)^2 + (3 w_2-1)^2  
-}
-
-Imagen: Superficie de la función de error $E(w_1,w_2)$.
-caption: Superficie de la función de error $E(w_1,w_2)$.
-
-
-
-Imagen: Contorno de la función de error $E(w_1,w_2)$.
-caption: Contorno de la función de error $E(w_1,w_2)$.
-
-
-El opuesto del gradiente de la función nos indica la dirección del espacio de parámetros que minimiza $E$:
-
-\ma{
--\nabla E &= -(\derivative{E}{w1},\derivative{E}{w2})= - ((x_1 w_1-\yv_1) x_1 + (x_2 w_2-\yv_2) x_2 ) \\
-&= -(\derivative{E}{w1},\derivative{E}{w2})= - ((w_1-0)  + (3 w_2-1) 3 )
-}
-
-Imagen: Superficie y contorno, con el gradiente, de la función de error $E(w_1,w_2)$.
-caption: Opuesto del gradiente de la función de error $E(w_1,w_2)$.
-
-\paragraph{Algoritmo:}
-
-Siguiendo el ejemplo, la esencia del algoritmo Backpropagation consiste en, dado una posición inicial en el espacio de parámetros, $w_1^i$ y $w_2^i$, moverse de a pequeños pasos en la dirección que indica el gradiente, hasta llegar a una posición del espacio de parámetros en donde el error sea lo suficientmente bajo, es decir, un mínimo local de la función que sea lo suficientemente bajo.
-
-Imagen: Superficie y contorno, con gradiente de la función de error $E(w_1,w_2)$.Camino desde una posición inicial hasta una posición con poco error en el espacio de parámetros
-caption: Camino desde una posición inicial $w_1^i$ y $w_2^i$ hasta una posición con poco error en el espacio de parámetros.
-
-Para el ejemplo, el algoritmo sería:
-
-\begin{algorithm}[H]
-\KwData{ \\Un ejemplar $\xv=(1,3) \in \reals^2$, con clase $\yv=(0,1)$\\
-Una tolerancia al error $\epsilon$\\
-Una tasa de aprendizaje $\alpha$}
-\KwResult{ Un vector de parámetros $\wv=(w_1,w_2)$ optimizado para clasificar $\xv$ con un error menor a $\epsilon$ }
-$\wv=random(2)$\;
-$error=\infty$ \;
-\While{$error > \epsilon$}{ 
-   $w_1 = w_1 - \alpha \derivative{E}{w_1}$ \;
-   $w_2 = w_2 - \alpha \derivative{E}{w_2}$ \;
-  $error = E(w_1,w_2)$ \;
-}
-Retornar  $\wv$ \;
-\caption{Esquema del algoritmo Backpropagation para el problema de ejemplo.} 
-\end{algorithm}
-
-Las líneas $w_i = w_i - \alpha \derivative{E}{w_i}$ del algoritmo implementan el movimiento en el espacio de parámetros en la dirección en que se minimiza el error.
-
-La tasa de aprendizaje, $\alpha$, es positiva y suele tener valores cercanos a 0, como $0.1$, y se incluye para lograr que la magnitud de cada movimiento en el espacio de parámetros sea pequeña, para evitar que el algoritmo pase de largo un mínimo de la función.
-
-Imagen: Una función con un mínimo local, un punto en el espacio de parametros de un lado de un mínimo local, y un paso al otro lado del mínimo local.
-caption: Un paso con magnitud demasiado grande en la minimización de una función puede hacer que el algoritmo pase de largo un mínimo local.
-
-En este caso, la superficie del error es convexa y por ende tiene un sólo mínimo, por lo cual es de esperar que se obtenga dicho mínimo si la tasa de aprendizaje es lo suficientemente baja, pero esto no es cierto del caso general en una red con varias capas, neuronas y funciónes de activación arbitrarias. 
-
-Generalizando este algoritmo para un conjunto de ejemplares $D$, podemos escribir el error de un ejemplar $\xv$ con clase $\yv$ como:
-
-\ma{
--\nabla E(\xv) 
-&= -(\derivative{E(\xv)}{w1},\derivative{E(\xv)}{w2}) \\
-& = - ( (x_1 w_1-\yv_1) x_1, (x_2 w_2-\yv_2) x_2 ) 
-}
-
-\begin{algorithm}[H]
-\KwData{ \\Un conjunto de ejemplares $\xi \in D$, con $D \subset \reals^2$, y clase $\yi \in \reals^2$\\
-Una tolerancia al error $\epsilon$\\
-Una tasa de aprendizaje $\alpha$}
-\KwResult{ Un vector de parámetros $\wv=(w_1,w_2)$ optimizado para clasificar $D$ con un error menor a $\epsilon$ }
-$\wv=random(2)$\;
-$error=\infty$ \;
-\While{$error > \epsilon$}{ 
-	 $dw_1=0$ \;
-	 $dw_2=0$ \;
-	 \For{$\xi \in D$}{
-	 	    $dw_1= dw_1 + (x_1 w_1-\yv_1) x_1$\;
-	 	    $dw_2= dw_2 + (x_2 w_2-\yv_2) x_2$\;
-	 }
-	$w_1 = w_1 - \alpha dw_1$ \;
-  $w_2 = w_2 - \alpha dw_2$ \;
-  $error = E(w_1,w_2)$ \;
-}
-Retornar  $\wv$ \;
-\caption{Esquema del algoritmo Backpropagation para el problema de ejemplo con un conjunto de datos arbitrario $D$.} 
-\end{algorithm}
-
-Continuando con la generalización, podemos formular este algoritmo para una red neuronal feedforward de $3$ capas y una función de activación arbitraria y $\continuous^1$.
-
-
-\subsubsection{Derivación de $\derivative{E}{\W^j}$ con una red de tres capas} 
-
-\paragraph{Derivación de $\derivative{E}{\W^j}$:}
-
-Las redes con tres capas son populares debido a que se ha probado que son aproximadoras universales, es decir, pueden aproximar cualquier función continua  $\fdef{f}{\reals^n}{\reals^m}$ con un grado de error arbitrariamente bajo, dada la cantidad suficiente de neuronas ocultas y funciones de activación apropiadas \cite{haykin1994}. Además, dan buenos resultados en la práctica, y son ampliamente utilizadas. 
-
-Para ellas, tenemos solo dos capas con pesos para optimizar, la 1, oculta, y la 2, de salida. Entonces, tendremos que derivar sólo dos reglas de actualización, una para los pesos de cada capa.
-
-Comenzamos la más simple, que involucra la derivada de la salida $o_m^2$ respecto a un peso $w_i^2(p)$ para un patrón $\xv$:
-
-\ma{
-\derivative{o_m^2}{w_i^2(p)}
-&=\caseotherwise{
-\derivative{o_i^2}{w_i^2(p)}
-}{0}{i=m}
-}
-
-debido a que el vector de pesos $\wv_i^2$ no interviene en el cálculo de $o_m^2$ para $i \neq m$. Si $i=m$, continuamos expandiendo:
-
-\ma{ \derivative{o_i^2}{w_i^2(p)}
-&= \derivative{ \theta_2( \ov^1 \cdot \wv_i^2 ) }{w_i^2(p)} \\
-&=  \theta_2'( \ov^1 \cdot \wv_i^j ) \derivative{\ov^1 \cdot \wv_i^2}{w_i^2(p)} \\
-&=  \theta_2'( \ov^1 \cdot \wv_i^2 ) \derivative{ \sum_{l=1}^{n_1} o_l^1  w_i^2(l)}{w_i^2(p)} \\
-&= \theta_2'( \ov^1 \cdot \wv_i^2 ) \derivative{ (o_p^1  w_i^2(p)) }{w_i^2(p)} \\
-&= \theta_2'( \ov^1 \cdot \wv_i^2 ) o_p^1 
-}
-
-
-Entonces, la derivada del error para la neurona $m$ de la capa de salida y el patrón $\xv$ respecto a $w_i^2(p)$ es:
-
-\ma{
-\derivative{E_m(\xv)}{w_i^2(p)} 
-&= \derivative{ (\frac{1}{2} (o_m^2- y_m)^2)}{w_i^2(p)}\\
-&= (o_m^2- y_m) \derivative{o_m^2}{w_i^2(p)}\\
-&=\caseotherwise{
-(o_i^2- y_i)\derivative{o_i^2}{w_i^2(p)}
-}{0}{i=m}
-}
-
-Y la derivada total del error para la capa de salida dado un patrón $\xv$:
-
-\ma{
-\derivative{E(\xv)}{w_i^2(p)} = \sum_{m=1}^{n_2} \derivative{E_m(\xv)}{w_i^2(p)} = \derivative{E_i(\xv)}{w_i^2(p)}
-}
-
-Para los pesos de la capa 1, tenemos la derivada de la salida $o_m^2$ respecto a un peso $w_i^1(p)$ para un patrón $\xv$:
-
-\ma{
-\derivative{o_m^2}{w_i^1(p)}
-&= \derivative{ \theta_2( \ov^1 \cdot \wv_m^2 ) }{w_i^1(p)} \\
-&=  \theta_2'( \ov^1 \cdot \wv_m^2 ) \derivative{\ov^1 \cdot \wv_m^2}{w_i^1(p)} \\
-&=  \theta_2'( \ov^1 \cdot \wv_m^2 ) \derivative{ \sum_{l=1}^{n_1} o_l^1  w_m^2(l)}{w_i^1(p)} \\
-&=  \theta_2'( \ov^1 \cdot \wv_m^2 )  \sum_{l=1}^{n_1} w_m^2(l) \derivative{o_l^1 }{w_i^1(p)} \\
-}
-
-Expandiendo $\derivative{o_l^1 }{w_i^1(p)}$, de forma análoga a como expandimos $\derivative{o_m^2 }{w_i^2(p)}$:
-
-\ma{
-\derivative{o_l^1}{w_i^1(p)}
-&=\caseotherwise{
-\derivative{o_i^1}{w_i^1(p)}
-}{0}{i=l} 
-}
-Y entonces si $i=l$:
-
-\ma{
-&= \derivative{ \theta_1( \ov^0 \cdot \wv_i^1 ) }{w_i^1(p)} \\
-&=  \theta_1'( \ov^0 \cdot \wv_i^j ) \derivative{\ov^0 \cdot \wv_i^1}{w_i^1(p)} \\
-&=  \theta_1'( \ov^0 \cdot \wv_i^1 ) \derivative{ \sum_{q=1}^{n_1} o_q^0  w_i^1(q)}{w_i^1(p)} \\
-&= \theta_1'( \ov^0 \cdot \wv_i^1 ) o_p^0 \\ 
-&= \theta_1'( \ov^0 \cdot \wv_i^1 ) x_p 
-}
-
-Es importante notar la similaridad entre las expresiones $\derivative{o_i^1}{w_i^1(p)}$ y $\derivative{o_i^2}{w_i^2(p)}$, ya que de esa manera podremos luego generalizar la regla de actualización a $k+1$ capas.
-
-Volviendo al caso de $3$ capas, la expresión para $
-\derivative{o_m^2}{w_i^1(p)}$ es entonces:
-
-\ma{
-\derivative{o_m^2}{w_i^1(p)} 
-&=\theta_2'( \ov^1 \cdot \wv_m^2 )  \sum_{l=1}^{n_1} w_m^2(l) \derivative{o_l^1 }{w_i^1(p)} \\
-&=\theta_2'( \ov^1 \cdot \wv_m^2 )   w_m^2(l) \derivative{o_l^1 }{w_i^1(p)} \\
-&=\theta_2'( \ov^1 \cdot \wv_m^2 ) w_m^2(l)  \theta_1'( \ov^0 \cdot \wv_i^1 ) x_p
-}
-
-La derivada del error para la neurona de salida $m$ respecto al peso $w_i^1(p)$ es entonces:
-
-
-\ma{
-\derivative{E_m(\xv)}{w_i^1(p)} 
-&= \derivative{ (\frac{1}{2} (o_m^2- y_m)^2)}{w_i^1(p)}\\
-&= (o_m^2- y_m) \derivative{o_m^2}{w_i^1(p)}\\
-}
-
-Y la derivada total del error para la capa de salida dado un patrón $\xv$:
-
-\ma{
-\derivative{E(\xv)}{w_i^1(p)} = \sum_{m=1}^{n_2} \derivative{E_m(\xv)}{w_i^1(p)}
-}
-
-Finalmente, las reglas de actualización para los pesos de las neuronas de las capas 1 y 2, respectivamente, son:
-
-\ma{
-w_i^1(p) \ass w_i^1(p) - \alpha \derivative{E(\xv)}{w_i^1(p)}\\
-w_i^2(p) \ass w_2^1(p) - \alpha \derivative{E(\xv)}{w_2^1(p)}
-}
-
-\paragraph{Algoritmo}
-
-Para el algoritmo, utilizaremos como variables las matrices de pesos de cada capa llamándolas $\W^1$ y $\W^2$, y matrices de derivadas de esos pesos $\dW^1$ y $\dW^2$, del mismo tamaño, y asumiremos que $\derivative{E}{\W^1}$ calcula una matriz de derivadas del error respecto a cada peso de la capa 1, y lo mismo con $\derivative{E}{\W^2}$. Entonces, $\W^j(i,p)= \wvij(p)$ y $\derivative{E}{\W^j(i,p)}= \derivative{E}{ \wvij(p)}$.
-
-Modificando el algoritmo visto antes para actualizar ahora los pesos de cada capa, tenemos:
-
-\begin{algorithm}[H]
-\KwData{ \\Un conjunto de ejemplares $\xi \in D$, con $D \subset \reals^d$, y clase $\yi \in \reals^{n_2}$.\\
-Una tolerancia al error $\epsilon$.\\
-Una tasa de aprendizaje $\alpha$.\\
-Una cantidad de neuronas ocultas $n_1$.}
-\KwResult{ Pesos $\W^1$ y $\W^2$ de cada neurona oculta $\wv_i^1$ y de salida $\wv_i^2$, optimizados para clasificar $D$ con un error menor a $\epsilon$ }
-$\W^1=random(n_1,d)$\;
-$\W^2=random(n_2,n_1)$\;
-$error=\infty$ \;
-\While{$error > \epsilon$}{	
-	$\dW^1=\derivative{E}{\W^1}$\;
-	$\dW^2=\derivative{E}{\W^2}$\;
-	$\W_1 = \W_1 - \alpha \dW_1$ \;
-  $\W_2 = \W_2 - \alpha \dW_2$ \;
-  $error = E(\W^1,\W^2)$ \;
-}
-Retornar  $\W^1,\W^2$ \;
-\caption{Esquema del algoritmo Backpropagation para una red de tres capas.} 
-\end{algorithm}
-
-
-\subsubsection{Derivación de $\derivative{E}{\W^j}$ para cualquier topología de red}
-
-Podemos escribir la forma genérica de la derivada de la salida de cada neurona $i'$ de cada capa $j'$ y para un ejemplar particular $\xv$, respecto a un peso $\wvijk{p}$, $j'>=j$ \footnote{El peso $\wvijk{p}$ es el componente $p$ del vector de pesos $\wvij \in \reals^{n_{j-1}}$ para la conexiones de la capa $j-1$ a la neurona $i$ de la capa $j$.}:
-
-\ma{
-\derivative{o_{i'}^{j'}}{\wvijk{p}}   
- & =   \derivative{ \theta_{j'}(net_{i'}^{j'}) }{\wvijk{p}} \\
- & =   \derivative{ \theta_{j'}(net_{i'}^{j'}) }{net_{i'}^{j'}}  \derivative{net_{i'}^{j'}}{\wvijk{p}}\\
- & =    \theta_{j'}'(net_{i'}^{j'}) \derivative{net_{i'}^{j'}}{\wvijk{p}}\\
- & =   \theta_{j'}'(net_{i'}^{j'}) \derivative{ \wv_{i'}^{j'} \cdot \ov^{j'-1} }{\wvijk{p}}\\
- & =   \theta_{j'}'(net_{i'}^{j'}) \suml_{l=1}^{n_{(j'-1)}} \derivative{ (w_{i'}^{j'}(l) o_{l}^{j'-1} )}{\wvijk{p}}\\
-}
-
-
-Esta ecuación tiene resolución directa si el peso $\wvijk{p}$ corresponde a una neurona de la misma capa que la salida $o_{i'}^{j'}$. Entonces, si $i'=i$ y $j'=j$:
-
-\ma{
-\derivative{o_{i'}^{j'}}{\wvijk{p}} &=  \theta_{j'}'(net_{i'}^{j'})   
-\derivative{w_{i'}^{j'}(p) o_{p'}^{j'-1}}{w_{i'}^{j'}(p)} =  \theta_{j'}'(net_{i'}^{j'}) o_{p'}^{j'-1} 
-}
-
-
-Si $j'=j$ pero $i' \neq i$, el peso es de otra neurona de la misma capa, y por ende no influye en la salida  $o_{i'}^{j'}$:
-
-\ma{
-\derivative{o_{i'}^{j'}}{\wvijk{p}} &=  \theta_{j'}'(net_{i'}^{j'})  0 = 0 
-}
-
-
-
-Por último, si $j'>j$, quiere decir que el peso corresponde a una neurona de capas anteriores, y entonces ese peso afecta todas las entradas de la neurona actual. Por ende, debemos utilizar la regla de la cadena con todas estas entradas; como estas entradas son salidas de otras neuronas, podemos utilizar la regla recursiva: 
- 
- 
-\ma{
-\derivative{o_{i'}^{j'}}{\wvijk{p}} 
-&= \theta_{j'}'(net_{i'}^{j'}) \suml_{l=1}^{n_{(j'-1)}}w_{i'}^{j'}(l) \derivative{o_{l}^{j'-1} }{\wvijk{p}}\\
-}
- 
-Y entonces la derivada del error para la neurona de salida $o_i^k$, dado un ejemplar $\xv$, es:
-
-\ma{
-\derivative{E_i(\xv)}{ \wvijk{p}} & =  \derivative{ (\frac{1}{2} (o_{i'}^{p}- y_{i'})^2)}{\wvijk{p}}
-=   (o_{i'}^{j'} - y_{i'}) \derivative{ o_{i'}^{j'} }{\wvijk{p}} 
-}
-
-Y la derivada del error para la capa de salida respecto a $\wvijk{p}$:
-
-\ma{
-\derivative{E(\xv)}{ \wvijk{p}} 
-& = \sum_{i=1}^{n_k} \derivative{E_i(\xv)}{ \wvijk{p}}
-}
-
-
-
-Donde como ahora tenemos una fórmula genérica para $\derivative{ o_{i'}^{j'} }{\wvijk{k}}$ podemos expandirla de acuerdo a la topología de la red.
-
-Entonces, podemos calcular la derivada del error para cualquier peso, $\derivative{E}{\wvijk{p}}= \suml_{\xi \in D} \derivative{E(\xi)}{\wvijk{p}}$, y podemos aplicar la regla de actualización $\wvijk{p} \ass\wvijk{p} - \alpha \derivative{E}{\wvijk{p}}$.
- 
- 
-\paragraph{Algoritmo}
- 
-El algoritmo final queda como:
-
+El algoritmo de entrenamiento utiliza este hecho para, de forma similar al Perceptrón, modificar iterativamente los pesos de la red hasta que el error de la misma sea lo suficientemente bajo:
 
 \begin{algorithm}[H]
 \KwData{ \\
-Una toplogía dada por $k+1$, el número de capas, y $n_i$ la cantidad de neuronas de la capa $i$.
-Un conjunto de ejemplares $\xi \in D$, con $D \subset \reals^d$, y clase $\yi \in \reals^{n_k}$.\\
+Una toplogía dada por $L+1$, el número de capas, y $n_i$ la cantidad de neuronas de la capa $i$, con $n_L=C$.\\
+Un conjunto de ejemplares $\xi \in D$, con $D \subset \reals^d$, y clase $\yi \in \reals^{C}$.\\
 Una tolerancia al error $\epsilon$.\\
 Una tasa de aprendizaje $\alpha$.}
 \KwResult{ Pesos $\W^j$ de las neuronas de cada capa $j>0$, optimizados para clasificar $D$ con un error menor a $\epsilon$ }
-\For{j=1 to k}{
+\For{j=1 to L}{
 	$\W^1=random(n_j,n_{j-1})$\;
 }
 $error=\infty$ \;
 \While{$error > \epsilon$}{	
-	\For{j=1 to k}{
+	\For{j=1 to L}{
 		$\dW^j=\derivative{E}{\W^j}$\;
 	}
-	\For{j=1 to k}{
+	\For{j=1 to L}{
 		$\W_j = \W_j - \alpha \dW_j$ \;
 	}
-  $error = E(\W^1,\dots,\W^k)$ \;
+  $error = E(\W^1,\dots,\W^L)$ \;
 }
-Retornar  $\W^1,\dots,W^k$ \;
+Retornar  $\W^1,\dots,W^L$ \;
 \caption{Esquema del algoritmo Backpropagation para una red de tres capas.} 
 \end{algorithm}
+\vspace{10pt}
 
 
-\subsubsection{Overfitting}
-
-Las redes neuronales son propensas a overfitting como cualquier modelo de aprendizaje automático. Hay dos ejes principales a trabajar para evitarlo.
-
-El primero, es utilizar un \textbf{conjunto de validación} para evaluar la condición de corte del algoritmo. En la línea del algoritmo:
-
-\ma{
-error = E(\W^1,\dots,\W^k)
-}
-
-Estamos asumiendo que el error se calcula sobre los patrones del conjunto de entrenamiento $D_e$. Una mejora posible es dividir el conjunto de datos original $D$ en tres; el conjunto de entrenamiento $D_e$, el de prueba $D_p$, y otro de validación, $D_v$. El conjunto de validación se utilizar para calcular el error de la red neuronal en cada iteración. Esta es una forma de regularización, cuya justificación es que dado que estamos entrenando con $D_e$, el error calculado sobre $D_v$ es un mejor estimador del error total sobre el dominio del problema $\ddp$ ya que el modelo está sesgado por $D_e$ pero no por $D_v$ (de todas maneras, luego de la primer iteración, como la verificación del error se realiza sobre $D_v$ hay un pequeño sesgo, pero mucho menor que el original).
-
-El segundo es restringir el número de neuronas de la capa oculta, $h$. A medida que aumenta la cantidad de neuronas ocultas de una red, aumenta su poder de aproximación. Si bien a priori esto parece algo bueno, salvo por el coste computacional adicional, en realidad resulta perjudicial ya que de esa manera se logra que el modelo imite tan bien a los datos que no pueda generalizar.
-
-En términos de una red de dos capas con funciones de activación identidad, esto se asemeja a utilizar tantos hiperplanos para separar el conjunto original que prácticamente se podría clasificar cualquier cosa sin ninguna importancia por la coherencia espacial que tenga la superficie de separación resultante.
-
-Imagen: Un conjunto de datos con muchísimos hiperplanos superpuestos, que clasifican cada ejemplar casi individualmente
-caption: Hiperplanos definidos por las neuronas ocultas de una red con demasiadas neuronas para la dificultad inherente del problema. 
-
-Por otro lado, menos hiperplanos de separación que los requeridos por el problema puede tener el efecto de no poder modelarlo adecuadamente por falta de poder de aproximación.
-
-Imagen: Un conjunto de datos con cinco clases y solo dos hiperplanos para separarlas
-caption: Hiperplanos definidos por las neuronas ocultas de una red con pocas neuronas para la dificultad inherente del problema. 
-
-En la práctica, deben probarse distintos valores para la cantidad de neuronas ocultas de cada capa, con el objetivo de obtener un término medio entre modelización adecuada y overfitting. Dichos valores dependerán del problema y las funciones de las neuronas.
- 
-\subsubsection{Mínimos locales}
-
-Como en la mayoría de los problemas de optimización, un problema ocurrente en el entrenamiento de las redes neuronales es que la función de error suele no suele ser convexa y entonces no hay garantía de que la dirección que indica el gradiente conduzca a un mínimo global del error.
-
-Dependiendo de la función de activación, el error puede ser una función de muy poca suavidad y por ende tener una gran cantidad de mínimos locales. Algunos de estos mínimos locales representan soluciones que si bien no son las mejores, resultan aceptables para el conjunto de datos de entrenamiento. Cuando un mínimo no es una solución aceptable, lo consideramos un lugar a evitar ya que el algoritmo backpropagation puede quedarse atascado\footnote{Nos referimos a un \textit{paso} o \textit{movimiento} en el espacio de parámetros a un cambio de los pesos $w$ de la red, siguiendo la forma de la regla de actualización de backpropagation, debido a que esta regla se puede interpretar como \textit{caminar} en el espacio de parámetros en alguna dirección.}. 
-
-En esencia, el problema de los mínimos locales es el de poder determinar una dirección óptima a moverse para evitar los mínimos locales con un error arriba del umbral tolerable, y una magnitud óptima para ese movimiento utilizando información local, de manera que se llegue a un mínimo global. 
-
-Por un lado, es importante poder determinar la magnitud óptima para actualizar un peso en la dirección en que indica el gradiente, de manera que se llegue a un mínimo lo más rápido posible. Por otro lado, es importante que se pueda salir de un mínimo local si el error que tiene esa posición es mayor que el umbral tolerable. 
-
-Existen varias técnicas para estimar la magnitud del cambio de los parámetros, y para recorrer el espacio de parámetros de forma más eficiente. Salvo la primera, la idea de estas técnicas es asegurarse que el movimiento en el espacio de parámetros sea más certero, a costa de utilizar más tiempo de ejecución o memoria para calcular la dirección y magnitud de ese movimiento:
-
-\begin{itemize}
-\item \textbf{Varias inicializaciones aleatorias}: Se corre el algoritmo varias veces, cada vez comenzando desde una posición inicial aleatoria distinta, entrenando varias redes, y quedándose con la mejor en el proceso. Se espera alguna de las redes logre llegar a un mínimo aceptable.
-
-\item \textbf{Tasas de aprendizaje no constantes:} Es deseable que la magnitud del cambio de las derivadas varie con el tiempo, de manera que al principio la magnitud sea grande y se explore el espacio de manera agresiva, y a medida que pasen las iteraciones la magnitud sea más chica, haciendo menos cambios, y buscando optimizar el error en una región más pequeña. 
-
-\item \textbf{Tasas de aprendizaje individuales:} Las tasas de aprendizaje puede variar para cada peso $w$, por ejemplo para hacer más agresivo la actualización del un peso $w$ cuando $\derivative{E}{w}$ es muy grande, y más chico cuando hay poco error respecto a ese peso. A su vez, podemos aumentar la granularidad haciéndolas variar para cada capa, o grupo arbitrario de neuronas.
-
-\item \textbf{Métodos de segundo orden:} Además de calcular el gradiente del error, se puede calcular o aproximar el Hessiano para obtener información de segundo orden sobre la dirección del error. La esencia de la idea es que si la función está acelerando, es probable que sea mejor hacer un cambio pequeño, ya que el gradiente está creciendo y dentro de poco esa dirección puede hacer crecer el error. Por el contrario, dado un hessiano negativo, la función decrece y tiene sentido tomar pasos más grandes.
-
-\item \textbf{Momentum:} Se puede moverse en la dirección en la que apunta, no el gradiente actual, sino un promedio de los últimos  $u$ gradientes. Entonces, si en la iteración $t$ se calcula la derivada para un peso $w$, $\derivative{E}{w}^t$ se puede guardar el mismo en una tabla, y luego se puede calcular la derivada promedio de las últimas $u$ iteraciones, $E^u= \sum_{i=t-u}^{t} \alpha_{t-i} \derivative{E}{w}^i$, y usar este valor para actualizar $w$. En esta fórmula, $\alpha_{t-i}$ es una tasa de aprendizaje para pesar de forma distinta las derivadas anteriores, de acuerdo a su importancia. Esto evita movimientos innecesarios cuando el gradiente cambia de signo constantemente, ya que el promedio de las últimas derivadas es mucho más estable.
-
-\item \textbf{Obviar la magnitud del gradiente:} La dirección del gradiente nos indica el camino para minimizar el error. La magnitud del gradiente, en cambio, depende de la magnitud de los datos de entrenamiento, la posición en el espacio de parámetros y el tipo de función de activación, por ende no siempre representa adecuadamente la magnitud del paso óptimo a dar para moverse en el espacio de parámetros. El algoritmo resilient backpropagation, a describir luego, utiliza esta perspectiva y estima la magnitud del cambio de forma independiente de la magnitud del gradiente.
-\end{itemize}
-
-\subsection{Algoritmo de entrenamiento Resilient Backpropagation}
-
-\newcommand{\wi}{w_i}
-\newcommand{\wt}{w^t}
-\newcommand{\wtp}{w^{t+1}}
-\newcommand{\wtm}{w^{t-1}}
-
-\newcommand{\vmax}{\Delta_{max}}
-\newcommand{\vmin}{\Delta_{min}}
-\newcommand{\accinc}{\eta^+}
-\newcommand{\accdec}{\eta^-}
-\newcommand{\vt}{\Delta^{t}_w}
-\newcommand{\vtp}{\Delta^{t+1}_w}
-\newcommand{\dvt}{\dv{E(t)}{\wt}}
-\newcommand{\dvtm}{\dv{E(t-1)}{\wtm}}
-\newcommand{\dwtm}{\Delta\wtm}
-\newcommand{\dwt}{\Delta\wt}
-\newcommand{\multidv}{ \dvt \cdot \dvtm}
-
-
-La idea principal del algoritmo Resilient Backpropagation, o Rprop \cite{Riedmiller93} \footnote{En esta sección, estamos desarrollando la variable iRprop- de Rprop, una mejora del mismo introducida en \cite{Igel00,Igel03}.}, como ya fue mencionado, es no utilizar la magnitud de la derivada del error para actualizar cada peso $w$. 
-
-En esta sección utilizaremos una notación más simple para numerar los pesos, escribiendo simplemente $w$ para referirnos a un peso cualquiera, asumiendo un conjunto de pesos $W$ de la red y alguna correspondencia entre esos pesos a las posiciones exactas en la red.  
-
-Hay dos ideas importantes, además de la de ignorar la magnitud de la derivada: evitar cambios innecesarios cuando la derivada fluctúa, y calcular una magnitud o velocidad de actualización dinámicamente para cada peso.
-
-\begin{itemize}
-\item Actualización en base al signo de la derivada 
-
-En lugar de utilizar la magnitud de la derivada del error, en cada iteración $t$ para cada peso $w$ se computa dinámicamente una velocidad $\vt$, y se mueve $w$ en la dirección opuesta a la que indica la derivada, en un paso con magnitud $\vt$, es decir: 
-
-\ma{
- \dwt &\ass - sign(\dvt) \vt \\
-\wtp& \ass \wt + \dwt
-}
-
-\item Evitar fluctuaciones 
-
-La segunda idea importante en el algoritmo es tratar de no hacer cambios cuando la derivada fluctúa para evitar pasos innecesarios. 
-
-Entonces, la regla anterior de actualización solamente se aplica cuando la derivada no cambió de signo respecto a la iteración anterior, o sea $\multidv >0$, ya que se busca un incremento continuo en una sola dirección. Aún más, si cambia el signo de la derivada, $\multidv <0$, y aumenta el error, $E(t)>E(t-1)$, se asumiendo que el último cambio de $w$ es producto de una fluctuación de la derivada. En ese caso, se deshace ese cambio con la regla:
-
-\ma{
-\wtp& \ass \wt - \dwtm
-}
-
-Además, siempre que $\multidv <0$ se pone una variable, $reset_w$ en $true$ para que en la próxima iteración se obvie la dirección de la derivada en la iteración anterior, y se mueva siempre en la nueva dirección de la derivada a la velocidad $\vt$. Las variables $reset_w$ se inician en true para todo $w$.
-
-Si $\dvt =0$, entonces $\dwt \ass 0$ y no se realiza ningún cambio para ese peso en esa iteración ya que se probablemente se encuentre en un mínimo local; de todas maneras, como la derivada depende de la salida de otras partes de la red, en la siguiente iteración la derivada puede no ser $0$ aunque $w$ no cambie. Por otro lado, si $\dvt \neq 0$ y $\dvtm =0$, se realiza un paso normalmente a la velocidad $\vt$ como antes, al igual que cuando $reset_w=true$. 
-
-\item Cálculo de velocidad independiente por peso
-
-La tercera idea importante del algoritmo radica en la manera en que cambia la velocidad.
- 
-El algoritmo tiene dos parámetros de límites de velocidad, una velocidad máxima $0<\vmax$, y una velocidad mínima $0<\vmin<\vmax$ para que no se alcancen velocidades demasiado grandes o chicas en magnitud; inicialmente, $\Delta_w^0=\vmin$ para todas las velocidades. 
-
-Otros dos parámetros controlan la aceleración cuando la derivada tiene el mismo tiene el mismo signo que en la iteración anterior o no, $\accinc$ y $\accdec$, respectivamente. 
-
-La regla de actualización es la siguiente: si la derivada mantiene su signo entre dos iteraciones, se acelera; si cambia, se desacelera; si la derivada es o fue $0$ en la iteración pasada, se mantiene la velocidad. Entonces, siendo $s=\multidv$:
-
-\ma{
-\vtp \ass \caset{ max(\vt \accinc,\vmax)}{s >0}
-{min(\vt \accdec,\vmin)}{s <0 }
-{\vt}{s = 0 }
-}
-
-
-\end{itemize}
-
-
-Juntando estas tres ideas podemos la regla de actualización completa para cada peso $w$ del algoritmo:
-
-\begin{algorithm}[H]
-\For{$w \in W$}{
-		$s \ass sign(\multidv) $\;
-		$\vtp \ass \caset{ max(\vt \accinc,\vmax)}{s >0}
-		{min(\vt \accdec,\vmin)}{s <0 }
-		{\vt}{s = 0 }$ \;
-		
-		\uIf{  $\dvtm=0$ OR $reset_w$}{
-			$\dwt \ass - sign(\dvt) \vt$ \;
-			$\wtp \ass \wt + \dwt$ \;
-			$reset_w \ass false$
-		}
-		\uElseIf{$s >0$}{
-			$\dwt \ass - sign(\dvt) \vt$ \;
-			$\wtp \ass \wt + \dwt$ \;
-			  
-		}
-		\uElseIf{$s<0$}{		
-			\If{$E(t)>E(t-1)$}{
-				$\wtp \ass \wt - \dwt$ \;
-			}
-			$reset_w \ass true$
-		}
-		\Else{
-   		\CommentSty{ \{ Caso $\dvt=0$ \} } \\
-			$\dwt \ass 0$ \;
-		}
-}
-\caption{Regla de actualización de los pesos del algoritmo Rprop} 
-\end{algorithm}
-
+Con la presentación de este algoritmo clásico para entrenar redes neuronales feedforward finaliza la descripción de dichas redes. Para el lector interesado, el apéndice \ref{apendice_neuronales} presenta de forma didáctica la derivación de la forma concreta de la regla de actualización para una red neuronal feedforward genérica. Dicho apéndice también menciona algunos problemas comunes en la aplicación efectiva del Backpropagation, e introduce el Resilient Backpropagation para mitigar algunos de ellos. La aplicación del algoritmo Resilient Backpropagation fue necesaria en esta tesina para lograr un nivel de error en el reconocimiento de gestos aceptable con redes feedforward.  

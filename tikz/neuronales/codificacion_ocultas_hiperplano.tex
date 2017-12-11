@@ -1,0 +1,18 @@
+\input{../base}
+\tikzdrawing{
+
+\draw [line width=2] (-4,-10) -- (10,10);
+\draw [line width=2] (-10,8) -- (3,-10);
+\node at (-0.5,7) {$(+1,+1)$};
+\node at (-0.5,-8) {$(-1,-1)$};
+\node at (-7,-6) {$(-1,+1)$};
+\node at (7,-6) {$(+1,-1)$};
+
+\pgfplotsset{ticks=none}
+
+%\node at (-9,7) {\pgfuseplotmark{triangle}};
+%\node at (-9,0.5) {\pgfuseplotmark{o}};
+%\node at (6,6) {\pgfuseplotmark{diamond}};
+
+\standardaxis{\datostresclases}
+}

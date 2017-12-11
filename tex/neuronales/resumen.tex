@@ -1,0 +1,47 @@
+
+En este capítulo se introdujeron las redes neuronales artificiales (ANN). Se describieron brevemente las bases del sistema nervioso y el funcionamiento de las neuronas, para luego derivar un modelo computacional inspirado en los sistemas biológicos. 
+
+Las redes neuronales son aplicables al reconocimiento de gestos por dos motivos principales:
+
+\begin{enumerate}
+\item Son excelentes clasificadores. 
+\item Sirven para generar características de forma automática a partir de los ejemplares. Dichas características facilitan la clasificación de gestos.
+\end{enumerate}
+
+Entonces, permiten clasificar gestos y generar características para los gestos que mejoren dicha clasificación.
+
+Un tema principal en el área de ANN es como determinar la topología de la red y las funciones matemáticas de las neuronas para lograr que resuelvan cierto problema. Dicho proceso se denomina el \textit{entrenamiento} de la red neuronal.
+
+Además de introducir el concepto de ANN, los ejes de este capítulo son el modelo feedforward y dos de sus algoritmos de entrenamiento, \textit{backpropagation} y \textit{resilient backpropagation}, parar resolver problemas de clasificación, y el modelo de redes neuronales competitivas, para realizar aprendizaje no supervisado.
+
+Estos dos modelos, redes feedforward y competitivas, se utilizan luego para implementar clasificadores de gestos, como se describe en el capítulo \ref{chap:modelos}. En particular, se emplean redes CPN para implementar el clasificador CNC presentado en esta tesina.
+
+
+%Las ANN son modelos de aprendizaje automático inspirados en las redes neuronales biológicas que componen el sistema nervioso de los animales.
+%
+%Las ANN se modelan mediante un grafo donde los nodos representan los cuerpos de las neuronas y las aristas sus conexiones. Cada neurona tiene varias conexiones de entrada estimulables por otras neuronas, y una de salida que luega se bifurca para que pueda estimular a otras neuronas. 
+%
+%\image{artificial}{1}{Red neuronal artificial. Los círculos representan neuronas y las flechas conexiones entre las mismas.}
+%
+%Cuando una neurona es estimulada, esta puede retransmitir dicho estímulo (posiblemente modificado) a otras neuronas de la red conectadas a su salida. Las ANN imitan esta dinámica, pero cada neurona se modela con una función matemática, y se simula el comportamiento de la red para ejecutar el modelo computacional.
+%
+
+%En particular, interesan las redes de tipo feedforward, que se representan mediante un grafo acíclico con capas, donde todos los nodos de una capa se conectan con la capa siguiente, salvo la última que es la capa de salida que representa el resultado de la computación. Además, la primer capa, que se denomina de entrada, no tiene conexiones entrantes, asumiendo que se estimula directamente con el ejemplar para el cual la red va a calcular algo. Estas redes permiten implementar el enfoque de aprendizaje automático supervisado.
+
+%
+%\tikzimage{feedforward}{scale=0.5}{Una red feedforward con tres capas: la primera, de entrada, luego un capa oculta, y finalmente una capa de salida, con varias neuronas de salida. Las funciones de las neuronas pueden ser no-lineales.} 
+%
+%Para estas redes se puede destacar el algoritmo de entrenamiento backpropagation, y su refinamiento, el resilient backpropagation. Dada una topología fija y una familia de funciones para las neuronas, que se deben elegir en concordancia con el problema a resolver, estos algoritmos encuentran los parámetros adecuados de las funciones de las neuronas para que, en base a un conjunto de ejemplares del problema, la red aprenda a calcular el resultado de cada ejemplar. En el caso del reconocimiento de gestos, el resultado sería la clase del gesto, por ende estas redes permiten realizar tareas de clasificación. 
+
+%
+%También interesan las redes competitivas para realizar aprendizaje no-supervisado, que son redes más simples en topología, generalmente consistente en una capa de entrada y una de salida. En este tipo de redes las neuronas de la capa de salida aprenden a organizarse de manera que puedan codificar los ejemplares más representativos del conjunto de ejemplares con el cual se entrena. Este proceso se conoce como \textbf{clustering} o agrupamiento.
+%
+
+%\image{cpn_arquitectura_sin_lateral}{0.2}{Arquitectura de una red competitiva con 4 neuronas de entrada y 2 de salida. Las neuronas de la capa de la izquierda (de salida) codifican los ejemplares más representativos del conjunto de ejemplares con el cual se entrenan.}
+%
+%De esta manera, dado un nuevo ejemplar, se puede codificar ese ejemplar en base a su parecido con los ejemplares representativos codificados en la red, que son un conjunto finito y generalmente pequeño, con lo cual se logra reducir la dimensionalidad del ejemplar. Esta nueva representación es una \textit{característica} del mismo, y por ende se dice que estas redes permiten generar características de forma automática.
+%
+%\tikzimagetwo{cluster3}{scale=0.4}{Un conjunto de datos con tres grupos.}
+%{cluster3_means_region}{scale=0.4}{Regiones de Voronoi del espacio asignadas a cada neurona de salida, en una red competitiva de 3 neuronas de salida con una función de distancia euclídea.}
+%
+

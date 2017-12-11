@@ -1,0 +1,49 @@
+\documentclass{standalone}
+\usepackage{ pgfplots}
+
+\pgfplotsset{
+    standard/.style={
+        axis x line=middle,
+        axis y line=middle,
+        enlarge x limits=0.15,
+        enlarge y limits=0.15,
+        every axis x label/.style={at={(current axis.right of origin)},anchor=north west},
+        every axis y label/.style={at={(current axis.above origin)},anchor=north east}
+    }
+}
+
+\pgfplotsset{
+   selecting/.style 2 args={
+        x filter/.code={
+            \edef\tempa{\thisrow{#1}}
+            \edef\tempb{#2}
+            \ifx\tempa\tempb
+            \else
+                \def\pgfmathresult{inf}
+            \fi
+        }
+    }
+}
+
+\begin{document}
+\begin{tikzpicture}
+\begin{axis}[axis lines=center,legend pos=south east,ylabel=cc,xlabel=p,ymin=50,xmin=0,ymax=100,xmax=1,xtick=data]
+
+\addplot+[selecting={c}{10}] table[x index=1, y index=0,col sep=comma] {resultados/datos/csv/svml-lnhg-cc.csv};
+\addlegendentry{$c=10$};
+
+
+\addplot+[selecting={c}{50}] table[x index=1, y index=0,col sep=comma] {resultados/datos/csv/svml-lnhg-cc.csv};
+\addlegendentry{$c=50$};
+
+
+\addplot+[selecting={c}{100}] table[x index=1, y index=0,col sep=comma] {resultados/datos/csv/svml-lnhg-cc.csv};
+\addlegendentry{$c=100$};
+
+
+\addplot+[selecting={c}{200}] table[x index=1, y index=0,col sep=comma] {resultados/datos/csv/svml-lnhg-cc.csv};
+\addlegendentry{$c=200$};
+
+\end{axis}
+\end{tikzpicture}
+\end{document}

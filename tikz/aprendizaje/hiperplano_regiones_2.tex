@@ -1,0 +1,18 @@
+\input{../base}
+\tikzdrawing{
+
+\newcommand{\che}{6}
+
+\draw  [ultra thick, fill={rgb:black,1;white,200}] (0,0) to (-10,-\che) to (-10,\che) to (10,\che) to (0,0);
+\draw  [ultra thick, fill={rgb:black,1;white,25}] (0,0) to (-10,-\che) to (10,-\che) to (10,\che) to (0,0);
+
+\node [above ] at (0,4) {$\wv \cdot \xv >0$};
+\node  at (0,-4) {$\wv \cdot \xv <0$};
+\draw [line width=4] (-10,-\che) -- (10,\che);
+\draw [line width=2,->] (0,0) -- (-1,1.4);
+\node [above] at (0,0.7) {$\wv$};
+
+\node [above,rotate=30] at (5,3) {$\wv \cdot \xv =0$};
+
+
+}  

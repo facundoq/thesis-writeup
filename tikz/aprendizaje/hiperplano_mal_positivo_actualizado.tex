@@ -1,0 +1,12 @@
+\input{../base}
+\tikzdrawing{
+
+
+\draw [line width=4] (-5,10) -- (5,-10);
+\draw [line width=2,->] (0,0) -- (-2,-1);
+
+\standardaxis{\datosdosclases
+\addplot[color=black,solid,only marks,thick,mark=oplus,fill=white] coordinates {(-4, -2) (2,4)};
+}[legend style={font=\Large}]
+\node [below ,align=left]at (-4,-3) { $\xvp$: Ejemplar\\ previamente\\  mal clasificado};
+}

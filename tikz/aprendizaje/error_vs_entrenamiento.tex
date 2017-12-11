@@ -1,0 +1,10 @@
+\input{../base}
+\tikzdrawing{
+\begin{axis}[xmin=0,xmax=1000,ymin=0,ymax=100,xlabel=Iteraciones o ajuste,ylabel=Porcentaje de error]   
+\scalefont{0.25} 
+\addplot[thick,domain=0:1000, samples=100,color={rgb:black,10;blue,20}]{100*(e^-(x/350))};
+\addlegendentry{$\rl(D_e,f)$}
+\addplot[thick,domain=0:1000,samples=100,color={rgb:black,10;green,20}]{ ( ((600+x)/80000)+(x-600)^2/4000+10};
+\addlegendentry{$\rl(\ddp,f)$}
+\end{axis}
+}

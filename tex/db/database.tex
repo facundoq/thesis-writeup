@@ -1,0 +1,20 @@
+
+La Letters and Numbers Hand Gesture Database (LNHG) \footnote{En https://sites.google.com/site/lnhgdb/ se encuentra una versión inicial de la base de datos que sólo contiene gestos de números arábigos}, está formada por 20 ejemplares de cada uno de los 10 dígitos arábigos y las 26 letras del abecedario (sin contar la ñ), obteniendo un conjunto de 720 ejemplares en total, con 36 clases. Los gestos se realizaron con la mano izquierda, todos por la misma persona, con descansos de 10 minutos entre la grabación de cada clase de gesto. Los datos de posición de la mano fueron capturados utilizando el SDK del Kinect. La grabación fue realizada a una tasa de captura de 28fps en promedio. 
+
+
+\image{segmented-samples}{0.8}{Proyección en el eje x\-y de ejemplares de gestos correspondientes a dígitos. }
+
+En la grabación de los distintos ejemplares de cada clase la orientación de la persona con respecto a la cámara fue la misma respecto a rotaciones del eje $x$ y $z$, pero hubo variedad en la rotación del eje $y$ (con origen en el centro de la persona). Además, los ejemplares fueron grabados comenzando desde diferentes posiciones tanto de la mano como del cuerpo, trazando cada gesto con diferentes tamaños y a distintas velocidades. La captura se realizó indicando el comienzo y fin de cada gesto mediante un pequeño pad numérico usb sostenido en la mano derecha de forma confortable, para lo cual solo era necesario presionar la tecla \textit{Enter}.
+
+Cada ejemplar $\ve{s_i} \in S$, donde $S$ es la base de datos de gestos, consiste en una secuencia:
+
+\ma{ 
+\ve{s_i}=\ve{s_i}[1], \ve{s_i}[2], \dots,\ve{s_i}[n_i], \quad \ve{s_i}[j] \in \reals^3, \quad j=1  \dots n_i}
+
+correspondiente a las posiciones de la mano en un espacio 3D, con etiquetas de tiempo:
+
+\ma{ T_i=t_1,\dots,t_{n_i}, \qquad t_j \in \reals, \qquad 0= t_1<t_2< \dots <t_{n_i}}
+
+y etiquetas de clase $c_i$. Cada muestra $\ve{s_i}$ puede tener una cantidad distinta de posiciones $n_i$, dependiendo de la velocidad con la cual se ejecutó el gesto, su tamaño y la tasa de captura.
+
+Entonces, cada gesto $\ve{s_i}$ es una versión discreta del modelo de gestos continuos descripto en el capítulo \ref{chap:gestos}.

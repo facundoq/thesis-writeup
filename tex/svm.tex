@@ -1,54 +1,17 @@
 
-\newcommand{\hipf}[1]{ \wv \cdot #1 + b}
-\newcommand{\hipfi}{ \hipf{\xi}}
-\newcommand{\hipe}[1]{ \hipf{#1} = 0 }
-\newcommand{\hipei}{ \hipe{\xi} }
-\newcommand{\rangeD}{\range{i}{1}{|D|}}
-
-\newcommand{\maxmin}[2]{\underset{#1}{\text{#2}}}
-\newcommand{\maxarg}[1]{\maxmin{#1}{Max} }
-\newcommand{\minarg}[1]{\maxmin{#1}{Min} }
-
-\newcommand{\hyi}{h(\xi) y_i }
-\newcommand{\hyiz}{\hyi >0}
-\newcommand{\hyio}{\hyi \geq 1}
-
-\newcommand{\riz}{r_i \geq 0}
-\newcommand{\siz}{\si \geq 0}
-\newcommand{\uiz}{\ui \geq 0}
-\newcommand{\aiz}{\ai \geq 0}
-\newcommand{\aizc}{0 \leq \ai \leq c}
-
-\newcommand{\au}{\alpha_1}
-\newcommand{\ad}{\alpha_2}
-
-\newcommand{\costes}{c \sum\limits_i \si}
-\newcommand{\costeu}{\sum\limits_i \si \ui}
-\newcommand{\costea}{\sum\limits_i \ai r_i }
-\newcommand{\costew}{\wv \cdot \wv^t}
-
-\newcommand{\ayi}{\ai y_i }
-\newcommand{\ayx}{\ai y_i \xi}
-\newcommand{\ayxj}{\aj y_j \xj}
-\newcommand{\sumayx}{\sum\limits_i \ai y_i \xi}
-\newcommand{\sumay}{\sum\limits_i \ai y_i}
-\newcommand{\lagai}{ \sumi \ai - \sumi \suml_j  (\ayx \cdot \aj y_j \xj )  }
-\newcommand{\lagd}{\lag_D}
-
-\newcommand{\txi}{\tra(\xi)}
-
 
 
 \epigraph{Why is it so popular? I believe there are several reasons. First of all, it is effective. It gives very stable and good results. From a theoretical point of view, it is very clear, very simple, and allows many different generalizations, called kernel machines. }{Vladimir N. Vapnik}
 
 
-El separador de espacios por excelencia es el hiperplano. Pero dado un conjunto de datos con dos clases linealmente separables, podemos tener infinitos hiperplanos que separen los conjuntos. Algoritmos simples como el del Perceptrón se quedan con el primero que encuentran, ya que no tienen un criterio para elegir entre los hiperplanos posibles. Las \textbf{Máquinas de Vectores de Soporte} (SVM) extienden el perceptrón con un criterio tal.
+\section{Introducción}
+El separador de espacios por excelencia es el hiperplano. Pero dado un conjunto de datos con dos clases linealmente separables, pueden existir infinitos hiperplanos que separan los conjuntos. 
 
--\\
-Gráfico con dos conjuntos de datos + y - con distintos hiperplanos, uno ``bueno''  y los otros raros\\
-Distintos hiperplanos separadores para el mismo conjunto de datos\\
+\tikzimage{hiperplano_svm_varios}{scale=0.25}{Distintos hiperplanos separadores para el mismo conjunto de datos.}
 
-En la figura anterior, si bien la distribución real de los ejemplos de las clases no se conoce y por ende no se puede asegurar cual es el hiperplano más correcto, está claro intuitivamente que a priori el primer hiperplano captura mejor la división entre las dos clases.
+Algoritmos simples como el del Perceptrón se quedan con el primero que encuentran que tenga un error lo suficientemente bajo, ya que no tienen un criterio para elegir entre todos los posibles hiperplanos que separan las clases. Si bien en la figura anterior la distribución real de los ejemplos de las clases no se conoce, y por ende no se puede asegurar cual es el hiperplano más correcto, está claro que, a priori, algunos hiperplanos capturan mejor que otros la división entre las dos clases. 
+
+Las \textbf{Máquinas de Vectores de Soporte} (SVM) extienden el perceptrón con un criterio para seleccionar entre los hiperplanos; en este modelo, se busca el \textit{hiperplano de máximo margen}.
 
 \section{Clasificador de Márgen Máximo}
 \texinput{svm/margen}
@@ -65,12 +28,12 @@ En la figura anterior, si bien la distribución real de los ejemplos de las clas
 \section{El truco del Kernel}
 \texinput{svm/kernel}
 
-\section{Algoritmo de entrenamiento SMO}
-\texinput{svm/smo}
+%\section{Algoritmo de entrenamiento SMO}
+%\texinput{svm/smo}
 
 \section{Adaptación para el reconocimiento multiclase}
 \texinput{svm/multiclase}
 
-\section[SVM: Apéndice]{Apéndice: Condiciones KKT, Lagrangiano y Dual de Wolfe}
-\label{sec:kkt}
-\texinput{svm/kkt}
+\section{Resumen}
+\texinput{svm/resumen}
+

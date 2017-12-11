@@ -1,0 +1,47 @@
+
+
+\section{Introducción}
+
+Este capítulo está dedicado a la construcción de clasificadores efectivos, aplicables al reconocimiento de gestos. Para ello, se hará uso de las estrategias presentadas en la parte I de este documento. En todos los casos, el gesto a reconocer será representado como se describió en el capítulo 5.
+
+
+%Combinando la característica descripta en el capítulo \ref{chap:db} para el modelo del capítulo \ref{chap:gestos}, con los clasificadores de los capítulos \ref{chap:svm} y \ref{chap:neuronales}, y otros desarrollos, es posible construir clasificadores efectivos para el reconocimiento de gestos.
+%
+%Se pueden distinguir dos tipos de características: las globales, que representan alguna característica global del ejemplar, y las locales, que describen el ejemplar en términos de cada parte del mismo, típicamente respetando su topología. La característica desarrollada en esta tesina es del tipo local, ya que cada dirección brinda información local del gesto. De todos modos, pueden generarse características globales en base a ella con la ventaja de que la misma posee las invarianzas ya mencionadas.
+%
+%A continuación,se describe el Clasificador Neuronal Competitivo (CNC), un nuevo tipo de clasificador que utiliza redes neuronales competitivas propuesto en esta tesina. La idea esencial del CNC es generar un descriptor de tipo global a partir del vector de direcciones del gesto y lo usa para clasificarlo. El clasificador está diseñado para realizar reconocimiento de gestos con la restricción de tener un conjunto de ejemplares de entrenamiento pequeño. 
+
+En primer lugar, se describirá el Clasificador Neuronal Competitivo (CNC) el cual constituye el aporte central de esta tesina. Se trata de un nuevo tipo de clasificador que combina un conjunto de  redes neuronales competitivas con un sistema de votación para llevar a cabo el reconocimiento. Una de sus características más importantes es su capacidad de adaptarse correctamente haciendo uso de un conjunto de ejemplares de entrenamiento pequeño
+
+Luego, se aplican los modelos SVM y Redes Neuronales Feedforward al problema de reconocimiento de gestos. Finalmente, se desarrolla también un método de reconocimiento basado en templates para resolver el mismo problema. Estas soluciones alternativas son habitualmente utilizadas en la literatura \cite{yun2009automatic, Patsadu2012,celebi2013gesture} y sirven como punto de comparación con el método CNC presentado en esta tesina. 
+
+
+\section{Clasificador Neuronal Competitivo}
+\chaptertexinput{cnc}
+
+
+\section{Modelos de reconocimiento a comparar}
+\chaptertexinput{comparar}
+
+
+\section{Resumen}
+
+En este capítulo se propuso un modelo nuevo de clasificador basado en redes neuronales competitivas, el \textbf{Clasificador Neuronal Competitivo (CNC)}, y se introdujeron otros clasificadores basados en SVM, redes neuronales feedforward, y un método de clasificación basado en templates para comparar con el CNC. Todos los modelos de clasificación utilizan la misma representación para el gesto a reconocer y buscan implementar la noción de equivalencia del capítulo \ref{chap:gestos}.
+
+El modelo CNC es un clasificador diseñado específicamente para reconocer gestos y entrenarse con pocos ejemplares de entrenamiento. El CNC utiliza un esquema de \textit{bagging}, en donde varias instancias de un tipo de red neuronal, que se describe en el siguiente párrafo, funcionan en paralelo para clasificar de forma más efectiva. Dichas redes se entrenan por separado, pero a la hora de clasificar un nuevo ejemplar, cada red es estimulada con el mismo y genera un resultado; el CNC combina los resultados de las redes para estimar la clase del ejemplar.
+
+Las redes del CNC se componen de tres capas: la 1, de entrada, la 2, de codificación, y la 3, de salida. 
+La capa 2 es de tipo competitiva, y cada neurona de la misma representa una dirección; los centroides se entrenan con el algoritmo de entrenamiento CPN del capítulo \ref{chap:neuronales}, y representan un conjunto de direcciones \textit{canónicas}, que son las más representativas de todas las direcciones del conjunto de entrenamiento. Luego, dado un nuevo ejemplar, la red puede codificar el mismo en base a las direcciones canónicas. 
+La capa 3 también es de tipo competitiva. Los centroides de las neuronas de la capa 3 se generan en base a los ejemplares del conjunto de entrenamiento, codificados de acuerdo a la capa 2; por cada ejemplar de entrenamiento, hay una neurona en la tercera capa. Dado un nuevo ejemplar, la red lo codifica con la segunda capa, y con la tercera genera un vector de distancias entre el nuevo ejemplar codificado y sus neuronas.
+
+Al clasificar un nuevo ejemplar, el CNC hace que cada red calcule un vector de distancias, y luego genera un nuevo vector de distancias promediando los de cada red. Finalmente, como las neuronas corresponden a ejemplares de entrenamiento, y de estos se conoce la clase, se le asigna al nuevo ejemplar la clase del ejemplar de entrenamiento con menor distancia, según el vector de distancias promedio.
+
+Los modelos de SVM, redes feedforward y de templates se aplican simplemente interpretando al vector de direcciones como un punto en el espacio n-dimensional de todos los posibles vectores de direcciones. 
+
+Para el modelo SVM, se generó un clasificador de $C$ clases utilizando $C$ clasificadores de 2 clases, entrenados con el algoritmo SMO. Se utiliza el separador lineal básico y opcionalmente el separador que incluye una transformación mediante un kernel gaussiano.
+
+Para las redes neuronales feedforward, se utilizó un modelo con 3 capas, con funciones de activación $tanh$, entrenado con backpropagation y resilient backpropagation.
+
+El método de templates guarda las características correspondientes a cada parte de los ejemplares de cada gesto de entrenamiento y a la hora de clasificar compara cada una de dichas características con las del ejemplar a clasificar por separado, mediante una función de similitud gaussiana. Luego, combina los resultados de la comparación de cada parte para estimar la probabilidad de que el ejemplar a clasificar pertenezca a cada clase.
+
+En el capítulo siguiente, se realizan experimentos de clasificación con cada uno de estos modelos y las bases de datos presentadas en el capítulo anterior para determinar su aplicabilidad al problema del reconocimiento de gestos.

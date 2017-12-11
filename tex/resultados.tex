@@ -1,4 +1,4 @@
-\epigraph{``Torture data long enough, and they'll confess to anything"}{}
+\epigraph{``Torture data long enough, and it'll confess to anything"}{}
 %All models are wrong, but some are useful. (George E. P. Box)
 %"An approximate answer to the right problem is worth a good deal more than an exact answer to an approximate problem." -- John Tukey
 %In God we trust. All others must bring data. (W. Edwards Deming)
@@ -6,76 +6,22 @@
 %The combination of some data and an aching desire for an answer does not ensure that a reasonable answer can be extracted from a given body of data. John Tukey
  %He uses statistics like a drunken man uses a lamp post, more for support than illumination. Andrew Lang
 
-A continuación, describimos los clasificadores de gestos propuestos a comparar, generados con la unión de los métodos de clasificación y las características para gestos desarrollados. Mostramos los resultados de los mismos aplicados a las base de datos de Letras y Números y a la base de datos Celebi2013, y finalizamos con una discusión sobre la aplicabilidad y efectividad de los métodos propuestos.
 
-\section{Modelos de reconocimiento }
-\chaptertexinput{modelos}
-
-\section{Experimentos con base de datos de LNHGDB}
-
-Comparamos el error de los métodos en la base de datos de gestos, utilizando los mismos parámetros de preprocesamiento para todos. El tamaño de resampleo fue $n=65$ y el de la ventana de suavizado $w=5$.
-
-Por cada algoritmo se realizaron 500 experimentos utilizando validación cruzada estratificada con resampleo aleatorio, con 3 muestras por clase para el conjunto de entrenamiento ($3*26=78$ en total) y 17 para el conjunto de prueba ($642$ en total). En el caso de la red feedforward, 2 muestras de cada clase se utilizaron como conjunto de validación, dejando solo 15 para el conjunto de prueba, debido a que por la naturaleza de los algoritmos de entrenamiento (Backpropagation y iRprop+) sería muy difícil de entrenar con solo 3 muestras.
-
-Para los clasificadores FF+BP, FF+iRP y CNC, mostramos resultados para redes con $h=30$, $h=30$ y $h=70$ neuronas ocultas, respectivamente, que dieron los mejores resultados en nuestros experimentos (probamos $h \in {5,10,\dots,150} $ para determinar esos valores).
-
-El CNC tuvo $p=5$ subclasificadores. En todos los experimentos la clase asignada fue aquella para la cual el clasificador dio el mejor puntaje, sin importar el valor absoluto de dichos puntajes. En otras palabras, dada una muestra, los métodos calculan los puntajes por clase $o_c$ de forma corriente, y luego la clase correspondiente se calcula como $class=max_c(o_c)$.
-
-
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{|c|c|c|c|}
-\hline Clasificador & Parámetros & Algoritmo de entrenamiento & Error ($\mu$) \\ 
-\hline SVM & Kernel Lineal & SMO &  60 \% \\ 
-\hline SVM & Kernel Gaussiano, $\sd=4$ & SMO & 60 \%  \\ 
-\hline CNC & $h=70$, $p=5$ & CNC, $\alpha=0.5$ & 60 \% \\ 
-\hline FF & $h=80$ & iRprop+ &  60 \% \\ 
-\hline FF & $h=80$ &  Backpropagation &  60 \% \\ 
-\hline Template & $\sd=4$ & - & 60\% \\ 
-\hline 
-\end{tabular}
-\caption{Resultados de los experimentos de clasificación para la base de datos Celebi2013.} 
-\end{table}
-
-Presentamos también el error del CNC sin utilizar el proceso de resampleo, debido a que no necesita un vector de entrada de longitud fijo, aunque en este caso los gestos no serían verdaderamente invariantes a la velocidad.
-
-TABLA
-
-Podemos ver que los errores de reconocimiento son ligeramente peores pero no significativamente, lo cual muestra, en principio, que el método podría utilizarse sin el resampleado en los casos donde un peor desempeño sea preferible a un coste computacional elevado.
-
-
-\section{Experimentos con base de datos Celebi2013}
-
-Para probar los clasificadores con esta base de datos, se consideró solamente la posición de una mano (la izquierda), y los gestos realizados con dicha mano, ya que de otra manera el mismo gesto realizado con la mano izquierda y la derecha sería casi indistinguible. Se realizaron todos los pasos de preprocesamiento y extracción de características descriptas anteriormente salvo el proceso de normalización de la rotación del usuario, ya que no había información de las posiciones de las otras partes del cuerpo para tal fin.
-
-Se empleó la misma metodología de validación cruzada con sampleo aleatorio y 500 iteraciones. Los resultados se presentan en la siguiente tabla:
-
-\begin{table}[h]
-\centering
-\small
-\begin{tabular}{|c|c|c|c|}
-\hline Clasificador & Parámetros & Algoritmo de entrenamiento & Error ($\mu$) \\ 
-\hline SVM & Kernel Lineal & SMO &  60 \% \\ 
-\hline SVM & Kernel Gaussiano, $\sd=4$ & SMO & 60 \%  \\ 
-\hline CNC & $h=70$, $p=5$ & CNC, $\alpha=0.5$ & 60 \% \\ 
-\hline FF & $h=80$ & iRprop+ &  60 \% \\ 
-\hline FF & $h=80$ &  Backpropagation &  60 \% \\ 
-\hline Template & $\sd=4$ & - & 60\% \\ 
-\hline 
-\end{tabular}
-\caption{Resultados de los experimentos de clasificación para la base de datos Celebi2013.} 
-\end{table}
-
-
-\section{Conclusiones}
-
-Se han presentado métodos de reconocimiento de gestos de un miembro (en este caso, la mano) invariantes a la velocidad, la escala, la traslación y parcialmente invariante a la rotación. Los métodos obtienen buenos resultados con un entrenamiento que utiliza pocas muestras, necesario para el reconocimiento de gestos dependiente del usuario en donde el mismo tiene que generar los patrones de entrenamiento.
-
-Se ha generado una base de datos de gestos de ejemplo para probar los métodos. Se introdujo también un modelo teórico de gestos, junto con una característica que hace más fácil su reconocimiento bajo las invarianzas mencionadas. 
-
-Se han adaptado los modelos de SVM, redes neuronales feedforward y de templates al problema en base al modelo de gestos introducido, y se ha medido su performance. Se desarrolló el modelo novel CNC, que utiliza una representación tipo bag-of-words para las direcciones de los gestos, y que, adicionalmente, es invariante al punto de comienzo del gesto.
  
-En nuestros experimentos, los modelos probados función bien en general, y el CNC y SVM obtienen los mejores porcentajes de reconocimiento. Adicionalmente, el CNC tiene la ventaja de ser fácil para entrenar, poseer la invariancia antes mencionada, y su algoritmo de aprendizaje requiere pocas iteraciones para converger.
+\section{Introducción}
+ 
+Este capítulo muestra los resultados de los experimentos realizados con la base de datos Letras y Números (LNHG, por Letters and Numbers Hand Gestures) y la base de datos Celebi2013. También se incluye una discusión sobre la aplicabilidad y efectividad de los métodos propuestos.
 
-En trabajo futuro, esperamos poder determinar la performance de los métodos distintas bases de datos para determinar la amplitud de su aplicabilidad, y compararlos en un contexto de tiempo real para probar su habilidad de reconocer gestos en secuencias de posiciones de la mano no segmentadas. Además, se espera experimentar con otras características de gestos como los coeficientes de la transformada discreta de Fourier o los momentos de Wu, y con otros clasificadores como los Modelos Ocultos de Markov (HMM). Finalmente, tenemos intenciones de mejorar y extender nuestra base de datos actual con más ejemplos de gestos 3D para las clases existentes y nuevas clases, para proveer un punto de referencia fuerte para nuevas comparaciones y análisis de performance.
+El objetivo de estos experimentos es triple: validar el modelo y la característica desarrollada como apta para clasificar gestos, encontrar el clasificador que mejor se adapte a la tarea, junto con sus parámetros ideales, y finalmente validar la hipótesis de que son aptos para generar modelos de gestos con pocas muestras de entrenamiento.
+
+
+\section{Experimentos con base de datos LNHG}
+\label{sec:experimentos}
+\chaptertexinput{experimentos}
+
+
+\section{Resumen}
+
+En este capítulo se comparó el método propuesto en esta tesina en el capítulo 6, denominado CNC, con otros métodos existentes, descriptos en el mismo capítulo.
+
+Los resultados obtenidos permiten afirmar que las capacidades de clasificación del CNC y el modelo SVM son altas, casi alcanzando 90\% de ejemplares correctamente clasificados en la base de datos LNHG, cuando se utilizan conjuntos de entrenamiento pequeños, y que aumenta considerablemente con más gestos de entrenamiento. Los otros modelos funcionan relativamente bien, y algunos hasta de manera comparable al SVM y CNC si se aumenta el tamaño del conjunto de entrenamiento. Estos resultados son bastante robustos a las variaciones de los parámetros de cada algoritmo, indicando que son aptos para el reconocimiento de gestos.

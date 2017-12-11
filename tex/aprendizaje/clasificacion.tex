@@ -1,14 +1,22 @@
+El aprendizaje automático, en general, y la clasificación automática, pueden considerarse efectivamente desde un punto de vista geométrico. En el mismo, los modelos de clasificación ven a los ejemplares a clasificar como puntos o vectores en un espacio $d$ dimensional.
 
-Formalmente, podemos definir un clasificador como una función $\fdef{f}{\ddp}{C}$, donde $\ddp$ es el conjunto de todos los ejemplares del problema, y $C=\{1..N\} \cup \bot $ es el conjunto de etiquetas de las $N$ clases, donde $\bot$ representa la clase nula, es decir, que un ejemplar no pertenece a ninguna clase. Esta función particiona $\ddp$ en subconjuntos disjuntos $\ddp_i$ (posiblemente infinitos) llamados \textbf{regiones de Voronoi} con $\cup_{i} \ddp_i = \ddp$, y luego asigna a cada $\ddp_i$ una clase (o ninguna). 
+Por ejemplo, si se deben clasificar personas para saber si pertenecen a una población de riesgo de obesidad, y de ellas se conoce su edad y su peso, entonces los ejemplares son vectores de $d=2$ componentes que existen en un espacio bi-dimensional, como $\reals^2$. Este espacio sería el que previamente se identificó como $\ddp$. Además, como se tiene un problema de clasificación supervisada, se conoce el conjunto de clases a asignar a los ejemplares, y los del conjunto de entrenamiento $D$ se encuentran etiquetados con la clase correspondiente. 
 
--\\(Gráfico voronoi)
-Regiones de voronoi en $\reals^2$ para un problema de clasificación con dominio $\ddp$ y 3 clases.\\
+Un algoritmo de entrenamiento genera un modelo de clasificación $f$ en base a estos ejemplares. La hipótesis básica detrás de la mayoría de los modelos es de \textbf{localidad}, es decir, que si un ejemplar $\xv$ tiene una etiqueta $y$, entonces los ejemplares $\xv'$ cercanos a $\xv$ probablemente tendrán la misma etiqueta. Al considerar todos los ejemplares, esta hipótesis da lugar a que el modelo determine distintas \textbf{regiones} de $\ddp$, que corresponden a ciertas clases.
 
-Tal función $f$ generalmente se genera con un algoritmo de entrenamiento que en base a un conjunto de datos de entrenamiento para el clasificador y a ciertos conocimientos específicos del dominio del problema a resolver.
+\tikzimagetwo{clases3}{scale=0.31}{Un conjunto de datos con 3 clases.}{voronoi3}{scale=0.25}{Regiones de cada clase estimadas por un clasificador entrenado con dichos datos.}
 
-(Grafico datos $\rightarrow$ regiones de voronoi)
-Un conjunto de datos con 3 clases y las regiones de voronoi estimadas por un clasificador entrenado con dichos datos.
+Entonces, el desafío de entrenar un modelo de clasificación $f$ es el de estimar las regiones de cada clase, en base a los ejemplares de entrenamiento. Luego de entrenado, a la hora de clasificar, $f$ recibe un ejemplar como entrada, y da como resultado una clase estimada.
 
-Entonces, de forma análoga a nuestro argumento general sobre aprendizaje automático, en esencia $f$ aproxima una función $f'$ que codifica las clases ``verdaderas'' de los ejemplares de $\ddp$.
+\image{funcionamiento_f}{0.5}{Funcionamiento de la función de clasificación o inferencia $f$.}
 
-El clasificador $f$ se genera en base a un conjunto ordenado $D$ de $n$ ejemplares $\xi$,  $D= \{ \xi \in \ddp \} \quad i=1..n$, donde por ejemplo podríamos tener $\ddp=\reals^d$, como será en el caso de los gestos. A su vez, cada ejemplar pertenece a una de las $|C|$ clases conocidas, por ende asociado a cada $\xi$ hay una etiqueta $y_i \in C$ que nos indica a qué clase pertenece $\xi$. 	
+Formalmente, un clasificador puede definirse como una función $\fdef{f}{\ddp}{C}$, donde $\ddp$ es el conjunto de todos los ejemplares del problema, y $C=\{1..N\} \cup \bot $ es el conjunto de etiquetas de las $N$ clases ($\bot$ representa la clase nula, es decir, que un ejemplar no pertenece a ninguna clase). 
+
+El clasificador $f$ se genera en base a un conjunto ordenado $D$ de $n$ ejemplares $\xi$,  $D= \{ \xi \in \ddp \} \quad i=1..n$, donde por ejemplo podría ser que $\ddp=\reals^d$, como será en el caso de los gestos, o $\ddp=\reals^2$, como en el de clasificar personas en base a su edad y peso. A su vez, cada ejemplar pertenece a una de las $|C|$ clases conocidas, por ende asociado a cada $\xi$ hay una etiqueta $y_i \in C$ que indica a qué clase pertenece $\xi$.
+
+Volviendo al punto de vista geométrico, se puede interpretar a $f$ como una función que particiona $\ddp$ en subconjuntos disjuntos $\ddp_i$ (posiblemente infinitos) llamados \textbf{regiones de Voronoi}, con $\cup_{i} \ddp_i = \ddp$, y luego asigna a cada $\ddp_i$ una clase (o ninguna). 
+
+\image{voronoi}{0.2}{Regiones de Voronoi para un problema de clasificación con dominio $\ddp=\reals^2$. Cada región $\ddp_i$ está representada con un color distinto. Los puntos representan a los centros de la región. Los colores indican que cada a región le corresponde una clase diferente.}
+
+Como se vio anteriormente, tal función $f$ se genera con un algoritmo de entrenamiento en base a un conjunto de ejemplares de entrenamiento y a ciertos conocimientos específicos del dominio del problema a resolver. De forma análoga al argumento general sobre aprendizaje automático, en esencia $f$ aproxima una función $f'$ que codifica las clases ``verdaderas'' de los ejemplares de $\ddp$; es decir, $f'$ conoce las regiones verdades de cada clase.
+

@@ -1,0 +1,7 @@
+\input{../base}
+\tikzdrawing{
+\begin{axis}[xmin=-2,xmax=2,ymin=-2,ymax=2]   
+\scalefont{0.25} 
+\addplot[domain=-2:2, samples=200]{x/abs(x)};
+\end{axis}
+}

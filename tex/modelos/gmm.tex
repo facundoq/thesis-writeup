@@ -1,0 +1,69 @@
+\newcommand{\mijc}{\ve{I_{j,c}}}
+
+
+Se ha desarrollado un clasificador basado en templates o ejemplares prototípicos del conjunto de entrenamiento, que clasifica cada dirección del vector de direcciones del gesto por separado y luego une dicha información para realizar una clasificación global. El mismo ha sido diseñado para usarse con conjuntos de entrenamiento de tamaño reducido. 
+
+El clasificador toma como entrada un ejemplar, que es una secuencia de longitud fija $\xv$ de $n$ direcciones, y da como resultado un vector $\yv$ de $C$ puntajes $0..1$ que representan la confianza de que el ejemplar pertenezca a cada clase. 
+
+\image{gmm/esquema}{0.5}{Esquema general del clasificador basado en templates.}
+
+El clasificador se construye con $n$ clasificadores bayesianos competitivos (CBC), y cada CBC $C_j, j=1 \dots n$ está compuesto de un conjunto de estados $S_{j,c}, \; \range{c}{1}{C}$. 
+
+\image{gmm/esquema_estados}{0.5}{Organización interna del clasificador por templates. Se muestran los $n$ CBC $C_j$, cada uno con $C$ estados $S_{j,c}$}
+
+
+Hay un CBC por cada dirección del gesto; dada la dirección $j$ del gesto, la salida de la CBC $c_j$ es un vector de $C$ elementos, donde cada elemento es generado por el estado $S_{j,c}$ y representa la confianza de que la dirección $j$ sea del gesto $c$, $P(\stcj | \xv[j])$. 
+
+
+\image{gmm/cbc}{0.5}{Estructura del CBC $C_j$, para $j=1$, es decir, del CBC asignado a la primera dirección del gesto. Cada estado $S_{1,c}, \; \range{c}{1}{C}$, modela la emisión de posibles direcciones de cada clase para la dirección $1$ de los gestos.}
+
+
+El clasificador, dado un gesto, alimenta cada CBC $C_j$ con la dirección $j$. Luego, combina los vectores de confianza de cada $C_j$ en una confianza global, representada por un vector $\ov$ de $C$ elementos donde $o_i=P ( c | \xv )$.
+
+
+\image{gmm/esquema_direcciones}{0.5}{Funcionamiento general del clasificador. La secuencia de direcciones del gesto se divide. Cada dirección $j$, en orden, se ingresa como entrada en el CBC $C_j$, que genera un vector de confianza por clase. El clasificador luego combina los $n$ resultados de los CBC para generar un vector de confianza por clase global.}
+
+
+Para calcular la confianza $P( c | \xv )$, se asume que las direcciones de los gestos se generan mediante procesos gaussianos. El estado $S_{j,c}$ modela la generación de la dirección $j$ del un gesto, asumiendo que el mismo pertenece a la clase $c$. Entonces, el entrenamiento del clasificador consiste en determinar los parámetros de las distribuciones gaussianas que modelan las direcciones de los gestos. Como cada gesto puede hacerse de una manera ligeramente distinta, se considera, para cada estado $S_{j,c}$, varias distribuciones gaussianas.
+
+Por ende, a cada estado $S_{j,c}$ del CBC $j$ le corresponde un conjunto de funciones de distribución de probabilidad gaussianas con medias $\gu$ y co-varianzas $\gc, \; k=1 \dots |D_c|$, donde $D_c$ es el conjunto de ejemplares entrenamiento de la clase $c$. Cada gaussiana $j$ modela la probabilidad de una emisión de la dirección $j$ del gesto asumiendo que el mismo pertenece a la clase $c$. Cada estado $S_{j,c}$ tiene una distribución por cada ejemplar de la clase $c$ ( por un total de $|D_c|$). 
+
+Los parámetros de cada función se estiman con los ejemplares del conjunto de entrenamiento como  $\gc = cov(\mijc) $, $ k= 1  \dots |D_c|$, donde $\sck$ es el ejemplar k-ésimo de la clase $c$ e $\mijc$ es una matriz con columnas: 
+
+\ma{
+ \scj{1},  \scj{2},   \dots,  \scj{|D_c|}  
+}
+
+Entonces  $\mijc$ es la matriz que contiene la dirección $j$ de cada ejemplar de entrenamiento de la clase $c$.
+
+Se utiliza entonces cada dirección de cada ejemplar del conjunto de entrenamiento como una media del CBC, lo cual no genera un modelo computacionalmente demandante ya que se está apuntando específicamente a conjuntos de entrenamiento pequeños.
+Para la clasificación de un nuevo ejemplar $\xv$, se calcula la confianza de la emisión de cada estado $\stcj$ aplicando la regla de bayes
+
+\begin{alignat*}{3}
+P(\stcj | \xv[j])= \frac{ P(\xv[j] | \stcj) P(\stcj)}{P(\xv[j])} &= 
+\frac{ p_{j,c} P(\stcj)}{\sum_{k \in C} p_{j,k} P(S_{j,k})} &=
+\frac{ p_{j,c}}{\sum_{k \in C} p_{j,k}}
+\end{alignat*}
+
+Donde:
+
+\ma{
+P(S_{j,k}) &= \frac{1}{C} \; \text{ es igual para todas las clases $k$} \\
+p_{j,k} &= P(\xv[j]|\stcj) = max({\normal(\xv[j];\gu,\gc)}) \; \text{ es el } \\
+ & \text{puntaje máximo entre los estados}
+}
+
+Este último puntaje máximo modela la confianza de que la dirección $j$ del ejemplar pertenezca a la clase $c$.
+
+Nótese que se está aplicando la regla de bayes para determinar la confianza $P(\stcj | \xv[j])$ en cada estado y luego se elige el estado con la mayor confianza. Esta es la razón por la cual se denomina a cada $C_j$ un clasificador bayesiano competitivo.
+
+Finalmente, la confianza de todo el ejemplar dada la clase $c$ se calcula combinando las salidas de cada $C_j$ como:
+
+\begin{alignat*}{3}
+P(c | \xv) &= 
+\frac{P(\xv | c) P(c)}{\sum_{k \in C} P(\xv | k) P(k)} &=
+\frac{P(\xv | c)}{\sum_{k \in C} P(\xv | k) }
+\end{alignat*}
+
+donde se define $P(k)= \frac{1}{|C|} $ y $P(\xv | k) = \frac{\sum_{j=1}^n P (S_{j,k} |\xv[j])}{n}$. Esta es la salida final del clasificador.
+

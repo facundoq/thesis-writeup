@@ -1,5 +1,11 @@
 
-Un programa que aprende automáticamente es aquel que no se programa explícitamente para resolver un problema, sino que utiliza un algoritmo de aprendizaje en base a datos de patrones, instancias o ejemplares del problema para generar un modelo del mismo. Con ese modelo, se puede entonces resolver instancias del problema, con cierto grado de error. 
+Un programa que aprende automáticamente es aquel que no se programa explícitamente para resolver un problema, sino que utiliza un algoritmo de aprendizaje en base a datos de instancias o ejemplares del problema para generar un modelo del mismo.
+
+\image{problema_ejemplares_modelo}{0.5}{Generación de un modelo a partir de ejemplares de un problema: la esencia del aprendizaje automático.}
+
+Con ese modelo, se pueden analizar ejemplares del problema general, obteniendo alguna inferencia, con cierto grado de error. 
+
+\image{problema_inferencia_modelo}{0.3}{Obtención de una inferencia a partir de algún ejemplar del problema.}
 
 Siguiendo la definición más formal de Mitchell \cite{mitchell1997} donde la ``experiencia'' son los ejemplares del problema:
 
@@ -7,7 +13,7 @@ Siguiendo la definición más formal de Mitchell \cite{mitchell1997} donde la ``
 
 En general, las técnicas de aprendizaje automático se aplican a problemas donde no se conoce una solución algorítmica definitiva o esta tiene características indeseables: es computacionalmente demandante, numéricamente inestable, requiere programación explícita para adaptarse a cambios, es poco robusta a fallos de sensores, o requiere intervención manual. 
 
-Una clase muy importante de problemas en donde se aplica aprendizaje automático es la de aquellos donde los humanos tenemos un bajo nivel de error innato, como el reconocimiento de voz, de gestos, de objetos, etc, pero es difícil codificar las reglas que utilizamos para realizar dichas tareas explícitamente. El aprendizaje automático es importante, entonces, porque las ocurrencias de la existencia humana parecen ocurrir en forma de patrones. La información del lenguaje, el habla, el dibujo y el entendimiento de las imágenes, todas involucran patrones. 
+Una clase muy importante de problemas en donde se aplica aprendizaje automático es la de aquellos donde los humanos tienen un bajo nivel de error innato, como el reconocimiento de voz, de gestos, de objetos, etc, pero es difícil codificar reglas para realizar dichas tareas explícitamente. El aprendizaje automático es importante, entonces, porque las ocurrencias de la existencia humana acontecen en forma de patrones. La información del lenguaje, el habla, el dibujo y el entendimiento de las imágenes, todas involucran patrones.
 
-No hay un aspecto o secuencia de aspectos que determine absolutamente y sin ambigüedad el significado de un patrón, y dicho significado varía con el contexto. Los humanos solemos ser bastante buenos en este tipo de tareas ya que tenemos un cerebro capaz de procesar la información relevante a dichas tareas de forma eficiente, adaptativa y eficaz. Si bien esto no es algo del todo sorprendente, ya que nos interesan y nos parecen importantes justamente porque podemos hacerlos, lograr que una computadora emule ciertas capacidades de nuestro cerebro es un objetivo de gran intererés para el aprendizaje automático. De hecho, podemos argumentar que, en esencia, muchos de los algoritmos de aprendizaje automático son aproximaciones matemáticas y computacionales a la automatización del funcionamiento del cerebro \cite{shannon1953,meltzoff2009,lioutikov2012}.
+No hay un aspecto o secuencia de aspectos que determine absolutamente y sin ambigüedad el significado de un patrón, y dicho significado varía con el contexto. Los humanos solemos ser bastante buenos en este tipo de tareas ya que tenemos un cerebro capaz de procesar la información relevante a dichas tareas de forma eficiente, adaptativa y eficaz. Si bien esto no es algo del todo sorprendente, ya que nos interesan y nos parecen importantes justamente porque podemos hacerlos, lograr que una computadora emule ciertas capacidades de nuestro cerebro es un objetivo de gran interés para el aprendizaje automático. De hecho, se puede argumentar que, en esencia, muchos de los algoritmos de aprendizaje automático son aproximaciones matemáticas y computacionales al funcionamiento del cerebro \cite{shannon1953,meltzoff2009,lioutikov2012}.
 

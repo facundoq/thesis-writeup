@@ -1,36 +1,24 @@
-\documentclass[a4paper,draft, 12pt]{book}
-
+\documentclass[a4paper,12pt]{book}
+% !TeX spellcheck = es_ES
 
 % TODO: 
-
-% experimentos
-% Templates
-% CNC
-
-% Redes neuronales:
-% COMPETITIVA
-
-%IMAGENES
-% Aprendizaje
-% SVM
-% Redes
-% gestos
-% db
-% resultados
-
-% Más experimentos y conclusiones
-
-
+% PARA DESPUÉS
 % Aprendizaje:
-% definir \rho para VC aleatoria y estratificada, con k y aleatoria
-%Separar mejor la etapa de entrenamiento y la de ejecución o clasificación.
-% calcular exactamente cuantas particiones posibles hay en kfold cv
+% definir \rho para VC aleatoria y estratificada, con k y aleatoria  
+% calcular exactamente cuantas particiones posibles hay en kfold cv	
 
+% Gráficos para los kernels
+% Gráficos para svm multiclase (poner en sinopsis también)
+% Poner alguna clasificación más que la de McNeill
+% agregarle gráficos a las redes competitivas. sobre todo algunos de como funcionan (poner también en sinopsis)
 
 \input{tex/general/packages}
 %\input{tex/general/biber}
 \input{tex/general/style}
+
 \raggedbottom
+
+  
 \begin{document}
 
 \renewcommand{\chaptername}{}
@@ -39,13 +27,14 @@
 
 \frontmatter
 \tableofcontents
-\mainmatter 
- 
-\chapter{Resumen }
+
+\chapter{Resumen}
 \chapterinput{resumen}
 
-\chapter{Introducción}
+\chapter{Prefacio}
 \chapterinput{intro}
+
+\mainmatter 
 
 \part{Métodos}
 \label{part:metodos}
@@ -53,11 +42,11 @@
 \chapter{Aprendizaje Automático }
 \chapterinput{aprendizaje}
 
-  \chapter{Maquinas de Vectores de Soporte (SVM)}
-  \chapterinput{svm}
-  
-  \chapter{Redes neuronales }
-  \chapterinput{neuronales}
+\chapter{Maquinas de Vectores de Soporte (SVM)}
+\chapterinput{svm}
+
+\chapter{Redes neuronales}
+\chapterinput{neuronales}  
 
 \chapter{Gestos}
 \chapterinput{gestos}
@@ -69,14 +58,51 @@
 \chaptermark{Bases de datos y características}
 \chapterinput{db}
 
+\chapter[El Clasificador Neuronal Competitivo (CNC)]{El Clasificador Neuronal Competitivo (CNC) y otros modelos para comparar}
+\chapterinput{modelos}
+
+
 \chapter{Experimentos y resultados}
 \chapterinput{resultados}
 
+\chapter{Conclusiones generales y trabajos futuros}
+\chapterinput{conclusiones}
+
+
+\appendix
+
+\chapter{Aprendizaje automático}
+%\chaptermark{Validación cruzada}
+\label{apendice_validacion}
+\renewcommand{\chapterid}{aprendizaje}
+\texinput{aprendizaje/validacion}
+
+\chapter{SVM}
+\chaptermark{SVM}
+\label{apendice_svm}
+\renewcommand{\chapterid}{svm}
+
+  \section{Condiciones KKT, Lagrangiano y Dual de Wolfe}
+  \label{sec:kkt}
+  \texinput{svm/kkt}
+
+  \section{Algoritmo de optimización SMO}
+  \label{apendice_smo}
+  \texinput{svm/smo}
+
+
+\chapter{Redes neuronales}
+
+\renewcommand{\chapterid}{neuronales}
+\label{apendice_neuronales}
+\texinput{neuronales/backpropagation}
+  
+  
 \backmatter
 
 %\printbibheading
 %\bibbysegment[heading = subbibliography]
 \bibliographystyle{unsrt}	
-\bibliography{bib/intro,bib/surveys,bib/kinect,bib/gestos,bib/simple,bib/small-training-set,bib/db,bib/ff,bib/neural,bib/gmm,bib/cpn,bib/psom,bib/aprendizaje,bib/svm}
+\bibliography{bib/intro,bib/general,bib/surveys,bib/kinect,bib/gestos,bib/simple,bib/small-training-set,bib/db,bib/ff,bib/neural,bib/gmm,bib/cpn,bib/psom,bib/aprendizaje,bib/svm}
 
 \end{document}

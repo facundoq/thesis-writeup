@@ -1,0 +1,512 @@
+\section{Backpropagation}
+
+En esta sección se desarrollarán las derivadas del error para lograr una expresión concreta de la regla de actualización de los pesos de una red con backpropagation.
+
+Dado que el desarrollo de las $\derivative{E}{\W^j}$ suele traer confusión debido a la repetida aplicación de la regla de la cadena para volver para atrás por las capas de la red, se llegará a una fórmula general en tres pasos: primero, con un simple ejemplo de una red de dos capas con neuronas lineales; luego con una red de tres capas, de gran uso en la práctica, y luego de forma genérica para una red de $L+1$ capas.
+
+\subsection{Backpropagation con una red de dos capas y neuronas lineales} 
+
+
+\subsubsection{Derivación de $\derivative{E}{\W^j}$:}
+Como ejemplo, supóngase una red con dos capas, una de entrada y una de salida, con dos neuronas de entrada y una de salida cuya función de activación es la identidad $\theta(x)=x$. Se asume también un conjunto de datos $D$ con un solo ejemplar, $\xv=(1,3)$ y salida esperada $(0,1)$. Entonces, la función error está definida en base a los dos pesos de la red, $\wv_1^1(1),\wv_1^1(2)$ que se llamarán $w_1$ y $w_2$ por simplicidad. La función de error para esta red es:
+
+\ma{
+E(w_1,w_2) &= (x_1 w_1-\yv_1)^2 + (x_2 w_2-\yv_2)^2  \\
+E(w_1,w_2) &= (1 w_1-0)^2 + (3 w_2-1)^2  
+}
+
+
+\imagetwo{error_surface}{  0.25}{Superficie de la función de error $E(w_1,w_2)$.}
+{error_contour}{0.25}{Curvas de nivel de la función de error $E(w_1,w_2)$.}
+
+
+El opuesto del gradiente de la función indica la dirección del espacio de parámetros que minimiza $E$:
+
+\ma{
+-\nabla E &= -(\derivative{E}{w1},\derivative{E}{w2})= - ((x_1 w_1-\yv_1) x_1 + (x_2 w_2-\yv_2) x_2 ) \\
+&= -(\derivative{E}{w1},\derivative{E}{w2})= - ((w_1-0)  + (3 w_2-1) 3 )
+}
+
+\image{error_contour_quiver}{  0.3}{Opuesto del gradiente de la función de error $E(w_1,w_2)$.}
+
+\subsubsection{Algoritmo:}
+
+Siguiendo el ejemplo, la esencia del algoritmo backpropagation consiste en, dado una posición inicial en el espacio de parámetros, $w_1^i$ y $w_2^i$, moverse de a pequeños pasos en la dirección que indica el gradiente, hasta llegar a una posición del espacio de parámetros en donde el error sea lo suficientemente bajo, es decir, un mínimo local de la función que sea lo suficientemente bajo.
+
+\image{error_contour_path}{0.3}{Camino desde una posición inicial $w_1^i$ y $w_2^i$ hasta una posición con poco error en el espacio de parámetros.}
+
+Para el ejemplo, el algoritmo sería:
+
+\begin{algorithm}[H]
+\KwData{ \\Un ejemplar $\xv=(1,3) \in \reals^2$, con clase $\yv=(0,1)$\\
+Una tolerancia al error $\epsilon$\\
+Una tasa de aprendizaje $\alpha$}
+\KwResult{ Un vector de parámetros $\wv=(w_1,w_2)$ optimizado para clasificar $\xv$ con un error menor a $\epsilon$ }
+$\wv=random(2)$\;
+$error=\infty$ \;
+\While{$error > \epsilon$}{ 
+   $w_1 = w_1 - \alpha \derivative{E}{w_1}$ \;
+   $w_2 = w_2 - \alpha \derivative{E}{w_2}$ \;
+  $error = E(w_1,w_2)$ \;
+}
+Retornar  $\wv$ \;
+\caption{Esquema del algoritmo Backpropagation para el problema de ejemplo.} 
+\end{algorithm}
+\vspace{10pt}
+
+Las líneas $w_i = w_i - \alpha \derivative{E}{w_i}$ del algoritmo implementan el movimiento en el espacio de parámetros en la dirección en que se minimiza el error.
+
+La tasa de aprendizaje, $\alpha$, es positiva y suele tener valores cercanos a 0, como $0.1$, y se incluye para lograr que la magnitud de cada movimiento en el espacio de parámetros sea pequeña, para evitar que el algoritmo pase de largo un mínimo de la función.
+
+
+\image{error_contour_big_step}{0.4}{Un paso con magnitud demasiado grande en la minimización de una función puede hacer que el algoritmo pase de largo un mínimo local.}
+
+En este caso, la superficie del error es convexa y por ende tiene un sólo mínimo, por lo cual es de esperar que se obtenga dicho mínimo si la tasa de aprendizaje es lo suficientemente baja, pero esto no es cierto del caso general en una red con varias capas, neuronas y funciónes de activación arbitrarias. 
+
+Generalizando este algoritmo para un conjunto de ejemplares $D$, se puede escribir el opuesto del gradiente del error de un ejemplar $\xv$ con clase $\yv$ como:
+
+\ma{
+-\nabla E(\xv) 
+&= -(\derivative{E(\xv)}{w1},\derivative{E(\xv)}{w2}) \\
+& = - ( (x_1 w_1-y_1) x_1, (x_2 w_2-y_2) x_2 ) 
+}
+
+\begin{algorithm}[H]
+\KwData{ \\Un conjunto de ejemplares $\xi \in D$, con $D \subset \reals^2$, y clase $\yi \in \reals^2$\\
+Una tolerancia al error $\epsilon$\\
+Una tasa de aprendizaje $\alpha$}
+\KwResult{ Un vector de parámetros $\wv=(w_1,w_2)$ optimizado para clasificar $D$ con un error menor a $\epsilon$ }
+$\wv=random(2)$\;
+$error=\infty$ \;
+\While{$error > \epsilon$}{ 
+	 $dw_1=0$ \;
+	 $dw_2=0$ \;
+	 \For{$\xv \in D$}{
+	 	    $dw_1= dw_1 + (x_1 w_1-y_1) x_1$\;
+	 	    $dw_2= dw_2 + (x_2 w_2-y_2) x_2$\;
+	 }
+	$w_1 = w_1 - \alpha dw_1$ \;
+  $w_2 = w_2 - \alpha dw_2$ \;
+  $error = E(w_1,w_2)$ \;
+}
+Retornar  $\wv$ \;
+\caption{Esquema del algoritmo Backpropagation para el problema de ejemplo con un conjunto de datos arbitrario $D$.} 
+\end{algorithm}
+\vspace{10pt}
+
+Esta forma de entrenar la red, acumulando en $dw_i$ las derivadas de los errores para todos los patrones, se conoce como \textbf{entrenamiento batch} o por épocas. También se podrían ir actualizando los $w_i$ cada vez que se calcula la derivada del error para cada $\xv$, por ejemplo, eligiendo los $\xv$ en orden aleatorio del conjunto de datos (de manera similar a como funciona el algoritmo de entrenamiento del perceptrón del capítulo \ref{chap:aprendizaje}). Este tipo de entrenamiento se conoce como \textbf{stochastic} o estocástico. El entrenamiento batch es más fácil de analizar desde el punto de vista teórico, y por ende existen resultados que proveen ciertas cotas de tiempo o error para su entrenamiento, pero en la práctica el entrenamiento estocástico puede ser más veloz y menos susceptible a mínimos locales, especialmente para conjuntos de datos muy grandes. La razón detrás de esto es que si bien calcular el gradiente del error en base a un sólo ejemplar es una estimación del mismo, posiblemente con bastante ruido: si el conjunto de ejemplares es muy grande, existirá mucha redundancia y por ende varios gradientes serán similares, con lo cual no tiene sentido calcular el gradiente sobre \textit{todos} los ejemplares; el ruido puede ser beneficioso ya que le otorga cierto grado de exploración aleatoria al algoritmo \cite{lecun1998}. Entonces, en la práctica, se puede utilizar algún término medio, como mini-batches, que calculan el gradiente con un pequeños subconjuntos de los ejemplares, que van cambiando iteración a iteración. Por simplicidad se utiliza el entrenamiento batch para la descripción de los algoritmos, pero pueden adaptarse fácilmente al caso estocástico.
+
+Continuando con la generalización, se puede formular este algoritmo para una red neuronal feedforward de $3$ capas y una función de activación arbitraria y $\continuous^1$.
+
+\subsection{Derivación de $\derivative{E}{\W^j}$ con una red de tres capas} 
+
+\subsubsection{Derivación de $\derivative{E}{\W^j}$:}
+
+Las redes con tres capas son populares debido a que se ha probado que son aproximadoras universales, es decir, pueden aproximar cualquier función continua  $\fdef{f}{\reals^n}{\reals^m}$ con un grado de error arbitrariamente bajo, dada la cantidad suficiente de neuronas ocultas y funciones de activación apropiadas \cite{haykin1994}. Además, dan buenos resultados en la práctica, y son ampliamente utilizadas. 
+
+Para ellas, se tienen solo dos capas con pesos para optimizar, la 1, oculta, y la 2, de salida. Entonces, se tendrán que derivar sólo dos reglas de actualización, una para los pesos de cada capa.
+
+Comenzando con la más simple, que involucra la derivada de la salida $o_m^2$ respecto a un peso $w_i^2(p)$ para un patrón $\xv$ \footnote{De nuevo, se omitió el $\xv$ en $o_m^2(\xv)$ por simplicidad de notación.}. Como el vector de pesos $\wv_i^2$ no interviene en el cálculo de $o_m^2$ para $i \neq m$:
+
+\ma{
+\derivative{o_m^2}{w_i^2(p)}
+&=\caseotherwise{
+\derivative{o_i^2}{w_i^2(p)}
+}{0}{i=m}
+}
+
+Si $i=m$, continua la derivación:
+
+\ma{ \derivative{o_i^2}{w_i^2(p)}
+&= \derivative{ \theta_2( \ov^1 \cdot \wv_i^2 ) }{w_i^2(p)} \\
+&=  \theta_2'( \ov^1 \cdot \wv_i^2 ) \derivative{\ov^1 \cdot \wv_i^2}{w_i^2(p)} \\
+&=  \theta_2'( \ov^1 \cdot \wv_i^2 ) \derivative{ \sum_{l=1}^{n_1} o_l^1  w_i^2(l)}{w_i^2(p)} \\
+&= \theta_2'( \ov^1 \cdot \wv_i^2 ) \derivative{ (o_p^1  w_i^2(p)) }{w_i^2(p)} \\
+&= \theta_2'( \ov^1 \cdot \wv_i^2 ) o_p^1 
+}
+
+
+Entonces, la derivada del error para la neurona $m$ de la capa de salida y el patrón $\xv$ respecto a $w_i^2(p)$ es:
+
+\ma{
+\derivative{E_m(\xv)}{w_i^2(p)} 
+&= \derivative{ (\frac{1}{2} (o_m^2- y_m)^2)}{w_i^2(p)}\\
+&= (o_m^2- y_m) \derivative{o_m^2}{w_i^2(p)}\\
+&=\caseotherwise{
+(o_i^2- y_i)\derivative{o_i^2}{w_i^2(p)}
+}{0}{i=m}
+}
+
+Y la derivada total del error para la capa de salida dado un patrón $\xv$:
+
+\ma{
+\derivative{E(\xv)}{w_i^2(p)} = \sum_{m=1}^{n_2} \derivative{E_m(\xv)}{w_i^2(p)} = \derivative{E_i(\xv)}{w_i^2(p)}
+}
+
+Para los pesos de la capa 1, se obtiene la derivada de la salida $o_m^2$ respecto a un peso $w_i^1(p)$ para un patrón $\xv$:
+
+\ma{
+\derivative{o_m^2}{w_i^1(p)}
+&= \derivative{ \theta_2( \ov^1 \cdot \wv_m^2 ) }{w_i^1(p)} \\
+&=  \theta_2'( \ov^1 \cdot \wv_m^2 ) \derivative{\ov^1 \cdot \wv_m^2}{w_i^1(p)} \\
+&=  \theta_2'( \ov^1 \cdot \wv_m^2 ) \derivative{ \sum_{l=1}^{n_1} o_l^1  w_m^2(l)}{w_i^1(p)} \\
+&=  \theta_2'( \ov^1 \cdot \wv_m^2 )  \sum_{l=1}^{n_1} w_m^2(l) \derivative{o_l^1 }{w_i^1(p)} \\
+}
+
+Expandiendo $\derivative{o_l^1 }{w_i^1(p)}$, de forma análoga a como se expandió $\derivative{o_m^2 }{w_i^2(p)}$:
+
+\ma{
+\derivative{o_l^1}{w_i^1(p)}
+&=\caseotherwise{
+\derivative{o_i^1}{w_i^1(p)}
+}{0}{i=l} 
+}
+Y entonces si $i=l$:
+
+\ma{
+&= \derivative{ \theta_1( \ov^0 \cdot \wv_i^1 ) }{w_i^1(p)} \\
+&=  \theta_1'( \ov^0 \cdot \wv_i^1 ) \derivative{\ov^0 \cdot \wv_i^1}{w_i^1(p)} \\
+&=  \theta_1'( \ov^0 \cdot \wv_i^1 ) \derivative{ \sum_{q=1}^{n_1} o_q^0  w_i^1(q)}{w_i^1(p)} \\
+&= \theta_1'( \ov^0 \cdot \wv_i^1 ) o_p^0 \\ 
+&= \theta_1'( \ov^0 \cdot \wv_i^1 ) x_p 
+}
+
+Es importante notar la similaridad entre las expresiones $\derivative{o_i^1}{w_i^1(p)}$ y $\derivative{o_i^2}{w_i^2(p)}$, ya que de esa manera se puede luego generalizar la regla de actualización a $L+1$ capas.
+
+Volviendo al caso de $3$ capas, la expresión para $
+\derivative{o_m^2}{w_i^1(p)}$ es entonces:
+
+\ma{
+\derivative{o_m^2}{w_i^1(p)} 
+&=\theta_2'( \ov^1 \cdot \wv_m^2 )  \sum_{l=1}^{n_1} w_m^2(l) \derivative{o_l^1 }{w_i^1(p)} \\
+&=\theta_2'( \ov^1 \cdot \wv_m^2 )   w_m^2(l) \derivative{o_l^1 }{w_i^1(p)} \\
+&=\theta_2'( \ov^1 \cdot \wv_m^2 ) w_m^2(l)  \theta_1'( \ov^0 \cdot \wv_i^1 ) x_p
+}
+
+La derivada del error para la neurona de salida $m$ respecto al peso $w_i^1(p)$ es entonces:
+
+
+\ma{
+\derivative{E_m(\xv)}{w_i^1(p)} 
+&= \derivative{ (\frac{1}{2} (o_m^2- y_m)^2)}{w_i^1(p)}\\
+&= (o_m^2- y_m) \derivative{o_m^2}{w_i^1(p)}\\
+}
+
+Y la derivada total del error para la capa de salida dado un patrón $\xv$:
+
+\ma{
+\derivative{E(\xv)}{w_i^1(p)} = \sum_{m=1}^{n_2} \derivative{E_m(\xv)}{w_i^1(p)}
+}
+
+Finalmente, las reglas de actualización para los pesos de las neuronas de las capas 1 y 2, respectivamente, son:
+
+\ma{
+w_i^1(p) \ass w_i^1(p) - \alpha \sum_{\xv \in D}^{max}\derivative{E(\xv)}{w_i^1(p)}\\
+w_i^2(p) \ass w_2^1(p) - \alpha \sum_{\xv \in D} \derivative{E(\xv)}{w_2^1(p)}
+}
+
+\subsubsection{Algoritmo}
+
+Para el algoritmo, se utilizarán como variables las matrices de pesos de cada capa llamándolas $\W^1$ y $\W^2$, y matrices de derivadas de esos pesos $\dW^1$ y $\dW^2$, del mismo tamaño, y se asume que $\derivative{E}{\W^1}$ calcula una matriz de derivadas del error respecto a cada peso de la capa 1 y para todos los ejemplares, y lo mismo con $\derivative{E}{\W^2}$. Entonces, $\W^j(i,p)= \wvij(p)$ y $\derivative{E}{\W^j(i,p)}= \derivative{E}{ \wvij(p)}$.
+
+Modificando el algoritmo visto antes para actualizar ahora los pesos de cada capa, se obtiene:
+
+\begin{algorithm}[H]
+\KwData{ \\Un conjunto de ejemplares $\xi \in D$, con $D \subset \reals^d$, y clase $\yi \in \reals^{n_2}$.\\
+Una tolerancia al error $\epsilon$.\\
+Una tasa de aprendizaje $\alpha$.\\
+Una cantidad de neuronas ocultas $n_1$.}
+\KwResult{ Pesos $\W^1$ y $\W^2$ de cada neurona oculta $\wv_i^1$ y de salida $\wv_i^2$, optimizados para clasificar $D$ con un error menor a $\epsilon$ }
+$\W^1=random(n_1,d)$\;
+$\W^2=random(n_2,n_1)$\;
+$error=\infty$ \;
+\While{$error > \epsilon$}{	
+	$\dW^1=\derivative{E}{\W^1}$\;
+	$\dW^2=\derivative{E}{\W^2}$\;
+	$\W_1 = \W_1 - \alpha \dW_1$ \;
+  $\W_2 = \W_2 - \alpha \dW_2$ \;
+  $error = E(\W^1,\W^2)$ \;
+}
+Retornar  $\W^1,\W^2$ \;
+\caption{Esquema del algoritmo Backpropagation para una red de tres capas.} 
+\end{algorithm}
+\vspace{10pt}
+
+\subsection{Derivación de $\derivative{E}{\W^j}$ para cualquier topología de red}
+
+Se puede escribir la forma genérica de la derivada de la salida de cada neurona $i'$ de cada capa $j'$ y para un ejemplar particular $\xv$, respecto a un peso $\wvijk{p}$, $j'>=j$ \footnote{El peso $\wvijk{p}$ es el componente $p$ del vector de pesos $\wvij \in \reals^{n_{j-1}}$ para la conexiones de la capa $j-1$ a la neurona $i$ de la capa $j$.}:
+
+\ma{
+\derivative{o_{i'}^{j'}}{\wvijk{p}}   
+ & =   \derivative{ \theta_{j'}(net_{i'}^{j'}) }{\wvijk{p}} \\
+ & =   \derivative{ \theta_{j'}(net_{i'}^{j'}) }{net_{i'}^{j'}}  \derivative{net_{i'}^{j'}}{\wvijk{p}}\\
+ & =    \theta_{j'}'(net_{i'}^{j'}) \derivative{net_{i'}^{j'}}{\wvijk{p}}\\
+ & =   \theta_{j'}'(net_{i'}^{j'}) \derivative{ \wv_{i'}^{j'} \cdot \ov^{j'-1} }{\wvijk{p}}\\
+ & =   \theta_{j'}'(net_{i'}^{j'}) \suml_{l=1}^{n_{(j'-1)}} \derivative{ (w_{i'}^{j'}(l) o_{l}^{j'-1} )}{\wvijk{p}}\\
+}
+
+
+Esta ecuación tiene resolución directa si el peso $\wvijk{p}$ corresponde a una neurona de la misma capa que la salida $o_{i'}^{j'}$. Entonces, si $i'=i$ y $j'=j$:
+
+\ma{
+\derivative{o_{i'}^{j'}}{\wvijk{p}} &=  \theta_{j'}'(net_{i'}^{j'})   
+\derivative{w_{i'}^{j'}(p) o_{p'}^{j'-1}}{w_{i'}^{j'}(p)} =  \theta_{j'}'(net_{i'}^{j'}) o_{p'}^{j'-1} 
+}
+
+
+Si $j'=j$ pero $i' \neq i$, el peso es de otra neurona de la misma capa, y por ende no influye en la salida  $o_{i'}^{j'}$:
+
+\ma{
+\derivative{o_{i'}^{j'}}{\wvijk{p}} &=  \theta_{j'}'(net_{i'}^{j'})  0 = 0 
+}
+
+
+
+Por último, si $j'>j$, quiere decir que el peso corresponde a una neurona de capas anteriores, y entonces ese peso afecta todas las entradas de la neurona actual. Por ende, se debe utilizar la regla de la cadena con todas estas entradas; como estas entradas son salidas de otras neuronas, se puede utilizar la regla recursiva: 
+ 
+ 
+\ma{
+\derivative{o_{i'}^{j'}}{\wvijk{p}} 
+&= \theta_{j'}'(net_{i'}^{j'}) \suml_{l=1}^{n_{(j'-1)}}w_{i'}^{j'}(l) \derivative{o_{l}^{j'-1} }{\wvijk{p}}\\
+}
+ 
+Y entonces la derivada del error para la neurona de salida $o_i^k$, dado un ejemplar $\xv$, es:
+
+\ma{
+\derivative{E_i(\xv)}{ \wvijk{p}} & =  \derivative{ (\frac{1}{2} (o_{i'}^{p}- y_{i'})^2)}{\wvijk{p}}
+=   (o_{i'}^{j'} - y_{i'}) \derivative{ o_{i'}^{j'} }{\wvijk{p}} 
+}
+
+Y la derivada del error para la capa de salida respecto a $\wvijk{p}$:
+
+\ma{
+\derivative{E(\xv)}{ \wvijk{p}} 
+& = \sum_{i=1}^{n_k} \derivative{E_i(\xv)}{ \wvijk{p}}
+}
+
+
+
+Donde como ahora hay una fórmula genérica para $\derivative{ o_{i'}^{j'} }{\wvijk{k}}$ se puede expandirla de acuerdo a la topología de la red.
+
+Entonces, existe una manera de calcular la derivada del error para cualquier peso, $\derivative{E}{\wvijk{p}}= \suml_{\xi \in D} \derivative{E(\xi)}{\wvijk{p}}$, y se puede aplicar la regla de actualización $\wvijk{p} \ass\wvijk{p} - \alpha \derivative{E}{\wvijk{p}}$.
+ 
+ 
+\subsubsection{Algoritmo}
+ 
+Finalmente, se repite aquí el algoritmo clásico de entrenamiento del backpropagation, ya presentado en el capítulo \ref{chap:neuronales}:
+
+
+\begin{algorithm}[H]
+\KwData{ \\
+Una toplogía dada por $L+1$, el número de capas, y $n_i$ la cantidad de neuronas de la capa $i$, con $n_L=C$.\\
+Un conjunto de ejemplares $\xi \in D$, con $D \subset \reals^d$, y clase $\yi \in \reals^{C}$.\\
+Una tolerancia al error $\epsilon$.\\
+Una tasa de aprendizaje $\alpha$.}
+\KwResult{ Pesos $\W^j$ de las neuronas de cada capa $j>0$, optimizados para clasificar $D$ con un error menor a $\epsilon$ }
+\For{j=1 to L}{
+	$\W^1=random(n_j,n_{j-1})$\;
+}
+$error=\infty$ \;
+\While{$error > \epsilon$}{	
+	\For{j=1 to L}{
+		$\dW^j=\derivative{E}{\W^j}$\;
+	}
+	\For{j=1 to L}{
+		$\W_j = \W_j - \alpha \dW_j$ \;
+	}
+  $error = E(\W^1,\dots,\W^L)$ \;
+}
+Retornar  $\W^1,\dots,W^L$ \;
+\caption{Esquema del algoritmo Backpropagation para una red de tres capas.} 
+\end{algorithm}
+\vspace{10pt}
+
+
+\section{Consideraciones para aplicar Backpropagation}
+
+\subsection{Overfitting}
+
+Las redes neuronales son propensas a overfitting como cualquier modelo de aprendizaje automático. Hay dos ejes principales a trabajar para evitarlo.
+
+El primero, es utilizar un \textbf{conjunto de validación} para evaluar la condición de corte del algoritmo. En la línea del algoritmo:
+
+\ma{
+error = E(\W^1,\dots,\W^L)
+}
+
+En esta condición se asume que el error se calcula sobre los patrones del conjunto de entrenamiento $D_e$. Una mejora posible es subdividir el conjunto de entrenamiento  $D_e$ en dos; el conjunto de entrenamiento real $D_e'$, y otro de validación, $D_v$, de forma similar a como se divide el conjunto de datos $D$ en $D_e$ y $D_v$. El conjunto de validación se utilizar para calcular el error de la red neuronal en cada iteración. Esta es una forma de regularización, cuya justificación es que dado que se entrena el modelo con $D_e'$, el error calculado sobre $D_v$ es un mejor estimador del error total sobre el dominio del problema $\ddp$ ya que el modelo está sesgado por $D_e'$ pero no por $D_v$ (de todas maneras, luego de la primer iteración, como la verificación del error se realiza sobre $D_v$ hay un pequeño sesgo, pero mucho menor que el original).
+
+El segundo es restringir el número de neuronas de las capas ocultas, y la cantidad de capas. A medida que aumenta la cantidad de neuronas ocultas de una red, aumenta su poder de aproximación. Si bien a priori esto parece algo bueno, salvo por el coste computacional adicional, en realidad resulta perjudicial ya que de esa manera se logra que el modelo imite tan bien a los datos que no pueda generalizar.
+
+En términos de una red de dos capas con funciones de activación identidad, esto se asemeja a utilizar tantos hiperplanos para separar el conjunto original que prácticamente se podría clasificar cualquier cosa sin ninguna importancia por la coherencia espacial que tenga la superficie de separación resultante.
+
+\tikzimage{ff_overfitting}{scale=0.4}{Hiperplanos definidos por las neuronas ocultas de una red con demasiadas neuronas para la dificultad inherente del problema.} 
+
+Por otro lado, utilizar menos hiperplanos de separación que los requeridos por el problema puede tener el efecto de no poder modelarlo adecuadamente por falta de poder de aproximación.
+
+
+\tikzimage{ff_underfitting}{scale=0.4}{Hiperplanos definidos por las neuronas ocultas de una red con pocas neuronas para la dificultad inherente del problema.}
+
+En la práctica, deben probarse distintos valores para la cantidad de neuronas ocultas de cada capa, con el objetivo de obtener un término medio entre modelización adecuada y overfitting. Dichos valores dependerán del problema y las funciones de las neuronas.
+ 
+\subsection{Mínimos locales}
+
+Como en la mayoría de los problemas de optimización, un problema ocurrente en el entrenamiento de las redes neuronales es que la función de error suele no suele ser convexa y entonces no hay garantía de que la dirección que indica el gradiente conduzca a un mínimo global del error.
+
+Dependiendo de la función de activación, el error puede ser una función de muy poca suavidad y por ende tener una gran cantidad de mínimos locales. Algunos de estos mínimos locales representan soluciones que si bien no son las mejores, resultan aceptables para el conjunto de datos de entrenamiento. Cuando un mínimo no es una solución aceptable, se considera un lugar a evitar ya que el algoritmo backpropagation puede quedarse atascado\footnote{Se llama \textit{paso} o \textit{movimiento} en el espacio de parámetros a un cambio de los pesos $w$ de la red, siguiendo la forma de la regla de actualización de backpropagation, debido a que esta regla se puede interpretar como \textit{caminar} en el espacio de parámetros en alguna dirección.}. 
+
+En esencia, el problema de los mínimos locales es el de poder determinar una dirección óptima a moverse para evitar los mínimos locales con un error arriba del umbral tolerable, y una magnitud óptima para ese movimiento utilizando información local, de manera que se llegue a un mínimo global. 
+
+Por un lado, es importante poder determinar la magnitud óptima para actualizar un peso en la dirección en que indica el gradiente, de manera que se llegue a un mínimo lo más rápido posible. Por otro lado, es importante que se pueda salir de un mínimo local si el error que tiene esa posición es mayor que el umbral tolerable. 
+
+Existen varias técnicas para estimar la magnitud del cambio de los parámetros, y para recorrer el espacio de parámetros de forma más eficiente. Salvo la primera, la idea de estas técnicas es asegurarse que el movimiento en el espacio de parámetros sea más certero, a costa de utilizar más tiempo de ejecución o memoria para calcular la dirección y magnitud de ese movimiento \cite{lecun1998,haykin1994}:
+
+\begin{itemize}
+\item \textbf{Varias inicializaciones aleatorias}: Se corre el algoritmo varias veces, cada vez comenzando desde una posición inicial aleatoria distinta, entrenando varias redes, y quedándose con la mejor en el proceso. Se espera que alguna de las redes logre llegar a un mínimo aceptable.
+
+\item \textbf{Tasas de aprendizaje no constantes:} Es deseable que la magnitud del cambio de las derivadas varie con el tiempo, de manera que al principio la magnitud sea grande y se explore el espacio de manera agresiva, y a medida que pasen las iteraciones la magnitud sea más chica, haciendo menos cambios, y buscando optimizar el error en una región más pequeña. 
+
+\item \textbf{Tasas de aprendizaje individuales:} Las tasas de aprendizaje puede variar para cada peso $w$, por ejemplo para hacer más agresivo la actualización del un peso $w$ cuando $\derivative{E}{w}$ es muy grande, y más chico cuando hay poco error respecto a ese peso. A su vez, se puede aumentar la granularidad haciéndolas variar para cada capa, o grupo arbitrario de neuronas. En general, es deseable que las tasas de las capas más bajas sean más altas que las finales, ya que sino el cambio en los primeros pesos afecta \textit{poco} la salida de la red.  
+
+\item \textbf{Métodos de segundo orden:} Además de calcular el gradiente del error, se puede calcular o aproximar el Hessiano $\derivativen{E}{\W}{2}$ para obtener información de segundo orden sobre la dirección del error. La esencia de la idea es que si la función está acelerando, es probable que sea mejor hacer un cambio pequeño, ya que el gradiente está creciendo y dentro de poco esa dirección puede hacer crecer el error. Por el contrario, dado un hessiano negativo, la función está acelerando negativamente y tiene sentido tomar pasos más grandes.
+
+\item \textbf{Momentum:} Se puede moverse en la dirección en la que apunta, no el gradiente actual, sino un promedio de los últimos  $u$ gradientes. Entonces, si en la iteración $t$ se calcula la derivada para un peso $w$, $\derivative{E}{w}^t$, se puede guardar el mismo en una tabla, y luego se puede calcular la derivada promedio de las últimas $u$ iteraciones, $E^u= \sum_{i=t-u}^{t} \alpha_{t-i} \derivative{E}{w}^i$, y usar este valor para actualizar $w$. En esta fórmula, $\alpha_{t-i}$ es una tasa de aprendizaje para pesar de forma distinta las derivadas anteriores, de acuerdo a su importancia. Esto evita movimientos innecesarios cuando el gradiente cambia de signo constantemente, ya que el promedio de las últimas derivadas tiende a ser más estable.
+
+\item \textbf{Obviar la magnitud del gradiente:} La dirección del gradiente indica el camino para minimizar el error. La magnitud del gradiente, en cambio, depende de la magnitud de los datos de entrenamiento, la posición en el espacio de parámetros y el tipo de función de activación, por ende no siempre representa adecuadamente la magnitud del paso óptimo a dar para moverse en el espacio de parámetros. El algoritmo resilient backpropagation, a describir luego, utiliza esta perspectiva y estima la magnitud del cambio de forma independiente de la magnitud del gradiente.
+\end{itemize}
+
+
+\subsection{Algoritmo de entrenamiento Resilient Backpropagation}
+
+\newcommand{\wi}{w_i}
+\newcommand{\wt}{w^t}
+\newcommand{\wtp}{w^{t+1}}
+\newcommand{\wtm}{w^{t-1}}
+
+\newcommand{\vmax}{\Delta_{max}}
+\newcommand{\vmin}{\Delta_{min}}
+\newcommand{\accinc}{\eta^+}
+\newcommand{\accdec}{\eta^-}
+\newcommand{\vt}{\Delta^{t}_w}
+\newcommand{\vtp}{\Delta^{t+1}_w}
+\newcommand{\vtm}{\Delta^{t-1}_w}
+\newcommand{\dvt}{\dv{E(t)}{\wt}}
+\newcommand{\dvtm}{\dv{E(t-1)}{\wtm}}
+\newcommand{\dwtm}{\Delta\wtm}
+\newcommand{\dwt}{\Delta\wt}
+\newcommand{\multidv}{ \dvt \cdot \dvtm}
+
+
+La idea principal del algoritmo Resilient Backpropagation, o Rprop \cite{Riedmiller93} \footnote{En esta sección, se desarrolla desarrollando la variante iRprop- de Rprop, una mejora del mismo introducida en \cite{Igel00,Igel03}.}, como ya fue mencionado, es no utilizar la magnitud de la derivada del error para actualizar cada peso $w$, sino utilizar solamente la dirección que indica el signo de dicha derivada. 
+
+En esta sección se utilizará una notación más simple para numerar los pesos, escribiendo simplemente $w$ para denotar a un peso cualquiera, asumiendo un conjunto de pesos $\W$ de la red y alguna correspondencia entre esos pesos a las posiciones exactas en la red. Por último, se escribe $\wt$ para denotar al valor del peso $w$ en la iteración $t$.  
+
+Hay dos ideas importantes, además de la de ignorar la magnitud de la derivada: evitar cambios innecesarios cuando la derivada fluctúa, y calcular una magnitud o velocidad de actualización dinámicamente para cada peso.
+
+\begin{itemize}
+\item Actualización en base al signo de la derivada 
+
+En lugar de utilizar la magnitud de la derivada del error, en cada iteración $t$ para cada peso $\wt$ se computa dinámicamente una velocidad $\vt$, y se mueve $\wt$ en la dirección opuesta a la que indica la derivada, en un paso con magnitud $\vt$, generando $\wtp$ es decir: 
+
+\ma{
+ \dwt &\ass - sign(\dvt) \vt \\ 
+\wtp& \ass \wt + \dwt
+}
+
+\item Evitar fluctuaciones 
+
+La segunda idea importante en el algoritmo es tratar de no hacer cambios cuando la derivada fluctúa para evitar pasos innecesarios. De esta manera se obtienen tres reglas de actualización adicionales a la anterior para ciertos casos.
+
+\begin{itemize}
+
+\item La regla anterior de actualización solamente se aplica cuando la derivada no cambió de signo respecto a la iteración anterior, o sea $\multidv >0$, ya que se busca un incremento continuo en una sola dirección. 
+
+\item Si cambia el signo de la derivada, $\multidv <0$, y aumenta el error, $E(t)>E(t-1)$, se asume que el último cambio de $w$ es producto de una fluctuación de la derivada. En ese caso, se deshace ese cambio con la regla:
+
+\ma{
+\dwt & \ass -\dwtm  \\
+\wtp & \ass \wt + \dwt
+}
+
+Además, si $\multidv <0$ se pone una variable, $reset_w$ en $true$ para que en la próxima iteración se obvie la dirección de la derivada en la iteración anterior, y se mueva siempre en la nueva dirección de la derivada a la velocidad $\vt$. 
+
+\item Si en una iteración se encuentra que $reset_w=true$, o sea, que en la iteración anterior se determinó que debería comenzar una búsqueda en una nueva dirección de acuerdo al punto anterior, se da un paso en la dirección del gradiente actual mediante la regla:
+
+\ma{
+ \dwt &\ass - sign(\dvt) \vt \\ 
+\wtp & \ass \wt + \dwt \\
+reset_w & \ass false
+}
+
+Las variables $reset_w$ se vuelven a poner en $false$ para continuar la búsqueda con normalidad en la próxima iteración. Además, se inician en $true$ para todo $w$ al comienzo del algoritmo.
+
+\item Si $\dvt =0$, entonces $\dwt \ass 0$ y no se realiza ningún cambio para ese peso en esa iteración ya que se probablemente se encuentre en un mínimo local; de todas maneras, como la derivada depende de la salida de otras partes de la red, en la siguiente iteración la derivada puede no ser $0$ aunque $w$ no cambie. Si bien en ese caso no hay cambio, por uniformidad se puede escribir la regla de actualización como:
+
+\ma{
+\dwt & \ass 0  \\
+\wtp & \ass \wt + \dwt
+}
+
+\item 
+Si $\dvt \neq 0$ y $\dvtm =0$, se realiza un paso normalmente a la velocidad $\vt$ como antes, al igual que cuando $reset_w=true$, asumiendo una re-inicialización que requiere una nueva dirección. 
+
+\ma{
+\dwt & \ass 0  \\
+\wtp & \ass \wt + \dwt
+}
+
+\end{itemize}
+
+\item Cálculo de velocidad independiente por peso
+
+La tercera idea importante del algoritmo radica en la manera en que cambia la velocidad.
+ 
+El algoritmo tiene dos parámetros de límites de velocidad, una velocidad máxima $0<\vmax$, y una velocidad mínima $0<\vmin<\vmax$ para que no se alcancen velocidades demasiado grandes o chicas en magnitud; inicialmente, $\Delta_w^0=\vmin$ para todas las velocidades. 
+
+Otros dos parámetros controlan la aceleración cuando la derivada tiene el mismo signo que en la iteración anterior o no, $\accinc$ y $\accdec$, respectivamente. 
+
+La regla de actualización de la velocidad es la siguiente: si la derivada mantiene su signo entre dos iteraciones, se acelera; si cambia, se desacelera; si la derivada es o fue $0$ en la iteración pasada, se mantiene la velocidad. Entonces, siendo $s=\multidv$:
+
+\ma{
+\vtp \ass \caset{ max(\vt \accinc,\vmax)}{ \quad s >0}
+{min(\vt \accdec,\vmin)}{ \quad s <0 }
+{\vt}{ \quad s = 0 }
+}
+
+
+\end{itemize}
+Juntando estas tres ideas se puede escribir la regla de actualización completa para cada peso $w$ del algoritmo en la iteración $t$ (recordando que para todo $w$, $reset_W$ se inicializa en $true$ y $\Delta_w^1=\vmin$). Esta regla calcula los pesos $\wtp$ a partir de los datos de la iteración $t$ y $t-1$:
+
+\begin{algorithm}[H]
+\For{$w \in W$}{
+		$s \ass sign(\multidv) $\;
+		$\vt \ass \caset{ min(\vt \accinc,\vmax)}{s >0}
+		{max(\vt \accdec,\vmin)}{s <0 }
+		{\vt}{s = 0 }$ \;
+		
+		\uIf{ ( $\dvt \neq 0$  AND $\dvtm = 0$ ) OR $reset_w$}{
+			$\dwt \ass - sign(\dvt) \vt$ \;
+			$reset_w \ass false$
+		}
+		\uElseIf{$s >0$}{
+			$\dwt \ass - sign(\dvt) \vt$ \;
+		}
+		\uElseIf{$s<0$}{		
+			\If{$E(t)>E(t-1)$}{
+			  $\dwt \ass -\dwtm $
+			}\Else{
+			  $\dwt \ass 0$
+			}
+			$reset_w \ass true$
+		}
+		\Else{
+   		\CommentSty{ \{ Caso $\dvt=0$ \} } \\
+			$\dwt \ass 0$ \;
+		}
+    $\wtp \ass \wt + \dwt$ \;
+}
+\caption{Regla de actualización de los pesos del algoritmo Rprop} 
+\end{algorithm}
+\vspace{10pt}
+
+Donde dada la uniformidad de las 4 reglas descriptas anteriormente, se quitó el $\wtp  \ass \wt + \dwt$ de cada condicional.

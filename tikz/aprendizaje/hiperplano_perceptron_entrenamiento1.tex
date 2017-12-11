@@ -1,0 +1,18 @@
+\input{../base}
+\tikzdrawing{
+
+
+
+\draw [line width=4] (-10,6) -- (10,-6);
+\draw [line width=2,->] (0,0) -- (1,1.66);
+\node [above] at (-0.3,1) {$\wv$};
+
+
+
+\pgfplotsset{ticks=none}
+\rectangularaxis{
+\addgaussianscatter{oplus}{-5}{2}{+}
+\addgaussianscatter{halfcircle}{5}{-2}{-}
+}{10}{6}
+
+}

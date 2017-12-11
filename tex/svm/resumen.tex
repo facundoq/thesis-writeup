@@ -1,0 +1,55 @@
+  
+En este capítulo se presentan las máquinas de vectores de soporte (SVM). Las mismas representan un modelo de clasificación, de aprendizaje de tipo supervisado, desarrollado por Vapnik y otros en los años 90, con fuertes bases en la teoría estadística del aprendizaje. 
+
+La idea esencial de las mismas es extender el algoritmo del perceptrón de manera que se selecciona el hiperplano de máximo margen entre las clases, es decir, el hiperplano que maximiza la distancia entre los ejemplares más cercanos de cada clase al hiperplano. De esta forma, el entrenamiento del SVM consiste en resolver un problema de optimización matemática, en donde hay que maximizar dicho margen.
+
+Además se presentan algunas extensiones para lidiar con conjuntos de datos que no se pueden separar exactamente con un hiperplano, manejar ejemplares anómalos, e incluir transformaciones no-lineales de los ejemplares de modo de ampliar el poder de clasificación de las SVM. Las pruebas del capítulo \ref{chap:resultados} hacen referencia a estas extensiones, debido a que se prueban distintas configuraciones del modelo variando los parámetros de las extensiones.
+
+Este capítulo hace una introducción al modelo de clasificación. Como se mencionó, para entrenar dicho modelo se debe resolver un problema de optimización; para el lector interesado se presenta en el apéndice \ref{apendice_smo} un algoritmo para tal fin. Además, en la derivación y justificación del modelo se utilizan ciertos conceptos matemáticos, de los cuales el apéndice \ref{sec:kkt} hace una breve referencia.
+
+Por último, el modelo SVM de clasificación ha sido ampliamente utilizado en los últimos tiempos, y por ende es un candidato ideal para comparar contra el clasificador propuesto en esta tesina, el CNC.
+
+%\tikzimage{hiperplano_svm_simple}{scale=0.25}{Un conjunto de datos linealmente separable, con un hiperplano de máximo margen.}
+%
+%De esta manera, se plantea el entrenamiento de una SVM (encontrar el hiperplano separador de máximo margen) como un problema de optimización con restricciones, donde la cantidad a optimizar es la longitud del margen, y las restricciones piden que los ejemplares de entrenamiento se clasifiquen correctamente. Entonces, se busca resolver el problema de optimización:
+%
+%
+%\begin{equation*}
+%\begin{aligned}
+%& \minarg{\wv,b}
+%& & M= \text{Margen entre clases} \\
+%& \text{sujeto a:}
+%& & \text{El hiperplano clasifica a todos los ejemplares correctamente.}
+%\end{aligned}
+%\end{equation*}
+%
+%
+%A este modelo básico se le aplica la extensión de márgenes suaves para lidiar con ejemplares anómalos y con conjuntos de datos que no sean linealmente separables.
+%
+%\tikzimagetwo{../aprendizaje/clases_no_linealmente_separables}{scale=0.25}{Un problema no linealmente separable}
+%{../aprendizaje/outlier_no_razonable}{scale=0.25}{ Un outlier se convierte en vector de soporte y distorsiona el hiperplano de máximo margen \textit{intuitivo}.}
+%
+%De esta manera se plantea el problema:
+%
+%
+%\begin{equation*}
+%\begin{aligned}
+%& \minarg{\wv,b}
+%& & M= \text{Margen entre clases} + \text{Costo de tener ejemplares mal clasificados} \\
+%& \text{sujeto a:}
+%& & \text{El hiperplano clasifica a la mayoría de los ejemplares correctamente.}
+%\end{aligned}
+%\end{equation*}
+%
+%Todos los problemas de optimización tienen un \textbf{problema dual} asociado. Este se obtiene a partir del original o \textit{primal}, y es también un problema de optimización . El problema dual codifica las restricciones del problema primal como si fuesen costes, de manera que la función de costes se torna peor cuanto menos se cumplan las restricciones del problema primal. 
+%
+%En el caso de SVM, el problema dual está íntimamente relacionado primal (el de arriba), ya que resulta que resolver el problema dual es equivalente a resolver el problema primal. El problema dual permite resolver el problema de optimización de forma más simple y por ende es preferible tratar con el en la práctica.
+%
+%El problema dual también permite introducir el \textbf{truco del kernel}, que permite utilizar características $\tra$ que de otra manera serían muy difíciles de computar. A su vez se introduce el concepto de kernel, que se pueden interpretar como funciones de similitud entre ejemplares, y se presentan los kernels más conocidos: el lineal, el gaussiano, y el polinomial. Esto permite aumentar la potencia clasificadora de SVM, manteniendo su simplicidad, dado que sigue siendo un clasificador con hiperplanos.
+%
+%\image{kernel}{0.4}{ A la izquierda, un dominio donde el separador \textit{natural} de las clases es una superficie no lineal. Transformando el dominio mediante una función $\tra$ se puede llevar el problema a un espacio $\ddp'$ (derecha) en donde los ejemplares sean linealmente separables, y clasificarlos utilizando el hiperplano determinado por el modelo SVM.}
+%
+%El algoritmo de optimización Sequential Minimal Optimization (SMO), que también se apoya en la formulación dual, puede utilizarse para resolver el problema de optimización de encontrar el hiperplano de máximo margen.
+%
+%Finalmente, como el modelo SVM, al igual que el perceptrón, solo distingue entre dos clases, se debe utilizar alguna técnica para realizar clasificación multiclase. Una opción posible, que se utilizará en esta tesina, consiste en, dadas $C$ clases, entrenar $C$ SVMs, que aprendan a distinguir los ejemplares de cada clase de \textit{todos} los ejemplares del \textit{resto} de las clases.
+%
